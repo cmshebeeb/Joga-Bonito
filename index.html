@@ -1231,7 +1231,6 @@ function renderAdminPlayers() {
 }
 
 // ==================== MATCHES WITH EDIT ====================
-// ==================== MATCHES WITH EDIT ====================
 let editingMatchId = null;
 
 function addOrUpdateMatch() {
@@ -1246,37 +1245,52 @@ function addOrUpdateMatch() {
   if (!homeId || !awayId) return toast('Select both teams');
   if (homeId === awayId) return toast('Teams must be different');
 
+  // Collect Goal Scorers
   const goals = [];
   document.querySelectorAll('.goal-scorer').forEach((sel, i) => {
-    const og = document.querySelectorAll('.goal-og')[i]?.checked || false;
-    goals.push({playerId: +sel.value || null, teamId: +sel.dataset.team, og});
+    const ogCheckbox = document.querySelectorAll('.goal-og')[i];
+    const og = ogCheckbox ? ogCheckbox.checked : false;
+    goals.push({
+      playerId: sel.value ? +sel.value : null,
+      teamId: +sel.dataset.team,
+      og: og
+    });
   });
 
+  // Collect Cards
   const cards = [];
   document.querySelectorAll('.card-player').forEach((sel, i) => {
-    const type = document.querySelectorAll('.card-type')[i]?.value;
-    if (sel.value) cards.push({playerId: +sel.value, type});
+    const typeSelect = document.querySelectorAll('.card-type')[i];
+    const type = typeSelect ? typeSelect.value : null;
+    if (sel.value && type) {
+      cards.push({ playerId: +sel.value, type: type });
+    }
   });
 
   if (editingMatchId) {
+    // Update existing match
     const m = S.matches.find(x => x.id === editingMatchId);
     if (m) {
-      m.homeId = homeId;
-      m.awayId = awayId;
-      m.date = date;
-      m.label = label;
-      m.homeScore = homeScore;
-      m.awayScore = awayScore;
-      m.goals = goals;
-      m.cards = cards;
-      m.isFinal = isFinal;
+      Object.assign(m, {homeId, awayId, date, label, homeScore, awayScore, goals, cards, isFinal});
     }
     editingMatchId = null;
     document.getElementById('matchSubmitBtn').textContent = 'Save Match';
-    toast('Match updated!');
+    toast('Match updated successfully!');
   } else {
-    S.matches.push({id: Date.now(), homeId, awayId, date, label, homeScore, awayScore, goals, cards, isFinal});
-    toast('Match saved!');
+    // Add new match
+    S.matches.push({
+      id: Date.now(),
+      homeId,
+      awayId,
+      date,
+      label,
+      homeScore,
+      awayScore,
+      goals,
+      cards,
+      isFinal
+    });
+    toast('Match saved successfully!');
     if (isFinal) showWinner(homeScore > awayScore ? homeId : awayId);
   }
 
@@ -1286,7 +1300,11 @@ function addOrUpdateMatch() {
   renderTable();
   renderStats();
 
-  // Clear form
+  // Clear the form after saving
+  resetMatchForm();
+}
+
+function resetMatchForm() {
   document.getElementById('match_home').value = '';
   document.getElementById('match_away').value = '';
   document.getElementById('match_date').value = '';
@@ -1296,6 +1314,8 @@ function addOrUpdateMatch() {
   document.getElementById('goalScorerInputs').innerHTML = '';
   document.getElementById('cardInputs').innerHTML = '';
   document.getElementById('match_is_final').checked = false;
+  editingMatchId = null;
+  document.getElementById('matchSubmitBtn').textContent = 'Save Match';
 }
 
 function editMatch(id) {
@@ -1308,33 +1328,39 @@ function editMatch(id) {
   document.getElementById('match_label').value = m.label || '';
   document.getElementById('match_home_score').value = m.homeScore;
   document.getElementById('match_away_score').value = m.awayScore;
-  document.getElementById('match_is_final').checked = m.isFinal || false;
+  document.getElementById('match_is_final').checked = !!m.isFinal;
 
   editingMatchId = id;
   document.getElementById('matchSubmitBtn').textContent = 'Update Match';
 
-  // Load players for goal/card selection
   setTimeout(() => {
     loadMatchPlayers();
     updateMatchGoals();
-  }, 100);
+  }, 300);
 
-  toast('Editing match...');
+  toast('Loading match for editing...');
 }
 
 function renderAdminMatches() {
-  document.getElementById('adminMatchList').innerHTML = S.matches.map(m => {
+  const container = document.getElementById('adminMatchList');
+  if (!S.matches.length) {
+    container.innerHTML = '<p style="color:var(--muted)">No matches yet.</p>';
+    return;
+  }
+
+  container.innerHTML = S.matches.map(m => {
     const ht = S.teams.find(t => t.id === m.homeId);
     const at = S.teams.find(t => t.id === m.awayId);
-    return `<div class="ali">
-      <div class="ali-info">
-        <h4>${ht?.name || '?'} ${m.homeScore} – ${m.awayScore} ${at?.name || '?'}</h4>
-        <p>${m.date ? new Date(m.date).toDateString() : ''} ${m.label ? `· ${m.label}` : ''}</p>
-      </div>
-      <button class="btn btn-outline btn-sm" onclick="editMatch(${m.id})" style="margin-right:5px;">Edit</button>
-      <button class="btn btn-red btn-sm" onclick="deleteMatch(${m.id})">Delete</button>
-    </div>`;
-  }).join('') || '<p style="color:var(--muted)">No matches.</p>';
+    return `
+      <div class="ali">
+        <div class="ali-info">
+          <h4>${ht ? ht.name : '?'} ${m.homeScore} – ${m.awayScore} ${at ? at.name : '?'}</h4>
+          <p>${m.date ? new Date(m.date).toDateString() : ''} ${m.label ? `· ${m.label}` : ''}</p>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="editMatch(${m.id})" style="margin-right:6px;">Edit</button>
+        <button class="btn btn-red btn-sm" onclick="deleteMatch(${m.id})">Delete</button>
+      </div>`;
+  }).join('');
 }
 
 function addOrUpdateMatch() {
