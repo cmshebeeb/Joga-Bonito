@@ -624,8 +624,13 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
 
     <!-- REVIEWS -->
     <div class="admin-panel" id="panel-reviews-admin">
-      <h3 style="font-weight:700;font-size:15px;margin-bottom:14px;">Fan Submissions (Reviews)</h3>
-      <button class="btn btn-red btn-sm" onclick="clearAllReviews()" style="margin-bottom:12px;">🗑️ Clear All Reviews</button>
+      <h3 style="font-weight:700;font-size:15px;margin-bottom:14px;">📝 Fan Submissions (Reviews)</h3>
+      
+      <div style="margin-bottom:15px;">
+        <button class="btn btn-green btn-sm" onclick="exportAllData()" style="margin-right:8px;">📤 Export All Data</button>
+        <button class="btn btn-red btn-sm" onclick="clearAllReviews()">🗑️ Clear All Reviews</button>
+      </div>
+
       <div id="reviewsAdminList"></div>
     </div>
   </div>
@@ -1437,6 +1442,71 @@ function startConfetti() {
   function draw() { ctx.clearRect(0, 0, canvas.width, canvas.height); pcs.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fillStyle = p.c; ctx.fill(); p.y += p.d; p.x += Math.sin(p.a) * 1.2; p.a += .05; if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; } }); cf = requestAnimationFrame(draw); } draw();
 }
 function stopConfetti() { cancelAnimationFrame(cf); }
+
+// ==================== FAN REVIEWS FIX + EXPORT ====================
+
+function renderAdminReviews() {
+  const el = document.getElementById('reviewsAdminList');
+  if (!S.reviews || S.reviews.length === 0) {
+    el.innerHTML = '<p style="color:var(--muted);padding:20px;">No reviews submitted yet.</p>';
+    return;
+  }
+
+  let html = '';
+  S.reviews.forEach(r => {
+    html += `
+      <div class="card" style="margin-bottom:14px;padding:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <strong style="font-size:15px;">👤 ${r.reviewer || 'Anonymous'}</strong>
+          <span style="font-size:12px;color:var(--muted);">${new Date(r.submittedAt).toLocaleString()}</span>
+        </div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:6px;">Formation: <b>${r.formation}</b></div>
+        <div style="margin-bottom:10px;">Team of the Tournament: ${r.team ? r.team.filter(Boolean).join(', ') : '—'}</div>
+        
+        ${r.best_captain ? `<div style="font-size:13px;">Best Captain Team: <b>${r.best_captain}</b></div>` : ''}
+        ${r.mvp ? `<div style="font-size:13px;">MVP: <b>${r.mvp}</b></div>` : ''}
+        ${r.comments ? `<div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-style:italic;color:var(--text2);">"${r.comments}"</div>` : ''}
+        
+        <button class="btn btn-red btn-sm" onclick="deleteReview(${r.id})" style="margin-top:12px;">Delete This Review</button>
+      </div>`;
+  });
+
+  el.innerHTML = html;
+}
+
+function deleteReview(id) {
+  if (confirm('Delete this fan review?')) {
+    S.reviews = S.reviews.filter(r => r.id !== id);
+    save();
+    renderAdminReviews();
+    toast('Review deleted');
+  }
+}
+
+function clearAllReviews() {
+  if (confirm('Delete ALL fan reviews permanently?')) {
+    S.reviews = [];
+    save();
+    renderAdminReviews();
+    toast('All reviews cleared');
+  }
+}
+
+// ==================== EXPORT ALL DATA (Very Useful) ====================
+function exportAllData() {
+  const dataStr = JSON.stringify(S, null, 2);
+  const blob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `joga-bonito-backup-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('Data exported successfully! Save this file safely.');
+}
+
 
 // ════ RENDER ALL ADMIN ════
 function renderAdminPanels() {
