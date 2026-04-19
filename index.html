@@ -599,8 +599,9 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
 
     <!-- REVIEWS -->
     <div class="admin-panel" id="panel-reviews-admin">
-      <h3 style="font-weight:700;font-size:15px;margin-bottom:14px;">Fan Submissions</h3>
-      <div id="reviewsAdminList"><p style="color:var(--muted)">No reviews yet.</p></div>
+      <h3 style="font-weight:700;font-size:15px;margin-bottom:14px;">Fan Submissions (Reviews)</h3>
+      <button class="btn btn-red btn-sm" onclick="clearAllReviews()" style="margin-bottom:12px;">🗑️ Clear All Reviews</button>
+      <div id="reviewsAdminList"></div>
     </div>
   </div>
 </div>
@@ -985,30 +986,34 @@ function submitReview(){
 }
 
 // ════ ADMIN REVIEWS ════
-function renderAdminReviews(){
-  const el=document.getElementById('reviewsAdminList');
-  if(!S.reviews.length){el.innerHTML='<p style="color:var(--muted)">No reviews yet.</p>';return;}
-  el.innerHTML=S.reviews.map(r=>`
-    <div class="card" style="margin-bottom:11px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;">
-        <strong style="font-size:15px;">👤 ${r.reviewer}</strong>
+function renderAdminReviews() {
+  const el = document.getElementById('reviewsAdminList');
+  if (!S.reviews.length) {
+    el.innerHTML = '<p style="color:var(--muted)">No reviews submitted yet.</p>';
+    return;
+  }
+  el.innerHTML = S.reviews.map(r => `
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <strong>👤 ${r.reviewer}</strong>
         <span style="font-size:11px;color:var(--muted)">${new Date(r.submittedAt).toLocaleString()}</span>
       </div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:5px;">Formation: <span style="color:var(--green);font-weight:700;">${r.formation}</span></div>
-      <div style="font-size:13px;margin-bottom:7px;">Team: ${r.team.filter(Boolean).join(', ')||'—'}</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:12px;">
-        ${r.mvp?`<div style="color:var(--muted)">MVP: <b>${r.mvp}</b></div>`:''}
-        ${r.best_captain?`<div style="color:var(--muted)">Best Captain: <b>${r.best_captain}</b></div>`:''}
-        ${r.emerging?`<div style="color:var(--muted)">Emerging: <b>${r.emerging}</b></div>`:''}
-        ${r.luckiest?`<div style="color:var(--muted)">Luckiest: <b>${r.luckiest}</b></div>`:''}
-        ${r.best_gk?`<div style="color:var(--muted)">Best GK: <b>${r.best_gk}</b></div>`:''}
-        ${r.fav_player?`<div style="color:var(--muted)">Fav Player: <b>${r.fav_player}</b></div>`:''}
-      </div>
-      ${r.comments?`<div style="margin-top:7px;font-size:12px;color:var(--muted);font-style:italic;border-top:1px solid var(--border);padding-top:7px;">"${r.comments}"</div>`:''}
-      <button class="btn btn-red btn-sm" onclick="deleteReview(${r.id})" style="margin-top:9px;">Delete</button>
-    </div>`).join('');
+      <div style="font-size:13px;color:var(--muted);">Formation: <b>${r.formation}</b></div>
+      <div style="margin:8px 0;">Team: ${r.team.filter(Boolean).join(', ') || '—'}</div>
+      ${r.comments ? `<div style="font-style:italic;color:var(--muted);margin-top:8px;">"${r.comments}"</div>` : ''}
+      <button class="btn btn-red btn-sm" onclick="deleteReview(${r.id})" style="margin-top:10px;">Delete Review</button>
+    </div>
+  `).join('');
 }
-function deleteReview(id){S.reviews=S.reviews.filter(r=>r.id!==id);save();renderAdminReviews();}
+
+function clearAllReviews() {
+  if (confirm('Delete ALL fan reviews?')) {
+    S.reviews = [];
+    save();
+    renderAdminReviews();
+    toast('All reviews cleared');
+  }
+}
 
 // ════ WINNER ════
 let cf;
@@ -1226,7 +1231,111 @@ function renderAdminPlayers() {
 }
 
 // ==================== MATCHES WITH EDIT ====================
+// ==================== MATCHES WITH EDIT ====================
 let editingMatchId = null;
+
+function addOrUpdateMatch() {
+  const homeId = +document.getElementById('match_home').value;
+  const awayId = +document.getElementById('match_away').value;
+  const date = document.getElementById('match_date').value;
+  const label = document.getElementById('match_label').value;
+  const homeScore = +document.getElementById('match_home_score').value || 0;
+  const awayScore = +document.getElementById('match_away_score').value || 0;
+  const isFinal = document.getElementById('match_is_final').checked;
+
+  if (!homeId || !awayId) return toast('Select both teams');
+  if (homeId === awayId) return toast('Teams must be different');
+
+  const goals = [];
+  document.querySelectorAll('.goal-scorer').forEach((sel, i) => {
+    const og = document.querySelectorAll('.goal-og')[i]?.checked || false;
+    goals.push({playerId: +sel.value || null, teamId: +sel.dataset.team, og});
+  });
+
+  const cards = [];
+  document.querySelectorAll('.card-player').forEach((sel, i) => {
+    const type = document.querySelectorAll('.card-type')[i]?.value;
+    if (sel.value) cards.push({playerId: +sel.value, type});
+  });
+
+  if (editingMatchId) {
+    const m = S.matches.find(x => x.id === editingMatchId);
+    if (m) {
+      m.homeId = homeId;
+      m.awayId = awayId;
+      m.date = date;
+      m.label = label;
+      m.homeScore = homeScore;
+      m.awayScore = awayScore;
+      m.goals = goals;
+      m.cards = cards;
+      m.isFinal = isFinal;
+    }
+    editingMatchId = null;
+    document.getElementById('matchSubmitBtn').textContent = 'Save Match';
+    toast('Match updated!');
+  } else {
+    S.matches.push({id: Date.now(), homeId, awayId, date, label, homeScore, awayScore, goals, cards, isFinal});
+    toast('Match saved!');
+    if (isFinal) showWinner(homeScore > awayScore ? homeId : awayId);
+  }
+
+  save();
+  renderMatches();
+  renderAdminMatches();
+  renderTable();
+  renderStats();
+
+  // Clear form
+  document.getElementById('match_home').value = '';
+  document.getElementById('match_away').value = '';
+  document.getElementById('match_date').value = '';
+  document.getElementById('match_label').value = '';
+  document.getElementById('match_home_score').value = 0;
+  document.getElementById('match_away_score').value = 0;
+  document.getElementById('goalScorerInputs').innerHTML = '';
+  document.getElementById('cardInputs').innerHTML = '';
+  document.getElementById('match_is_final').checked = false;
+}
+
+function editMatch(id) {
+  const m = S.matches.find(x => x.id === id);
+  if (!m) return;
+
+  document.getElementById('match_home').value = m.homeId;
+  document.getElementById('match_away').value = m.awayId;
+  document.getElementById('match_date').value = m.date || '';
+  document.getElementById('match_label').value = m.label || '';
+  document.getElementById('match_home_score').value = m.homeScore;
+  document.getElementById('match_away_score').value = m.awayScore;
+  document.getElementById('match_is_final').checked = m.isFinal || false;
+
+  editingMatchId = id;
+  document.getElementById('matchSubmitBtn').textContent = 'Update Match';
+
+  // Load players for goal/card selection
+  setTimeout(() => {
+    loadMatchPlayers();
+    updateMatchGoals();
+  }, 100);
+
+  toast('Editing match...');
+}
+
+function renderAdminMatches() {
+  document.getElementById('adminMatchList').innerHTML = S.matches.map(m => {
+    const ht = S.teams.find(t => t.id === m.homeId);
+    const at = S.teams.find(t => t.id === m.awayId);
+    return `<div class="ali">
+      <div class="ali-info">
+        <h4>${ht?.name || '?'} ${m.homeScore} – ${m.awayScore} ${at?.name || '?'}</h4>
+        <p>${m.date ? new Date(m.date).toDateString() : ''} ${m.label ? `· ${m.label}` : ''}</p>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="editMatch(${m.id})" style="margin-right:5px;">Edit</button>
+      <button class="btn btn-red btn-sm" onclick="deleteMatch(${m.id})">Delete</button>
+    </div>`;
+  }).join('') || '<p style="color:var(--muted)">No matches.</p>';
+}
 
 function addOrUpdateMatch() {
   // ... (keep your existing addMatch logic here, but modify to support edit)
@@ -1236,7 +1345,20 @@ function addOrUpdateMatch() {
 
 
 // ════ RENDER ALL ════
-function renderAdminPanels(){populateDropdowns();renderAdminTeams();renderAdminPlayers();renderAdminMatches();renderAdminNews();renderAdminReviews();renderAdminComments();if(S.logo){document.getElementById('logoArea').innerHTML=`<img src="${S.logo}" alt="Logo">`;document.getElementById('logoCurrent').innerHTML=`<img src="${S.logo}" style="width:76px;height:76px;border-radius:50%;object-fit:cover;border:2px solid var(--border);">`; }}
+// ════ RENDER ALL ADMIN PANELS ════
+function renderAdminPanels() {
+  populateDropdowns();
+  renderAdminTeams();
+  renderAdminPlayers();
+  renderAdminMatches();
+  renderAdminNews();
+  renderAdminComments();
+  renderAdminReviews();     // This ensures Reviews list always refreshes
+  if (S.logo) {
+    document.getElementById('logoArea').innerHTML = `<img src="${S.logo}" alt="Logo">`;
+    document.getElementById('logoCurrent').innerHTML = `<img src="${S.logo}" style="width:76px;height:76px;border-radius:50%;object-fit:cover;border:2px solid var(--border);">`;
+  }
+}
 
 // ════ TOAST ════
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
