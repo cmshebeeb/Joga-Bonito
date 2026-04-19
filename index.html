@@ -506,7 +506,7 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
 
     <!-- NEWS -->
     <div class="admin-panel" id="panel-news">
-      <h3 style="font-weight:700;font-size:15px;margin-bottom:14px;">Add News Story</h3>
+      <h3 style="font-weight:700;font-size:15px;margin-bottom:14px;">Add / Edit News Story</h3>
       <div class="form-group"><label>Headline</label><input type="text" id="news_title" placeholder="News headline"></div>
       <div class="form-group"><label>Body Text</label><textarea id="news_body" rows="3" placeholder="Story content..."></textarea></div>
       <div class="form-group"><label>Emoji</label><input type="text" id="news_emoji" placeholder="⚽" style="max-width:72px;"></div>
@@ -518,7 +518,7 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
         </div>
         <img id="newsImgPreview" style="max-height:90px;margin-top:7px;border-radius:8px;display:none;object-fit:cover;">
       </div>
-      <button class="btn btn-green" onclick="addNews()">Add Story</button>
+      <button class="btn btn-green" id="newsSubmitBtn" onclick="addOrUpdateNews()">Add Story</button>
       <div class="mini-divider"></div>
       <div id="newsList"></div>
     </div>
@@ -528,7 +528,7 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
       <h3 style="font-weight:700;font-size:15px;margin-bottom:14px;">Fan Comments (homepage slider)</h3>
       <div class="form-group"><label>Name</label><input type="text" id="comm_name" placeholder="e.g. Arun K"></div>
       <div class="form-group"><label>Comment</label><input type="text" id="comm_text" placeholder="e.g. Best tournament ever!"></div>
-      <button class="btn btn-green" onclick="addComment()">Add Comment</button>
+      <button class="btn btn-green" id="commSubmitBtn" onclick="addOrUpdateComment()">Add Comment</button>
       <div class="mini-divider"></div>
       <div id="adminCommentList"></div>
     </div>
@@ -1020,6 +1020,102 @@ function startConfetti(){
   function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);pcs.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.c;ctx.fill();p.y+=p.d;p.x+=Math.sin(p.a)*1.2;p.a+=.05;if(p.y>canvas.height){p.y=-10;p.x=Math.random()*canvas.width;}});cf=requestAnimationFrame(draw);}draw();
 }
 function stopConfetti(){cancelAnimationFrame(cf);}
+// ==================== NEWS WITH EDIT ====================
+let editingNewsIndex = -1;
+
+function addOrUpdateNews() {
+  const title = document.getElementById('news_title').value.trim();
+  const body = document.getElementById('news_body').value.trim();
+  const emoji = document.getElementById('news_emoji').value.trim() || '📰';
+  if (!title) return toast('Enter a headline');
+
+  if (editingNewsIndex >= 0) {
+    S.news[editingNewsIndex].title = title;
+    S.news[editingNewsIndex].body = body;
+    S.news[editingNewsIndex].emoji = emoji;
+    if (newsImgData) S.news[editingNewsIndex].img = newsImgData;
+    editingNewsIndex = -1;
+    document.getElementById('newsSubmitBtn').textContent = 'Add Story';
+  } else {
+    S.news.push({title, body, emoji, img: newsImgData});
+  }
+  newsImgData = null;
+  document.getElementById('newsImgPreview').style.display='none';
+  ['news_title','news_body','news_emoji'].forEach(id => document.getElementById(id).value = '');
+  save();
+  renderNews();
+  renderAdminNews();
+  toast(editingNewsIndex >= 0 ? 'News updated!' : 'News added!');
+}
+
+function editNews(i) {
+  const n = S.news[i];
+  document.getElementById('news_title').value = n.title;
+  document.getElementById('news_body').value = n.body || '';
+  document.getElementById('news_emoji').value = n.emoji || '';
+  if (n.img) {
+    document.getElementById('newsImgPreview').src = n.img;
+    document.getElementById('newsImgPreview').style.display = 'block';
+  }
+  editingNewsIndex = i;
+  document.getElementById('newsSubmitBtn').textContent = 'Update Story';
+}
+
+function renderAdminNews() {
+  document.getElementById('newsList').innerHTML = S.news.map((n,i) => `
+    <div class="ali">
+      <div style="font-size:24px;">${n.emoji}</div>
+      <div class="ali-info"><h4>${n.title}</h4><p>${(n.body||'').slice(0,60)}...</p></div>
+      <button class="btn btn-outline btn-sm" onclick="editNews(${i})" style="margin-right:4px;">Edit</button>
+      <button class="btn btn-red btn-sm" onclick="deleteNews(${i})">Delete</button>
+    </div>
+  `).join('') || '<p style="color:var(--muted)">No news.</p>';
+}
+
+
+// ==================== COMMENTS WITH EDIT ====================
+let editingCommentId = null;
+
+function addOrUpdateComment() {
+  const name = document.getElementById('comm_name').value.trim();
+  const text = document.getElementById('comm_text').value.trim();
+  if(!name || !text) return toast('Fill both fields');
+
+  if (editingCommentId) {
+    const c = S.comments.find(x => x.id === editingCommentId);
+    if(c) { c.name = name; c.text = text; }
+    editingCommentId = null;
+    document.getElementById('commSubmitBtn').textContent = 'Add Comment';
+  } else {
+    S.comments.push({id: Date.now(), name, text});
+  }
+  document.getElementById('comm_name').value = '';
+  document.getElementById('comm_text').value = '';
+  save();
+  renderCommentSlider();
+  renderAdminComments();
+  toast(editingCommentId ? 'Comment updated!' : 'Comment added!');
+}
+
+function editComment(id) {
+  const c = S.comments.find(x => x.id === id);
+  if(!c) return;
+  document.getElementById('comm_name').value = c.name;
+  document.getElementById('comm_text').value = c.text;
+  editingCommentId = id;
+  document.getElementById('commSubmitBtn').textContent = 'Update Comment';
+}
+
+function renderAdminComments() {
+  document.getElementById('adminCommentList').innerHTML = S.comments.map(c => `
+    <div class="ali">
+      <div class="cc-avatar" style="width:34px;height:34px;">${c.name.charAt(0).toUpperCase()}</div>
+      <div class="ali-info"><h4>${c.name}</h4><p>${c.text}</p></div>
+      <button class="btn btn-outline btn-sm" onclick="editComment(${c.id})" style="margin-right:4px;">Edit</button>
+      <button class="btn btn-red btn-sm" onclick="deleteComment(${c.id})">Delete</button>
+    </div>
+  `).join('') || '<p style="color:var(--muted)">No comments.</p>';
+}
 
 // ════ RENDER ALL ════
 function renderAdminPanels(){populateDropdowns();renderAdminTeams();renderAdminPlayers();renderAdminMatches();renderAdminNews();renderAdminReviews();renderAdminComments();if(S.logo){document.getElementById('logoArea').innerHTML=`<img src="${S.logo}" alt="Logo">`;document.getElementById('logoCurrent').innerHTML=`<img src="${S.logo}" style="width:76px;height:76px;border-radius:50%;object-fit:cover;border:2px solid var(--border);">`; }}
