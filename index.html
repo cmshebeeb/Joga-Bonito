@@ -503,7 +503,10 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
   <div class="inner">
     <div class="sec-header" style="margin-bottom:16px;">
       <div class="sec-title">Admin Panel</div>
-      <button class="btn btn-outline btn-sm" onclick="adminLogout()">Logout</button>
+      <div>
+        <button class="btn btn-outline btn-sm" onclick="loadSampleData()" style="margin-right:8px;">📋 Load Sample Data</button>
+        <button class="btn btn-outline btn-sm" onclick="adminLogout()">Logout</button>
+      </div>
     </div>
     <div class="admin-tabs">
       <div class="atab active" onclick="switchAdmin('logo',event)">🖼 Logo</div>
@@ -1291,13 +1294,44 @@ let selFmVal = null, rankObj = {}, favRankObj = {}, fairRankObj = {};
 function setupReviewForm() {
   document.getElementById('reviewFormCard').style.display = 'block';
   document.getElementById('reviewSuccess').style.display = 'none';
-  const pOpts = '<option value="">— Select —</option>' + S.players.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
-  const tOpts = '<option value="">— Select —</option>' + S.teams.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+
+  // Populate Reviewer Name (from all players)
+  const pOpts = '<option value="">— Select Your Name —</option>' + 
+                S.players.map(p => {
+                  const t = S.teams.find(x => x.id === p.teamId);
+                  return `<option value="${p.name}">${p.name} (${t ? t.name : ''})</option>`;
+                }).join('');
+
+  // Populate Team dropdowns
+  const tOpts = '<option value="">— Select Team —</option>' + 
+                S.teams.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+
   document.getElementById('reviewerName').innerHTML = pOpts;
-  ['q_best_captain', 'q_best_entertain', 'q_luckiest', 'q_unluckiest', 'q_improved'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = tOpts; });
-  ['q_emerging', 'q_fav_player', 'q_best_gk', 'q_skillful', 'q_mvp'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = pOpts; });
-  rankObj = {}; favRankObj = {}; fairRankObj = {};
-  renderRankSel('teamRankings', rankObj); renderRankSel('favTeamRankings', favRankObj); renderRankSel('fairPlayRankings', fairRankObj);
+
+  // Team-based questions
+  ['q_best_captain', 'q_best_entertain', 'q_luckiest', 'q_unluckiest', 'q_improved'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = tOpts;
+  });
+
+  // Player-based questions
+  ['q_emerging', 'q_fav_player', 'q_best_gk', 'q_skillful', 'q_mvp'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = pOpts;
+  });
+
+  // Reset rankings
+  rankObj = {};
+  favRankObj = {};
+  fairRankObj = {};
+  renderRankSel('teamRankings', rankObj);
+  renderRankSel('favTeamRankings', favRankObj);
+  renderRankSel('fairPlayRankings', fairRankObj);
+
+  // Reset formation
+  selFmVal = null;
+  document.querySelectorAll('.formation-opt').forEach(o => o.classList.remove('selected'));
+  document.getElementById('playerSlots').innerHTML = '';
 }
 
 function renderRankSel(cId, obj) {
@@ -1505,6 +1539,34 @@ function exportAllData() {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
   toast('Data exported successfully! Save this file safely.');
+}
+
+function loadSampleData() {
+  if (confirm("Load sample teams and players for testing? This will add demo data.")) {
+    // Sample Teams
+    S.teams = [
+      {id: 1001, name: "FC Kerala", logo: null},
+      {id: 1002, name: "Mallus United", logo: null},
+      {id: 1003, name: "Thrissur FC", logo: null},
+      {id: 1004, name: "Cochin Strikers", logo: null}
+    ];
+
+    // Sample Players
+    S.players = [
+      {id: 2001, name: "Rahul M", teamId: 1001, position: "Attacker", photo: null},
+      {id: 2002, name: "Akhil S", teamId: 1001, position: "Midfielder", photo: null},
+      {id: 2003, name: "Vishnu P", teamId: 1002, position: "Goalkeeper", photo: null},
+      {id: 2004, name: "Arjun K", teamId: 1002, position: "Defender", photo: null},
+      {id: 2005, name: "Sreerag", teamId: 1003, position: "Attacker", photo: null},
+      {id: 2006, name: "Lokesh", teamId: 1004, position: "Midfielder", photo: null}
+    ];
+
+    save();
+    populateDropdowns();
+    renderAdminTeams();
+    renderAdminPlayers();
+    toast("Sample data loaded! Now you can test the Fan Review.");
+  }
 }
 
 
