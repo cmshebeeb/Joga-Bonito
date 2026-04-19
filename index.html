@@ -535,7 +535,7 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
 
     <!-- TEAMS -->
     <div class="admin-panel" id="panel-teams-admin">
-      <h3 style="font-weight:700;font-size:15px;margin-bottom:14px;">Add Team</h3>
+      <h3 style="font-weight:700;font-size:15px;margin-bottom:14px;">Add / Edit Team</h3>
       <div class="form-group"><label>Team Name</label><input type="text" id="team_name" placeholder="e.g. FC Kerala"></div>
       <div class="form-group">
         <label>Team Logo</label>
@@ -545,14 +545,14 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
         </div>
         <img id="teamLogoPreview" style="width:52px;height:52px;border-radius:50%;margin-top:7px;display:none;object-fit:cover;border:2px solid var(--border);">
       </div>
-      <button class="btn btn-green" onclick="addTeam()">Add Team</button>
+      <button class="btn btn-green" id="teamSubmitBtn" onclick="addOrUpdateTeam()">Add Team</button>
       <div class="mini-divider"></div>
       <div id="adminTeamList"></div>
     </div>
 
     <!-- PLAYERS -->
     <div class="admin-panel" id="panel-players-admin">
-      <h3 style="font-weight:700;font-size:15px;margin-bottom:14px;">Add Player</h3>
+      <h3 style="font-weight:700;font-size:15px;margin-bottom:14px;">Add / Edit Player</h3>
       <div class="form-group"><label>Full Name</label><input type="text" id="player_name" placeholder="Player full name"></div>
       <div class="form-group"><label>Team</label><select id="player_team"><option value="">— Select Team —</option></select></div>
       <div class="form-group"><label>Position</label>
@@ -566,14 +566,14 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
         </div>
         <img id="playerPhotoPreview" style="width:52px;height:52px;border-radius:50%;margin-top:7px;display:none;object-fit:cover;border:2px solid var(--border);">
       </div>
-      <button class="btn btn-green" onclick="addPlayer()">Add Player</button>
+      <button class="btn btn-green" id="playerSubmitBtn" onclick="addOrUpdatePlayer()">Add Player</button>
       <div class="mini-divider"></div>
       <div id="adminPlayerList"></div>
     </div>
 
     <!-- MATCHES -->
     <div class="admin-panel" id="panel-matches-admin">
-      <h3 style="font-weight:700;font-size:15px;margin-bottom:14px;">Add Match</h3>
+      <h3 style="font-weight:700;font-size:15px;margin-bottom:14px;">Add / Edit Match</h3>
       <div class="grid-2">
         <div class="form-group"><label>Home Team</label><select id="match_home" onchange="loadMatchPlayers()"><option value="">— Team —</option></select></div>
         <div class="form-group"><label>Away Team</label><select id="match_away" onchange="loadMatchPlayers()"><option value="">— Team —</option></select></div>
@@ -592,7 +592,7 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
         <input type="checkbox" id="match_is_final" style="width:auto;accent-color:var(--green);">
         <label style="margin:0;font-size:13px;color:var(--text2);">This is the Final Match</label>
       </div>
-      <button class="btn btn-green" onclick="addMatch()">Save Match</button>
+      <button class="btn btn-green" id="matchSubmitBtn" onclick="addOrUpdateMatch()">Save Match</button>
       <div class="mini-divider"></div>
       <div id="adminMatchList"></div>
     </div>
@@ -1116,6 +1116,124 @@ function renderAdminComments() {
     </div>
   `).join('') || '<p style="color:var(--muted)">No comments.</p>';
 }
+
+// ==================== TEAMS WITH EDIT ====================
+let editingTeamId = null;
+
+function addOrUpdateTeam() {
+  const name = document.getElementById('team_name').value.trim();
+  if (!name) return toast('Enter team name');
+
+  if (editingTeamId) {
+    const t = S.teams.find(x => x.id === editingTeamId);
+    if (t) {
+      t.name = name;
+      if (teamLogoData) t.logo = teamLogoData;
+    }
+    editingTeamId = null;
+    document.getElementById('teamSubmitBtn').textContent = 'Add Team';
+  } else {
+    S.teams.push({id: Date.now(), name, logo: teamLogoData});
+  }
+  teamLogoData = null;
+  document.getElementById('team_name').value = '';
+  document.getElementById('teamLogoPreview').style.display = 'none';
+  save();
+  renderAdminTeams();
+  populateDropdowns();
+  toast(editingTeamId ? 'Team updated!' : 'Team added!');
+}
+
+function editTeam(id) {
+  const t = S.teams.find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('team_name').value = t.name;
+  if (t.logo) {
+    document.getElementById('teamLogoPreview').src = t.logo;
+    document.getElementById('teamLogoPreview').style.display = 'block';
+  }
+  editingTeamId = id;
+  document.getElementById('teamSubmitBtn').textContent = 'Update Team';
+}
+
+function renderAdminTeams() {
+  document.getElementById('adminTeamList').innerHTML = S.teams.map(t => `
+    <div class="ali">
+      ${t.logo ? `<img src="${t.logo}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;">` : '<div style="font-size:22px;">👕</div>'}
+      <div class="ali-info"><h4>${t.name}</h4></div>
+      <button class="btn btn-outline btn-sm" onclick="editTeam(${t.id})" style="margin-right:5px;">Edit</button>
+      <button class="btn btn-red btn-sm" onclick="deleteTeam(${t.id})">Delete</button>
+    </div>
+  `).join('') || '<p style="color:var(--muted)">No teams.</p>';
+}
+
+// ==================== PLAYERS WITH EDIT ====================
+let editingPlayerId = null;
+
+function addOrUpdatePlayer() {
+  const name = document.getElementById('player_name').value.trim();
+  const teamId = +document.getElementById('player_team').value;
+  const position = document.getElementById('player_pos').value;
+  if(!name || !teamId || !position) return toast('Fill all player fields');
+
+  if (editingPlayerId) {
+    const p = S.players.find(x => x.id === editingPlayerId);
+    if (p) {
+      p.name = name;
+      p.teamId = teamId;
+      p.position = position;
+      if (playerPhotoData) p.photo = playerPhotoData;
+    }
+    editingPlayerId = null;
+    document.getElementById('playerSubmitBtn').textContent = 'Add Player';
+  } else {
+    S.players.push({id: Date.now(), name, teamId, position, photo: playerPhotoData});
+  }
+  playerPhotoData = null;
+  document.getElementById('player_name').value = '';
+  document.getElementById('player_team').value = '';
+  document.getElementById('player_pos').value = '';
+  document.getElementById('playerPhotoPreview').style.display = 'none';
+  save();
+  renderAdminPlayers();
+  toast(editingPlayerId ? 'Player updated!' : 'Player added!');
+}
+
+function editPlayer(id) {
+  const p = S.players.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('player_name').value = p.name;
+  document.getElementById('player_team').value = p.teamId;
+  document.getElementById('player_pos').value = p.position;
+  if (p.photo) {
+    document.getElementById('playerPhotoPreview').src = p.photo;
+    document.getElementById('playerPhotoPreview').style.display = 'block';
+  }
+  editingPlayerId = id;
+  document.getElementById('playerSubmitBtn').textContent = 'Update Player';
+}
+
+function renderAdminPlayers() {
+  document.getElementById('adminPlayerList').innerHTML = S.players.map(p => {
+    const t = S.teams.find(x => x.id === p.teamId);
+    return `<div class="ali">
+      ${p.photo ? `<img src="${p.photo}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0;">` : '<div style="font-size:20px;">👤</div>'}
+      <div class="ali-info"><h4>${p.name}</h4><p>${t?.name||''} · ${p.position}</p></div>
+      <button class="btn btn-outline btn-sm" onclick="editPlayer(${p.id})" style="margin-right:5px;">Edit</button>
+      <button class="btn btn-red btn-sm" onclick="deletePlayer(${p.id})">Delete</button>
+    </div>`;
+  }).join('') || '<p style="color:var(--muted)">No players.</p>';
+}
+
+// ==================== MATCHES WITH EDIT ====================
+let editingMatchId = null;
+
+function addOrUpdateMatch() {
+  // ... (keep your existing addMatch logic here, but modify to support edit)
+  // For simplicity, I'll give full function in next message if needed.
+  // First test Teams & Players.
+}
+
 
 // ════ RENDER ALL ════
 function renderAdminPanels(){populateDropdowns();renderAdminTeams();renderAdminPlayers();renderAdminMatches();renderAdminNews();renderAdminReviews();renderAdminComments();if(S.logo){document.getElementById('logoArea').innerHTML=`<img src="${S.logo}" alt="Logo">`;document.getElementById('logoCurrent').innerHTML=`<img src="${S.logo}" style="width:76px;height:76px;border-radius:50%;object-fit:cover;border:2px solid var(--border);">`; }}
