@@ -218,6 +218,11 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg);}
 .pt-pts{font-weight:800;color:var(--green);font-size:15px;}.pt-w{color:var(--green);font-weight:700;}.pt-l{color:var(--red);font-weight:700;}
 .pos-1{color:var(--gold);font-weight:800;}.pos-2{color:var(--text2);font-weight:700;}.pos-3{color:#b45309;font-weight:700;}
 
+/* REVIEW EDIT MODAL */
+.review-edit-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:600;align-items:center;justify-content:center;padding:20px;}
+.review-edit-modal.show{display:flex;}
+.review-edit-box{background:#fff;border-radius:16px;padding:26px;max-width:500px;width:100%;max-height:85vh;overflow-y:auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.2);}
+
 footer{text-align:center;padding:18px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);background:#fff;margin-top:40px;}
 footer a{color:var(--green);text-decoration:none;font-weight:700;}
 
@@ -298,6 +303,23 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('teamModal')">✕</button>
     <div id="teamModalContent"></div>
+  </div>
+</div>
+
+<!-- REVIEW EDIT MODAL -->
+<div class="review-edit-modal" id="reviewEditModal">
+  <div class="review-edit-box">
+    <h3 style="font-family:'Bebas Neue';font-size:22px;color:var(--green);letter-spacing:1px;margin-bottom:16px;">Edit Review</h3>
+    <div class="form-group"><label>Reviewer Name</label><input type="text" id="editReviewerName" placeholder="Name"></div>
+    <div class="form-group"><label>Formation</label><input type="text" id="editReviewerFormation" placeholder="e.g. 2-2-1"></div>
+    <div class="form-group"><label>Tournament MVP</label><input type="text" id="editReviewerMvp" placeholder="Player name"></div>
+    <div class="form-group"><label>Fan Favourite Player</label><input type="text" id="editReviewerFavPlayer" placeholder="Player name"></div>
+    <div class="form-group"><label>Best Captain's Team</label><input type="text" id="editReviewerBestCaptain" placeholder="Team name"></div>
+    <div class="form-group"><label>Comments</label><textarea id="editReviewerComments" rows="3" placeholder="Comments..."></textarea></div>
+    <div style="display:flex;gap:9px;margin-top:4px;">
+      <button class="btn btn-green" style="flex:1;" onclick="saveReviewEdit()">Save Changes</button>
+      <button class="btn btn-outline" style="flex:1;" onclick="closeReviewEditModal()">Cancel</button>
+    </div>
   </div>
 </div>
 
@@ -484,13 +506,13 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
       <button class="btn btn-outline btn-sm" onclick="adminLogout()">Logout</button>
     </div>
     <div class="admin-tabs">
-      <div class="atab active" onclick="switchAdmin('logo')">🖼 Logo</div>
-      <div class="atab" onclick="switchAdmin('news')">📢 News</div>
-      <div class="atab" onclick="switchAdmin('comments-admin')">💬 Comments</div>
-      <div class="atab" onclick="switchAdmin('teams-admin')">👕 Teams</div>
-      <div class="atab" onclick="switchAdmin('players-admin')">👤 Players</div>
-      <div class="atab" onclick="switchAdmin('matches-admin')">⚽ Matches</div>
-      <div class="atab" onclick="switchAdmin('reviews-admin')">📝 Reviews</div>
+      <div class="atab active" onclick="switchAdmin('logo',event)">🖼 Logo</div>
+      <div class="atab" onclick="switchAdmin('news',event)">📢 News</div>
+      <div class="atab" onclick="switchAdmin('comments-admin',event)">💬 Comments</div>
+      <div class="atab" onclick="switchAdmin('teams-admin',event)">👕 Teams</div>
+      <div class="atab" onclick="switchAdmin('players-admin',event)">👤 Players</div>
+      <div class="atab" onclick="switchAdmin('matches-admin',event)">⚽ Matches</div>
+      <div class="atab" onclick="switchAdmin('reviews-admin',event)">📝 Reviews</div>
     </div>
 
     <!-- LOGO -->
@@ -573,10 +595,10 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
 
     <!-- MATCHES -->
     <div class="admin-panel" id="panel-matches-admin">
-      <h3 style="font-weight:700;font-size:15px;margin-bottom:14px;">Add / Edit Match</h3>
+      <h3 style="font-weight:700;font-size:15px;margin-bottom:14px;" id="matchFormTitle">Add Match</h3>
       <div class="grid-2">
-        <div class="form-group"><label>Home Team</label><select id="match_home" onchange="loadMatchPlayers()"><option value="">— Team —</option></select></div>
-        <div class="form-group"><label>Away Team</label><select id="match_away" onchange="loadMatchPlayers()"><option value="">— Team —</option></select></div>
+        <div class="form-group"><label>Home Team</label><select id="match_home" onchange="updateMatchGoals()"><option value="">— Team —</option></select></div>
+        <div class="form-group"><label>Away Team</label><select id="match_away" onchange="updateMatchGoals()"><option value="">— Team —</option></select></div>
       </div>
       <div class="grid-2">
         <div class="form-group"><label>Date</label><input type="date" id="match_date"></div>
@@ -592,7 +614,10 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
         <input type="checkbox" id="match_is_final" style="width:auto;accent-color:var(--green);">
         <label style="margin:0;font-size:13px;color:var(--text2);">This is the Final Match</label>
       </div>
-      <button class="btn btn-green" id="matchSubmitBtn" onclick="addOrUpdateMatch()">Save Match</button>
+      <div style="display:flex;gap:9px;">
+        <button class="btn btn-green" id="matchSubmitBtn" onclick="addOrUpdateMatch()">Save Match</button>
+        <button class="btn btn-outline" id="matchCancelBtn" onclick="resetMatchForm()" style="display:none;">Cancel Edit</button>
+      </div>
       <div class="mini-divider"></div>
       <div id="adminMatchList"></div>
     </div>
@@ -626,414 +651,89 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
 
 <script>
 // ════ STATE ════
-let S=JSON.parse(localStorage.getItem('jb3')||'null')||{teams:[],players:[],matches:[],news:[{title:'Tournament Kicks Off!',body:'Joga Bonito Season 1 is officially underway at NIT Jalandhar!',emoji:'🏆',img:null}],reviews:[],comments:[],logo:null,adminLogged:false};
-const save=()=>localStorage.setItem('jb3',JSON.stringify(S));
+let S = JSON.parse(localStorage.getItem('jb3') || 'null') || {
+  teams: [], players: [], matches: [], news: [{title:'Tournament Kicks Off!', body:'Joga Bonito Season 1 is officially underway at NIT Jalandhar!', emoji:'🏆', img:null}],
+  reviews: [], comments: [], logo: null, adminLogged: false
+};
+const save = () => localStorage.setItem('jb3', JSON.stringify(S));
 
 // ════ NAV ════
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  if(id==='admin-login'&&S.adminLogged){showPage('admin');return;}
-  const pg=document.getElementById('page-'+id);if(pg){pg.classList.add('active');window.scrollTo(0,0);}
-  if(id==='matches')renderMatches();if(id==='table')renderTable();if(id==='stats')renderStats();
-  if(id==='teams')renderTeams();if(id==='review')setupReviewForm();if(id==='admin')renderAdminPanels();
-  document.querySelectorAll('.nav-btn').forEach(b=>{if(b.textContent.toLowerCase()===id)b.classList.add('active');});
-  if(id==='home')document.querySelectorAll('.nav-btn')[0]?.classList.add('active');
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if (id === 'admin-login' && S.adminLogged) { showPage('admin'); return; }
+  const pg = document.getElementById('page-' + id);
+  if (pg) { pg.classList.add('active'); window.scrollTo(0, 0); }
+  if (id === 'matches') renderMatches();
+  if (id === 'table') renderTable();
+  if (id === 'stats') renderStats();
+  if (id === 'teams') renderTeams();
+  if (id === 'review') setupReviewForm();
+  if (id === 'admin') renderAdminPanels();
+  document.querySelectorAll('.nav-btn').forEach(b => { if (b.textContent.toLowerCase() === id) b.classList.add('active'); });
+  if (id === 'home') document.querySelectorAll('.nav-btn')[0]?.classList.add('active');
 }
 
 // ════ POPUP ════
-function openLivePopup(){document.getElementById('liveOverlay').classList.add('show');}
-function closeLivePopup(e){if(e.target===document.getElementById('liveOverlay'))document.getElementById('liveOverlay').classList.remove('show');}
-function openReview(){document.getElementById('liveOverlay').classList.remove('show');showPage('review');}
-function openS2(){document.getElementById('liveOverlay').classList.remove('show');document.getElementById('s2Overlay').classList.add('show');}
-function closeS2(e){if(!e||e.target===document.getElementById('s2Overlay'))document.getElementById('s2Overlay').classList.remove('show');}
+function openLivePopup() { document.getElementById('liveOverlay').classList.add('show'); }
+function closeLivePopup(e) { if (e.target === document.getElementById('liveOverlay')) document.getElementById('liveOverlay').classList.remove('show'); }
+function openReview() { document.getElementById('liveOverlay').classList.remove('show'); showPage('review'); }
+function openS2() { document.getElementById('liveOverlay').classList.remove('show'); document.getElementById('s2Overlay').classList.add('show'); }
+function closeS2(e) { if (!e || e.target === document.getElementById('s2Overlay')) document.getElementById('s2Overlay').classList.remove('show'); }
 
 // ════ MODAL ════
-function closeModal(id,e){if(!e||e.target===document.getElementById(id))document.getElementById(id).classList.remove('show');}
+function closeModal(id, e) { if (!e || e.target === document.getElementById(id)) document.getElementById(id).classList.remove('show'); }
 
 // ════ ADMIN ════
-function adminLogin(){
-  const u=document.getElementById('adminUser').value.trim(),p=document.getElementById('adminPass').value;
-  if(u==='admin'&&p==='19@Admin'){S.adminLogged=true;save();document.getElementById('page-admin-login').classList.remove('active');document.getElementById('page-admin').classList.add('active');renderAdminPanels();}
-  else document.getElementById('loginErr').style.display='block';
+function adminLogin() {
+  const u = document.getElementById('adminUser').value.trim(), p = document.getElementById('adminPass').value;
+  if (u === 'admin' && p === '19@Admin') {
+    S.adminLogged = true; save();
+    document.getElementById('page-admin-login').classList.remove('active');
+    document.getElementById('page-admin').classList.add('active');
+    renderAdminPanels();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+  }
 }
-function adminLogout(){S.adminLogged=false;save();showPage('home');}
-function switchAdmin(tab){
-  document.querySelectorAll('.admin-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.atab').forEach(t=>t.classList.remove('active'));
-  const p=document.getElementById('panel-'+tab);if(p)p.classList.add('active');
-  event.target.classList.add('active');
+function adminLogout() { S.adminLogged = false; save(); showPage('home'); }
+function switchAdmin(tab, event) {
+  document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.atab').forEach(t => t.classList.remove('active'));
+  const p = document.getElementById('panel-' + tab);
+  if (p) p.classList.add('active');
+  if (event && event.target) event.target.classList.add('active');
 }
 
 // ════ LOGO ════
-function uploadLogo(inp){
-  if(!inp.files[0])return;const r=new FileReader();
-  r.onload=e=>{S.logo=e.target.result;save();document.getElementById('logoArea').innerHTML=`<img src="${e.target.result}" alt="Logo">`;document.getElementById('logoCurrent').innerHTML=`<img src="${e.target.result}" style="width:76px;height:76px;border-radius:50%;object-fit:cover;border:2px solid var(--border);">`;toast('Logo updated!');};
+function uploadLogo(inp) {
+  if (!inp.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => {
+    S.logo = e.target.result; save();
+    document.getElementById('logoArea').innerHTML = `<img src="${e.target.result}" alt="Logo">`;
+    document.getElementById('logoCurrent').innerHTML = `<img src="${e.target.result}" style="width:76px;height:76px;border-radius:50%;object-fit:cover;border:2px solid var(--border);">`;
+    toast('Logo updated!');
+  };
   r.readAsDataURL(inp.files[0]);
 }
 
 // ════ NEWS ════
-let newsImgData=null;
-function previewNewsImg(inp){if(!inp.files[0])return;const r=new FileReader();r.onload=e=>{newsImgData=e.target.result;const img=document.getElementById('newsImgPreview');img.src=e.target.result;img.style.display='block';};r.readAsDataURL(inp.files[0]);}
-function addNews(){
-  const title=document.getElementById('news_title').value.trim(),body=document.getElementById('news_body').value.trim(),emoji=document.getElementById('news_emoji').value.trim()||'📰';
-  if(!title)return toast('Enter a headline');
-  S.news.push({title,body,emoji,img:newsImgData});newsImgData=null;
-  ['news_title','news_body','news_emoji'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('newsImgPreview').style.display='none';
-  save();renderNews();renderAdminNews();toast('News story added!');
-}
-function deleteNews(i){S.news.splice(i,1);save();renderNews();renderAdminNews();}
-function renderNews(){
-  document.getElementById('storiesContainer').innerHTML=S.news.map((n,i)=>`
-    <div class="story-card" onclick="openStory(${i})">
-      ${n.img?`<div class="story-bg"><img src="${n.img}"></div>`:`<div class="story-bg">${n.emoji}</div>`}
-      <div class="story-overlay"><h3>${n.title}</h3></div>
-    </div>`).join('');
-}
-function renderAdminNews(){
-  document.getElementById('newsList').innerHTML=S.news.map((n,i)=>`
-    <div class="ali"><div style="font-size:24px;">${n.emoji}</div>
-    <div class="ali-info"><h4>${n.title}</h4><p>${n.body?.slice(0,55)||''}</p></div>
-    <button class="btn btn-red btn-sm" onclick="deleteNews(${i})">Delete</button></div>`).join('')||'<p style="color:var(--muted)">No news.</p>';
-}
-
-// ════ STORY MODAL ════
-function openStory(idx){
-  const n=S.news[idx];if(!n)return;
-  document.getElementById('storyFullTitle').textContent=n.title;
-  document.getElementById('storyFullBody').textContent=n.body;
-  const img=document.getElementById('storyFullImg');img.innerHTML=n.img?`<img src="${n.img}">`:`${n.emoji}`;
-  document.getElementById('storyProgress').innerHTML=S.news.map((_,i)=>`<div class="story-seg ${i<idx?'done':i===idx?'act':''}"></div>`).join('');
-  document.getElementById('story-modal').classList.add('show');
-}
-
-// ════ COMMENTS ════
-function addComment(){
-  const name=document.getElementById('comm_name').value.trim(),text=document.getElementById('comm_text').value.trim();
-  if(!name||!text)return toast('Fill both fields');
-  S.comments.push({id:Date.now(),name,text});
-  document.getElementById('comm_name').value='';document.getElementById('comm_text').value='';
-  save();renderCommentSlider();renderAdminComments();toast('Comment added!');
-}
-function deleteComment(id){S.comments=S.comments.filter(c=>c.id!==id);save();renderCommentSlider();renderAdminComments();}
-function renderCommentSlider(){
-  const sec=document.getElementById('commentSection');
-  if(!S.comments.length){sec.style.display='none';return;}
-  sec.style.display='block';
-  const all=[...S.comments,...S.comments,...S.comments,...S.comments];
-  document.getElementById('sliderTrack').innerHTML=all.map(c=>`
-    <div class="comment-chip">
-      <div class="cc-avatar">${c.name.charAt(0).toUpperCase()}</div>
-      <div><div class="cc-name">${c.name}</div><div class="cc-text">${c.text}</div></div>
-    </div>`).join('');
-}
-function renderAdminComments(){
-  document.getElementById('adminCommentList').innerHTML=S.comments.map(c=>`
-    <div class="ali">
-      <div class="cc-avatar" style="width:34px;height:34px;border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--green);flex-shrink:0;">${c.name.charAt(0).toUpperCase()}</div>
-      <div class="ali-info"><h4>${c.name}</h4><p>${c.text}</p></div>
-      <button class="btn btn-red btn-sm" onclick="deleteComment(${c.id})">Delete</button>
-    </div>`).join('')||'<p style="color:var(--muted)">No comments.</p>';
-}
-
-// ════ TEAMS ════
-let teamLogoData=null;
-function previewTeamLogo(inp){if(!inp.files[0])return;const r=new FileReader();r.onload=e=>{teamLogoData=e.target.result;const img=document.getElementById('teamLogoPreview');img.src=e.target.result;img.style.display='block';};r.readAsDataURL(inp.files[0]);}
-function addTeam(){
-  const name=document.getElementById('team_name').value.trim();if(!name)return toast('Enter team name');
-  S.teams.push({id:Date.now(),name,logo:teamLogoData});teamLogoData=null;
-  document.getElementById('team_name').value='';document.getElementById('teamLogoPreview').style.display='none';
-  save();renderAdminTeams();populateDropdowns();toast('Team added!');
-}
-function deleteTeam(id){S.teams=S.teams.filter(t=>t.id!==id);S.players=S.players.filter(p=>p.teamId!==id);save();renderAdminTeams();populateDropdowns();}
-function renderTeams(){
-  const g=document.getElementById('teamsGrid');
-  if(!S.teams.length){g.innerHTML='<p style="color:var(--muted)">No teams added yet.</p>';return;}
-  g.innerHTML=S.teams.map(t=>`
-    <div class="team-card" onclick="openTeamModal(${t.id})">
-      ${t.logo?`<img class="tc-logo" src="${t.logo}" alt="${t.name}">`:'<div style="width:60px;height:60px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 9px;">👕</div>'}
-      <h3>${t.name}</h3><p>${S.players.filter(p=>p.teamId===t.id).length} players</p>
-    </div>`).join('');
-}
-function openTeamModal(id){
-  const t=S.teams.find(x=>x.id===id);if(!t)return;
-  const players=S.players.filter(p=>p.teamId===id);const st=getTeamStats(id);
-  document.getElementById('teamModalContent').innerHTML=`
-    <div style="text-align:center;margin-bottom:18px;">
-      ${t.logo?`<img src="${t.logo}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--border);margin-bottom:9px;">`:'<div style="font-size:44px;margin-bottom:9px;">👕</div>'}
-      <h2 style="font-size:20px;font-weight:800;">${t.name}</h2>
-      <div style="display:flex;gap:16px;justify-content:center;margin-top:11px;">
-        ${[['Played',st.played],['Won',st.won],['Goals',st.gf],['Pts',st.pts]].map(([l,v])=>`<div style="text-align:center;"><div style="font-family:'Bebas Neue';font-size:24px;color:var(--green)">${v}</div><div style="font-size:11px;color:var(--muted)">${l}</div></div>`).join('')}
-      </div>
-    </div>
-    ${players.length?players.map(p=>`
-      <div class="player-row">
-        ${p.photo?`<img class="player-photo-sm" src="${p.photo}">`:'<div style="width:32px;height:32px;background:var(--bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;">👤</div>'}
-        <div><div style="font-weight:700;font-size:14px;">${p.name}</div><div style="font-size:11px;color:var(--muted)">${p.position}</div></div>
-      </div>`).join(''):'<p style="color:var(--muted);font-size:13px;">No players added.</p>'}`;
-  document.getElementById('teamModal').classList.add('show');
-}
-function renderAdminTeams(){
-  document.getElementById('adminTeamList').innerHTML=S.teams.map(t=>`
-    <div class="ali">
-      ${t.logo?`<img src="${t.logo}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;">`:'<div style="font-size:22px;">👕</div>'}
-      <div class="ali-info"><h4>${t.name}</h4></div>
-      <button class="btn btn-red btn-sm" onclick="deleteTeam(${t.id})">Delete</button>
-    </div>`).join('')||'<p style="color:var(--muted)">No teams.</p>';
-}
-
-// ════ PLAYERS ════
-let playerPhotoData=null;
-function previewPlayerPhoto(inp){if(!inp.files[0])return;const r=new FileReader();r.onload=e=>{playerPhotoData=e.target.result;const img=document.getElementById('playerPhotoPreview');img.src=e.target.result;img.style.display='block';};r.readAsDataURL(inp.files[0]);}
-function addPlayer(){
-  const name=document.getElementById('player_name').value.trim(),teamId=+document.getElementById('player_team').value,position=document.getElementById('player_pos').value;
-  if(!name||!teamId||!position)return toast('Fill all player fields');
-  S.players.push({id:Date.now(),name,teamId,position,photo:playerPhotoData});playerPhotoData=null;
-  ['player_name','player_pos'].forEach(id=>document.getElementById(id).value='');document.getElementById('player_team').value='';
-  document.getElementById('playerPhotoPreview').style.display='none';
-  save();renderAdminPlayers();toast('Player added!');
-}
-function deletePlayer(id){S.players=S.players.filter(p=>p.id!==id);save();renderAdminPlayers();}
-function renderAdminPlayers(){
-  document.getElementById('adminPlayerList').innerHTML=S.players.map(p=>{
-    const t=S.teams.find(x=>x.id===p.teamId);
-    return `<div class="ali">
-      ${p.photo?`<img src="${p.photo}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0;">`:'<div style="font-size:20px;">👤</div>'}
-      <div class="ali-info"><h4>${p.name}</h4><p>${t?.name||''} · ${p.position}</p></div>
-      <button class="btn btn-red btn-sm" onclick="deletePlayer(${p.id})">Delete</button></div>`;
-  }).join('')||'<p style="color:var(--muted)">No players.</p>';
-}
-
-// ════ DROPDOWNS ════
-function populateDropdowns(){
-  const opts=S.teams.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
-  ['player_team','match_home','match_away'].forEach(id=>{
-    const el=document.getElementById(id);if(!el)return;
-    el.innerHTML=`<option value="">${id==='player_team'?'— Select Team —':'— Team —'}</option>`+opts;
-  });
-}
-
-// ════ MATCHES ════
-function loadMatchPlayers(){updateMatchGoals();}
-function updateMatchGoals(){
-  const homeId=+document.getElementById('match_home').value,awayId=+document.getElementById('match_away').value;
-  const hs=+document.getElementById('match_home_score').value||0,as=+document.getElementById('match_away_score').value||0;
-  const ht=S.teams.find(t=>t.id===homeId),at=S.teams.find(t=>t.id===awayId);
-  if(ht)document.getElementById('homeScoreLbl').textContent=ht.name+' Goals';
-  if(at)document.getElementById('awayScoreLbl').textContent=at.name+' Goals';
-  const allP=S.players.filter(p=>p.teamId===homeId||p.teamId===awayId);
-  const pOpts=allP.map(p=>`<option value="${p.id}">${p.name} (${S.teams.find(t=>t.id===p.teamId)?.name||''})</option>`).join('');
-  let html='';
-  if(hs>0||as>0){
-    html+=`<div style="font-weight:700;font-size:11px;color:var(--gold);margin-bottom:7px;text-transform:uppercase;letter-spacing:.4px;">Goal Scorers</div>`;
-    for(let i=0;i<hs;i++)html+=gRow(ht?.name||'Home',homeId,pOpts);
-    for(let i=0;i<as;i++)html+=gRow(at?.name||'Away',awayId,pOpts);
-  }
-  document.getElementById('goalScorerInputs').innerHTML=html;
-  document.getElementById('cardInputs').innerHTML=`
-    <div style="font-weight:700;font-size:11px;color:var(--gold);margin-bottom:7px;text-transform:uppercase;letter-spacing:.4px;">Cards</div>
-    <div id="cardList"></div>
-    <button type="button" class="btn btn-outline btn-sm" onclick="addCardRow('${pOpts.replace(/'/g,"\\'").replace(/\n/g,'')}')">+ Add Card</button>`;
-}
-function gRow(teamName,teamId,pOpts){
-  return `<div style="display:flex;gap:7px;margin-bottom:5px;align-items:center;">
-    <span style="font-size:11px;color:var(--green);min-width:56px;font-weight:600;">${teamName}</span>
-    <select class="goal-scorer" data-team="${teamId}" style="flex:1;"><option value="">— Scorer —</option>${pOpts}</select>
-    <label style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:3px;white-space:nowrap;"><input type="checkbox" class="goal-og" style="width:auto;"> OG</label>
-  </div>`;
-}
-function addCardRow(opts){
-  const div=document.createElement('div');div.style.cssText='display:flex;gap:7px;margin-bottom:5px;align-items:center;';
-  div.innerHTML=`<select class="card-player" style="flex:1;"><option value="">— Player —</option>${opts}</select>
-    <select class="card-type" style="max-width:120px;"><option value="yellow">🟨 Yellow</option><option value="red">🟥 Red</option><option value="second-yellow">🟨🟥 2nd Yellow</option></select>
-    <button type="button" onclick="this.parentNode.remove()" class="btn btn-red btn-sm">✕</button>`;
-  document.getElementById('cardList').appendChild(div);
-}
-function addMatch(){
-  const homeId=+document.getElementById('match_home').value,awayId=+document.getElementById('match_away').value;
-  const date=document.getElementById('match_date').value,label=document.getElementById('match_label').value;
-  const homeScore=+document.getElementById('match_home_score').value||0,awayScore=+document.getElementById('match_away_score').value||0;
-  const isFinal=document.getElementById('match_is_final').checked;
-  if(!homeId||!awayId)return toast('Select both teams');if(homeId===awayId)return toast('Teams must be different');
-  const goals=[];document.querySelectorAll('.goal-scorer').forEach((sel,i)=>{const og=document.querySelectorAll('.goal-og')[i]?.checked||false;goals.push({playerId:+sel.value||null,teamId:+sel.dataset.team,og});});
-  const cards=[];document.querySelectorAll('.card-player').forEach((sel,i)=>{const type=document.querySelectorAll('.card-type')[i]?.value;if(sel.value)cards.push({playerId:+sel.value,type});});
-  S.matches.push({id:Date.now(),homeId,awayId,date,label,homeScore,awayScore,goals,cards,isFinal});save();
-  if(isFinal)showWinner(homeScore>awayScore?homeId:awayId);
-  renderMatches();renderAdminMatches();renderTable();renderStats();
-  document.getElementById('match_home_score').value=0;document.getElementById('match_away_score').value=0;
-  document.getElementById('match_home').value='';document.getElementById('match_away').value='';
-  document.getElementById('goalScorerInputs').innerHTML='';document.getElementById('cardInputs').innerHTML='';
-  document.getElementById('match_is_final').checked=false;toast('Match saved!');
-}
-function deleteMatch(id){S.matches=S.matches.filter(m=>m.id!==id);save();renderAdminMatches();renderMatches();renderTable();renderStats();}
-function renderMatches(){
-  const list=document.getElementById('matchesList');
-  if(!S.matches.length){list.innerHTML='<p style="color:var(--muted)">No matches yet.</p>';return;}
-  list.innerHTML=[...S.matches].reverse().map(m=>{
-    const ht=S.teams.find(t=>t.id===m.homeId),at=S.teams.find(t=>t.id===m.awayId);
-    const finalBadge=m.isFinal?'<span class="badge badge-gold" style="margin-left:6px;">🏆 Final</span>':'';
-    const gBadges=m.goals.map(g=>{const p=S.players.find(x=>x.id===g.playerId);return `<span class="goal-badge">⚽ ${p?p.name:g.og?'OG':'?'}${g.og?' (OG)':''}</span>`;}).join('');
-    const cBadges=m.cards.map(c=>{const p=S.players.find(x=>x.id===c.playerId);const icon=c.type==='red'||c.type==='second-yellow'?'<span class="card-icon card-r"></span>':'<span class="card-icon card-y"></span>';return `<span class="goal-badge">${icon}${p?.name||'?'}</span>`;}).join('');
-    return `<div class="match-card">
-      <div style="font-size:11px;color:var(--muted);margin-bottom:9px;">${m.date?new Date(m.date).toDateString():''} ${m.label?`· ${m.label}`:''} ${finalBadge}</div>
-      <div class="match-teams">
-        <div class="match-team">${ht?.logo?`<img class="player-photo-sm" src="${ht.logo}" style="width:40px;height:40px;">`:'<div style="font-size:26px;">👕</div>'}<div class="match-team-name">${ht?.name||'Team'}</div></div>
-        <div class="match-score">${m.homeScore} – ${m.awayScore}</div>
-        <div class="match-team">${at?.logo?`<img class="player-photo-sm" src="${at.logo}" style="width:40px;height:40px;">`:'<div style="font-size:26px;">👕</div>'}<div class="match-team-name">${at?.name||'Team'}</div></div>
-      </div>
-      ${gBadges||cBadges?`<div class="goal-list">${gBadges}${cBadges}</div>`:''}
-    </div>`;
-  }).join('');
-}
-function renderAdminMatches(){
-  document.getElementById('adminMatchList').innerHTML=S.matches.map(m=>{
-    const ht=S.teams.find(t=>t.id===m.homeId),at=S.teams.find(t=>t.id===m.awayId);
-    return `<div class="ali"><div class="ali-info"><h4>${ht?.name||'?'} ${m.homeScore} – ${m.awayScore} ${at?.name||'?'}</h4><p>${m.date?new Date(m.date).toDateString():''} ${m.label?`· ${m.label}`:''}</p></div><button class="btn btn-red btn-sm" onclick="deleteMatch(${m.id})">Delete</button></div>`;
-  }).join('')||'<p style="color:var(--muted)">No matches.</p>';
-}
-
-// ════ POINTS TABLE ════
-function getTeamStats(id){
-  let played=0,won=0,drawn=0,lost=0,gf=0,ga=0,pts=0;
-  S.matches.forEach(m=>{if(m.homeId===id||m.awayId===id){const isH=m.homeId===id,tf=isH?m.homeScore:m.awayScore,ta=isH?m.awayScore:m.homeScore;played++;gf+=tf;ga+=ta;if(tf>ta){won++;pts+=3;}else if(tf===ta){drawn++;pts++;}else{lost++;}}});
-  return{played,won,drawn,lost,gf,ga,gd:gf-ga,pts};
-}
-function renderTable(){
-  const rows=S.teams.map(t=>({...t,...getTeamStats(t.id)})).sort((a,b)=>b.pts-a.pts||b.gd-a.gd||b.gf-a.gf);
-  document.getElementById('pointsBody').innerHTML=rows.map((t,i)=>`
-    <tr>
-      <td class="${i===0?'pos-1':i===1?'pos-2':i===2?'pos-3':''}" style="font-weight:700;">${i+1}</td>
-      <td><div style="display:flex;align-items:center;gap:8px;">${t.logo?`<img class="team-logo-sm" src="${t.logo}">`:'<span style="font-size:14px;">👕</span>'}<span style="font-weight:600;">${t.name}</span></div></td>
-      <td>${t.played}</td><td class="pt-w">${t.won}</td><td>${t.drawn}</td><td class="pt-l">${t.lost}</td>
-      <td>${t.gf}</td><td>${t.ga}</td><td>${t.gd>=0?'+':''}${t.gd}</td><td class="pt-pts">${t.pts}</td>
-    </tr>`).join('')||'<tr><td colspan="10" style="color:var(--muted);text-align:center;padding:22px;">No data</td></tr>';
-}
-
-// ════ STATS ════
-function renderStats(){
-  const sMap={};S.matches.forEach(m=>m.goals.forEach(g=>{if(!g.playerId||g.og)return;sMap[g.playerId]=(sMap[g.playerId]||0)+1;}));
-  document.getElementById('topScorers').innerHTML=Object.entries(sMap).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([id,g],i)=>{
-    const p=S.players.find(x=>x.id===+id),t=S.teams.find(x=>x.id===p?.teamId);
-    return `<div class="stat-row"><div class="stat-rank">${i+1}</div>${p?.photo?`<img class="player-photo-sm" src="${p.photo}">`:'<div style="width:32px;height:32px;background:var(--bg);border-radius:50%;"></div>'}
-      <div class="stat-info"><div class="stat-name">${p?.name||'?'}</div><div class="stat-meta">${t?.name||''}</div></div><div class="stat-count">${g}</div></div>`;
-  }).join('')||'<p style="color:var(--muted);font-size:13px;">No goals yet.</p>';
-  const yMap={};S.matches.forEach(m=>m.cards.forEach(c=>{if(c.type==='yellow'||c.type==='second-yellow')yMap[c.playerId]=(yMap[c.playerId]||0)+1;}));
-  document.getElementById('yellowCards').innerHTML=Object.entries(yMap).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([id,cnt],i)=>{
-    const p=S.players.find(x=>x.id===+id),t=S.teams.find(x=>x.id===p?.teamId);
-    return `<div class="stat-row"><div class="stat-rank">${i+1}</div>${p?.photo?`<img class="player-photo-sm" src="${p.photo}">`:'<div style="width:32px;height:32px;background:var(--bg);border-radius:50%;"></div>'}
-      <div class="stat-info"><div class="stat-name">${p?.name||'?'}</div><div class="stat-meta">${t?.name||''}</div></div><div class="stat-count" style="color:#d97706;">${cnt}</div></div>`;
-  }).join('')||'<p style="color:var(--muted);font-size:13px;">No cards.</p>';
-  const tg=S.teams.map(t=>{const s=getTeamStats(t.id);return{name:t.name,gf:s.gf,ga:s.ga};});
-  document.getElementById('bestAttack').innerHTML=[...tg].sort((a,b)=>b.gf-a.gf).map((t,i)=>`<tr><td style="font-weight:700;">${i+1}</td><td>${t.name}</td><td style="color:var(--green);font-weight:700;">${t.gf}</td></tr>`).join('')||'<tr><td colspan="3" style="color:var(--muted)">No data</td></tr>';
-  document.getElementById('bestDefence').innerHTML=[...tg].sort((a,b)=>a.ga-b.ga).map((t,i)=>`<tr><td style="font-weight:700;">${i+1}</td><td>${t.name}</td><td style="color:var(--green);font-weight:700;">${t.ga}</td></tr>`).join('')||'<tr><td colspan="3" style="color:var(--muted)">No data</td></tr>';
-}
-
-// ════ REVIEW ════
-let selFmVal=null,rankObj={},favRankObj={},fairRankObj={};
-function setupReviewForm(){
-  document.getElementById('reviewFormCard').style.display='block';document.getElementById('reviewSuccess').style.display='none';
-  const pOpts='<option value="">— Select —</option>'+S.players.map(p=>`<option value="${p.name}">${p.name}</option>`).join('');
-  const tOpts='<option value="">— Select —</option>'+S.teams.map(t=>`<option value="${t.name}">${t.name}</option>`).join('');
-  document.getElementById('reviewerName').innerHTML=pOpts;
-  ['q_best_captain','q_best_entertain','q_luckiest','q_unluckiest','q_improved'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=tOpts;});
-  ['q_emerging','q_fav_player','q_best_gk','q_skillful','q_mvp'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=pOpts;});
-  rankObj={};favRankObj={};fairRankObj={};
-  renderRankSel('teamRankings',rankObj);renderRankSel('favTeamRankings',favRankObj);renderRankSel('fairPlayRankings',fairRankObj);
-}
-function renderRankSel(cId,obj){
-  const n=S.teams.length;const el=document.getElementById(cId);
-  if(!n){if(el)el.innerHTML='<p style="color:var(--muted);font-size:13px;">No teams added.</p>';return;}
-  let html='';
-  for(let rank=1;rank<=n;rank++){
-    const used=Object.entries(obj).filter(([r])=>+r!==rank).map(([,v])=>v);
-    const opts='<option value="">— Select —</option>'+S.teams.filter(t=>!used.includes(t.name)).map(t=>`<option value="${t.name}"${obj[rank]===t.name?' selected':''}>${t.name}</option>`).join('');
-    html+=`<div class="ranking-row"><div class="rank-label">#${rank}</div><select onchange="onRankCh('${cId}',${rank},this.value)" style="flex:1;">${opts}</select></div>`;
-  }
-  if(el)el.innerHTML=html;
-}
-function onRankCh(cId,rank,value){
-  const obj=cId==='teamRankings'?rankObj:cId==='favTeamRankings'?favRankObj:fairRankObj;
-  obj[rank]=value;renderRankSel(cId,obj);
-}
-function selFm(el,f){
-  document.querySelectorAll('.formation-opt').forEach(o=>o.classList.remove('selected'));
-  el.classList.add('selected');selFmVal=f;renderPlayerSlots(f);
-}
-function renderPlayerSlots(f){
-  const[d,m,a]=f.split('-').map(Number);
-  const pOpts='<option value="">— Select Player —</option>'+S.players.map(p=>{const t=S.teams.find(x=>x.id===p.teamId);return `<option value="${p.name}">${p.name} (${t?.name||''} · ${p.position})</option>`;}).join('');
-  let html=`<div class="form-group"><div class="slot-label">🧤 Goalkeeper</div><select>${pOpts}</select></div>`;
-  for(let i=0;i<d;i++)html+=`<div class="form-group"><div class="slot-label">🛡️ Defender ${i+1}</div><select>${pOpts}</select></div>`;
-  for(let i=0;i<m;i++)html+=`<div class="form-group"><div class="slot-label">⚙️ Midfielder ${i+1}</div><select>${pOpts}</select></div>`;
-  for(let i=0;i<a;i++)html+=`<div class="form-group"><div class="slot-label">⚡ Attacker ${i+1}</div><select>${pOpts}</select></div>`;
-  document.getElementById('playerSlots').innerHTML=html;
-}
-function submitReview(){
-  const reviewer=document.getElementById('reviewerName').value;
-  if(!reviewer)return toast('Please select your name');if(!selFmVal)return toast('Please select a formation');
-  const slots=document.querySelectorAll('#playerSlots select');
-  const team=Array.from(slots).map(s=>s.value);
-  S.reviews.push({id:Date.now(),reviewer,formation:selFmVal,team,
-    best_captain:document.getElementById('q_best_captain').value,best_entertain:document.getElementById('q_best_entertain').value,
-    luckiest:document.getElementById('q_luckiest').value,unluckiest:document.getElementById('q_unluckiest').value,
-    improved:document.getElementById('q_improved').value,emerging:document.getElementById('q_emerging').value,
-    fav_player:document.getElementById('q_fav_player').value,best_gk:document.getElementById('q_best_gk').value,
-    skillful:document.getElementById('q_skillful').value,mvp:document.getElementById('q_mvp').value,
-    teamRankings:{...rankObj},favTeamRankings:{...favRankObj},fairPlayRankings:{...fairRankObj},
-    comments:document.getElementById('q_comments').value,submittedAt:new Date().toISOString()});
-  save();document.getElementById('reviewFormCard').style.display='none';document.getElementById('reviewSuccess').style.display='block';toast('Review submitted! 🎉');
-}
-
-// ════ ADMIN REVIEWS ════
-function renderAdminReviews() {
-  const el = document.getElementById('reviewsAdminList');
-  if (!S.reviews.length) {
-    el.innerHTML = '<p style="color:var(--muted)">No reviews submitted yet.</p>';
-    return;
-  }
-  el.innerHTML = S.reviews.map(r => `
-    <div class="card" style="margin-bottom:12px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <strong>👤 ${r.reviewer}</strong>
-        <span style="font-size:11px;color:var(--muted)">${new Date(r.submittedAt).toLocaleString()}</span>
-      </div>
-      <div style="font-size:13px;color:var(--muted);">Formation: <b>${r.formation}</b></div>
-      <div style="margin:8px 0;">Team: ${r.team.filter(Boolean).join(', ') || '—'}</div>
-      ${r.comments ? `<div style="font-style:italic;color:var(--muted);margin-top:8px;">"${r.comments}"</div>` : ''}
-      <button class="btn btn-red btn-sm" onclick="deleteReview(${r.id})" style="margin-top:10px;">Delete Review</button>
-    </div>
-  `).join('');
-}
-
-function clearAllReviews() {
-  if (confirm('Delete ALL fan reviews?')) {
-    S.reviews = [];
-    save();
-    renderAdminReviews();
-    toast('All reviews cleared');
-  }
-}
-
-// ════ WINNER ════
-let cf;
-function showWinner(teamId){const t=S.teams.find(x=>x.id===teamId);if(!t)return;document.getElementById('winnerTeamName').textContent=t.name;document.getElementById('winnerOverlay').classList.add('show');startConfetti();}
-function closeWinner(){document.getElementById('winnerOverlay').classList.remove('show');stopConfetti();}
-function startConfetti(){
-  const canvas=document.getElementById('confettiCanvas');canvas.width=window.innerWidth;canvas.height=window.innerHeight;
-  const ctx=canvas.getContext('2d');const pcs=Array.from({length:140},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height-canvas.height,r:Math.random()*7+3,c:`hsl(${Math.random()*360},75%,55%)`,d:Math.random()*2.5+1,a:Math.random()*6}));
-  function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);pcs.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.c;ctx.fill();p.y+=p.d;p.x+=Math.sin(p.a)*1.2;p.a+=.05;if(p.y>canvas.height){p.y=-10;p.x=Math.random()*canvas.width;}});cf=requestAnimationFrame(draw);}draw();
-}
-function stopConfetti(){cancelAnimationFrame(cf);}
-// ==================== NEWS WITH EDIT ====================
+let newsImgData = null;
 let editingNewsIndex = -1;
+
+function previewNewsImg(inp) {
+  if (!inp.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => { newsImgData = e.target.result; const img = document.getElementById('newsImgPreview'); img.src = e.target.result; img.style.display = 'block'; };
+  r.readAsDataURL(inp.files[0]);
+}
 
 function addOrUpdateNews() {
   const title = document.getElementById('news_title').value.trim();
   const body = document.getElementById('news_body').value.trim();
   const emoji = document.getElementById('news_emoji').value.trim() || '📰';
   if (!title) return toast('Enter a headline');
-
   if (editingNewsIndex >= 0) {
     S.news[editingNewsIndex].title = title;
     S.news[editingNewsIndex].body = body;
@@ -1041,16 +741,15 @@ function addOrUpdateNews() {
     if (newsImgData) S.news[editingNewsIndex].img = newsImgData;
     editingNewsIndex = -1;
     document.getElementById('newsSubmitBtn').textContent = 'Add Story';
+    toast('News updated!');
   } else {
-    S.news.push({title, body, emoji, img: newsImgData});
+    S.news.push({ title, body, emoji, img: newsImgData });
+    toast('News story added!');
   }
   newsImgData = null;
-  document.getElementById('newsImgPreview').style.display='none';
-  ['news_title','news_body','news_emoji'].forEach(id => document.getElementById(id).value = '');
-  save();
-  renderNews();
-  renderAdminNews();
-  toast(editingNewsIndex >= 0 ? 'News updated!' : 'News added!');
+  document.getElementById('newsImgPreview').style.display = 'none';
+  ['news_title', 'news_body', 'news_emoji'].forEach(id => document.getElementById(id).value = '');
+  save(); renderNews(); renderAdminNews();
 }
 
 function editNews(i) {
@@ -1058,107 +757,166 @@ function editNews(i) {
   document.getElementById('news_title').value = n.title;
   document.getElementById('news_body').value = n.body || '';
   document.getElementById('news_emoji').value = n.emoji || '';
-  if (n.img) {
-    document.getElementById('newsImgPreview').src = n.img;
-    document.getElementById('newsImgPreview').style.display = 'block';
-  }
+  if (n.img) { document.getElementById('newsImgPreview').src = n.img; document.getElementById('newsImgPreview').style.display = 'block'; }
   editingNewsIndex = i;
   document.getElementById('newsSubmitBtn').textContent = 'Update Story';
 }
 
-function renderAdminNews() {
-  document.getElementById('newsList').innerHTML = S.news.map((n,i) => `
-    <div class="ali">
-      <div style="font-size:24px;">${n.emoji}</div>
-      <div class="ali-info"><h4>${n.title}</h4><p>${(n.body||'').slice(0,60)}...</p></div>
-      <button class="btn btn-outline btn-sm" onclick="editNews(${i})" style="margin-right:4px;">Edit</button>
-      <button class="btn btn-red btn-sm" onclick="deleteNews(${i})">Delete</button>
-    </div>
-  `).join('') || '<p style="color:var(--muted)">No news.</p>';
+function deleteNews(i) { S.news.splice(i, 1); save(); renderNews(); renderAdminNews(); }
+
+function renderNews() {
+  document.getElementById('storiesContainer').innerHTML = S.news.map((n, i) => `
+    <div class="story-card" onclick="openStory(${i})">
+      ${n.img ? `<div class="story-bg"><img src="${n.img}"></div>` : `<div class="story-bg">${n.emoji}</div>`}
+      <div class="story-overlay"><h3>${n.title}</h3></div>
+    </div>`).join('');
 }
 
+function renderAdminNews() {
+  document.getElementById('newsList').innerHTML = S.news.map((n, i) => `
+    <div class="ali">
+      <div style="font-size:24px;">${n.emoji}</div>
+      <div class="ali-info"><h4>${n.title}</h4><p>${(n.body || '').slice(0, 60)}...</p></div>
+      <button class="btn btn-outline btn-sm" onclick="editNews(${i})" style="margin-right:4px;">Edit</button>
+      <button class="btn btn-red btn-sm" onclick="deleteNews(${i})">Delete</button>
+    </div>`).join('') || '<p style="color:var(--muted)">No news.</p>';
+}
 
-// ==================== COMMENTS WITH EDIT ====================
+// ════ STORY MODAL ════
+function openStory(idx) {
+  const n = S.news[idx]; if (!n) return;
+  document.getElementById('storyFullTitle').textContent = n.title;
+  document.getElementById('storyFullBody').textContent = n.body;
+  const img = document.getElementById('storyFullImg');
+  img.innerHTML = n.img ? `<img src="${n.img}">` : n.emoji;
+  document.getElementById('storyProgress').innerHTML = S.news.map((_, i) =>
+    `<div class="story-seg ${i < idx ? 'done' : i === idx ? 'act' : ''}"></div>`).join('');
+  document.getElementById('story-modal').classList.add('show');
+}
+
+// ════ COMMENTS ════
 let editingCommentId = null;
 
 function addOrUpdateComment() {
   const name = document.getElementById('comm_name').value.trim();
   const text = document.getElementById('comm_text').value.trim();
-  if(!name || !text) return toast('Fill both fields');
-
+  if (!name || !text) return toast('Fill both fields');
   if (editingCommentId) {
     const c = S.comments.find(x => x.id === editingCommentId);
-    if(c) { c.name = name; c.text = text; }
+    if (c) { c.name = name; c.text = text; }
     editingCommentId = null;
     document.getElementById('commSubmitBtn').textContent = 'Add Comment';
+    toast('Comment updated!');
   } else {
-    S.comments.push({id: Date.now(), name, text});
+    S.comments.push({ id: Date.now(), name, text });
+    toast('Comment added!');
   }
   document.getElementById('comm_name').value = '';
   document.getElementById('comm_text').value = '';
-  save();
-  renderCommentSlider();
-  renderAdminComments();
-  toast(editingCommentId ? 'Comment updated!' : 'Comment added!');
+  save(); renderCommentSlider(); renderAdminComments();
 }
 
 function editComment(id) {
-  const c = S.comments.find(x => x.id === id);
-  if(!c) return;
+  const c = S.comments.find(x => x.id === id); if (!c) return;
   document.getElementById('comm_name').value = c.name;
   document.getElementById('comm_text').value = c.text;
   editingCommentId = id;
   document.getElementById('commSubmitBtn').textContent = 'Update Comment';
 }
 
+function deleteComment(id) { S.comments = S.comments.filter(c => c.id !== id); save(); renderCommentSlider(); renderAdminComments(); }
+
+function renderCommentSlider() {
+  const sec = document.getElementById('commentSection');
+  if (!S.comments.length) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  const all = [...S.comments, ...S.comments, ...S.comments, ...S.comments];
+  document.getElementById('sliderTrack').innerHTML = all.map(c => `
+    <div class="comment-chip">
+      <div class="cc-avatar">${c.name.charAt(0).toUpperCase()}</div>
+      <div><div class="cc-name">${c.name}</div><div class="cc-text">${c.text}</div></div>
+    </div>`).join('');
+}
+
 function renderAdminComments() {
   document.getElementById('adminCommentList').innerHTML = S.comments.map(c => `
     <div class="ali">
-      <div class="cc-avatar" style="width:34px;height:34px;">${c.name.charAt(0).toUpperCase()}</div>
+      <div class="cc-avatar" style="width:34px;height:34px;border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--green);flex-shrink:0;">${c.name.charAt(0).toUpperCase()}</div>
       <div class="ali-info"><h4>${c.name}</h4><p>${c.text}</p></div>
       <button class="btn btn-outline btn-sm" onclick="editComment(${c.id})" style="margin-right:4px;">Edit</button>
       <button class="btn btn-red btn-sm" onclick="deleteComment(${c.id})">Delete</button>
-    </div>
-  `).join('') || '<p style="color:var(--muted)">No comments.</p>';
+    </div>`).join('') || '<p style="color:var(--muted)">No comments.</p>';
 }
 
-// ==================== TEAMS WITH EDIT ====================
+// ════ TEAMS ════
+let teamLogoData = null;
 let editingTeamId = null;
+
+function previewTeamLogo(inp) {
+  if (!inp.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => { teamLogoData = e.target.result; const img = document.getElementById('teamLogoPreview'); img.src = e.target.result; img.style.display = 'block'; };
+  r.readAsDataURL(inp.files[0]);
+}
 
 function addOrUpdateTeam() {
   const name = document.getElementById('team_name').value.trim();
   if (!name) return toast('Enter team name');
-
   if (editingTeamId) {
     const t = S.teams.find(x => x.id === editingTeamId);
-    if (t) {
-      t.name = name;
-      if (teamLogoData) t.logo = teamLogoData;
-    }
+    if (t) { t.name = name; if (teamLogoData) t.logo = teamLogoData; }
     editingTeamId = null;
     document.getElementById('teamSubmitBtn').textContent = 'Add Team';
+    toast('Team updated!');
   } else {
-    S.teams.push({id: Date.now(), name, logo: teamLogoData});
+    S.teams.push({ id: Date.now(), name, logo: teamLogoData });
+    toast('Team added!');
   }
   teamLogoData = null;
   document.getElementById('team_name').value = '';
   document.getElementById('teamLogoPreview').style.display = 'none';
-  save();
-  renderAdminTeams();
-  populateDropdowns();
-  toast(editingTeamId ? 'Team updated!' : 'Team added!');
+  save(); renderAdminTeams(); populateDropdowns();
 }
 
 function editTeam(id) {
-  const t = S.teams.find(x => x.id === id);
-  if (!t) return;
+  const t = S.teams.find(x => x.id === id); if (!t) return;
   document.getElementById('team_name').value = t.name;
-  if (t.logo) {
-    document.getElementById('teamLogoPreview').src = t.logo;
-    document.getElementById('teamLogoPreview').style.display = 'block';
-  }
+  if (t.logo) { document.getElementById('teamLogoPreview').src = t.logo; document.getElementById('teamLogoPreview').style.display = 'block'; }
   editingTeamId = id;
   document.getElementById('teamSubmitBtn').textContent = 'Update Team';
+}
+
+function deleteTeam(id) { S.teams = S.teams.filter(t => t.id !== id); S.players = S.players.filter(p => p.teamId !== id); save(); renderAdminTeams(); populateDropdowns(); }
+
+function renderTeams() {
+  const g = document.getElementById('teamsGrid');
+  if (!S.teams.length) { g.innerHTML = '<p style="color:var(--muted)">No teams added yet.</p>'; return; }
+  g.innerHTML = S.teams.map(t => `
+    <div class="team-card" onclick="openTeamModal(${t.id})">
+      ${t.logo ? `<img class="tc-logo" src="${t.logo}" alt="${t.name}">` : '<div style="width:60px;height:60px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 9px;">👕</div>'}
+      <h3>${t.name}</h3><p>${S.players.filter(p => p.teamId === t.id).length} players</p>
+    </div>`).join('');
+}
+
+function openTeamModal(id) {
+  const t = S.teams.find(x => x.id === id); if (!t) return;
+  const players = S.players.filter(p => p.teamId === id);
+  const st = getTeamStats(id);
+  document.getElementById('teamModalContent').innerHTML = `
+    <div style="text-align:center;margin-bottom:18px;">
+      ${t.logo ? `<img src="${t.logo}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--border);margin-bottom:9px;">` : '<div style="font-size:44px;margin-bottom:9px;">👕</div>'}
+      <h2 style="font-size:20px;font-weight:800;">${t.name}</h2>
+      <div style="display:flex;gap:16px;justify-content:center;margin-top:11px;">
+        ${[['Played', st.played], ['Won', st.won], ['Goals', st.gf], ['Pts', st.pts]].map(([l, v]) =>
+          `<div style="text-align:center;"><div style="font-family:'Bebas Neue';font-size:24px;color:var(--green)">${v}</div><div style="font-size:11px;color:var(--muted)">${l}</div></div>`).join('')}
+      </div>
+    </div>
+    ${players.length ? players.map(p => `
+      <div class="player-row">
+        ${p.photo ? `<img class="player-photo-sm" src="${p.photo}">` : '<div style="width:32px;height:32px;background:var(--bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;">👤</div>'}
+        <div><div style="font-weight:700;font-size:14px;">${p.name}</div><div style="font-size:11px;color:var(--muted)">${p.position}</div></div>
+      </div>`).join('') : '<p style="color:var(--muted);font-size:13px;">No players added.</p>'}`;
+  document.getElementById('teamModal').classList.add('show');
 }
 
 function renderAdminTeams() {
@@ -1168,70 +926,148 @@ function renderAdminTeams() {
       <div class="ali-info"><h4>${t.name}</h4></div>
       <button class="btn btn-outline btn-sm" onclick="editTeam(${t.id})" style="margin-right:5px;">Edit</button>
       <button class="btn btn-red btn-sm" onclick="deleteTeam(${t.id})">Delete</button>
-    </div>
-  `).join('') || '<p style="color:var(--muted)">No teams.</p>';
+    </div>`).join('') || '<p style="color:var(--muted)">No teams.</p>';
 }
 
-// ==================== PLAYERS WITH EDIT ====================
+// ════ PLAYERS ════
+let playerPhotoData = null;
 let editingPlayerId = null;
+
+function previewPlayerPhoto(inp) {
+  if (!inp.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => { playerPhotoData = e.target.result; const img = document.getElementById('playerPhotoPreview'); img.src = e.target.result; img.style.display = 'block'; };
+  r.readAsDataURL(inp.files[0]);
+}
 
 function addOrUpdatePlayer() {
   const name = document.getElementById('player_name').value.trim();
   const teamId = +document.getElementById('player_team').value;
   const position = document.getElementById('player_pos').value;
-  if(!name || !teamId || !position) return toast('Fill all player fields');
-
+  if (!name || !teamId || !position) return toast('Fill all player fields');
   if (editingPlayerId) {
     const p = S.players.find(x => x.id === editingPlayerId);
-    if (p) {
-      p.name = name;
-      p.teamId = teamId;
-      p.position = position;
-      if (playerPhotoData) p.photo = playerPhotoData;
-    }
+    if (p) { p.name = name; p.teamId = teamId; p.position = position; if (playerPhotoData) p.photo = playerPhotoData; }
     editingPlayerId = null;
     document.getElementById('playerSubmitBtn').textContent = 'Add Player';
+    toast('Player updated!');
   } else {
-    S.players.push({id: Date.now(), name, teamId, position, photo: playerPhotoData});
+    S.players.push({ id: Date.now(), name, teamId, position, photo: playerPhotoData });
+    toast('Player added!');
   }
   playerPhotoData = null;
-  document.getElementById('player_name').value = '';
+  ['player_name', 'player_pos'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('player_team').value = '';
-  document.getElementById('player_pos').value = '';
   document.getElementById('playerPhotoPreview').style.display = 'none';
-  save();
-  renderAdminPlayers();
-  toast(editingPlayerId ? 'Player updated!' : 'Player added!');
+  save(); renderAdminPlayers();
 }
 
 function editPlayer(id) {
-  const p = S.players.find(x => x.id === id);
-  if (!p) return;
+  const p = S.players.find(x => x.id === id); if (!p) return;
   document.getElementById('player_name').value = p.name;
   document.getElementById('player_team').value = p.teamId;
   document.getElementById('player_pos').value = p.position;
-  if (p.photo) {
-    document.getElementById('playerPhotoPreview').src = p.photo;
-    document.getElementById('playerPhotoPreview').style.display = 'block';
-  }
+  if (p.photo) { document.getElementById('playerPhotoPreview').src = p.photo; document.getElementById('playerPhotoPreview').style.display = 'block'; }
   editingPlayerId = id;
   document.getElementById('playerSubmitBtn').textContent = 'Update Player';
 }
+
+function deletePlayer(id) { S.players = S.players.filter(p => p.id !== id); save(); renderAdminPlayers(); }
 
 function renderAdminPlayers() {
   document.getElementById('adminPlayerList').innerHTML = S.players.map(p => {
     const t = S.teams.find(x => x.id === p.teamId);
     return `<div class="ali">
       ${p.photo ? `<img src="${p.photo}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0;">` : '<div style="font-size:20px;">👤</div>'}
-      <div class="ali-info"><h4>${p.name}</h4><p>${t?.name||''} · ${p.position}</p></div>
+      <div class="ali-info"><h4>${p.name}</h4><p>${t?.name || ''} · ${p.position}</p></div>
       <button class="btn btn-outline btn-sm" onclick="editPlayer(${p.id})" style="margin-right:5px;">Edit</button>
       <button class="btn btn-red btn-sm" onclick="deletePlayer(${p.id})">Delete</button>
     </div>`;
   }).join('') || '<p style="color:var(--muted)">No players.</p>';
 }
 
-// ==================== MATCHES WITH EDIT ====================
+// ════ DROPDOWNS ════
+function populateDropdowns() {
+  const opts = S.teams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+  ['player_team', 'match_home', 'match_away'].forEach(id => {
+    const el = document.getElementById(id); if (!el) return;
+    el.innerHTML = `<option value="">${id === 'player_team' ? '— Select Team —' : '— Team —'}</option>` + opts;
+  });
+}
+
+// ════ MATCHES ════
 let editingMatchId = null;
+
+// Builds player options HTML for a given list of players
+function buildPlayerOpts(players) {
+  return '<option value="">— Scorer —</option>' +
+    players.map(p => {
+      const t = S.teams.find(x => x.id === p.teamId);
+      return `<option value="${p.id}">${p.name} (${t ? t.name : ''})</option>`;
+    }).join('');
+}
+
+function updateMatchGoals() {
+  const homeId = +document.getElementById('match_home').value;
+  const awayId = +document.getElementById('match_away').value;
+  const hs = +document.getElementById('match_home_score').value || 0;
+  const as = +document.getElementById('match_away_score').value || 0;
+  const ht = S.teams.find(t => t.id === homeId);
+  const at = S.teams.find(t => t.id === awayId);
+  if (ht) document.getElementById('homeScoreLbl').textContent = ht.name + ' Goals';
+  if (at) document.getElementById('awayScoreLbl').textContent = at.name + ' Goals';
+
+  const allP = S.players.filter(p => p.teamId === homeId || p.teamId === awayId);
+
+  let html = '';
+  if (hs > 0 || as > 0) {
+    html += `<div style="font-weight:700;font-size:11px;color:var(--gold);margin-bottom:7px;text-transform:uppercase;letter-spacing:.4px;">Goal Scorers</div>`;
+    for (let i = 0; i < hs; i++) html += goalRow(ht ? ht.name : 'Home', homeId, allP);
+    for (let i = 0; i < as; i++) html += goalRow(at ? at.name : 'Away', awayId, allP);
+  }
+  document.getElementById('goalScorerInputs').innerHTML = html;
+
+  // Build cards section safely without template literal issues
+  const cardSection = document.createElement('div');
+  cardSection.innerHTML = `<div style="font-weight:700;font-size:11px;color:var(--gold);margin-bottom:7px;text-transform:uppercase;letter-spacing:.4px;">Cards</div>
+    <div id="cardList"></div>`;
+  const addCardBtn = document.createElement('button');
+  addCardBtn.type = 'button';
+  addCardBtn.className = 'btn btn-outline btn-sm';
+  addCardBtn.textContent = '+ Add Card';
+  addCardBtn.onclick = () => addCardRow(allP);
+  cardSection.appendChild(addCardBtn);
+  document.getElementById('cardInputs').innerHTML = '';
+  document.getElementById('cardInputs').appendChild(cardSection);
+}
+
+function goalRow(teamName, teamId, allP) {
+  const opts = buildPlayerOpts(allP.filter(p => p.teamId === teamId));
+  return `<div style="display:flex;gap:7px;margin-bottom:5px;align-items:center;">
+    <span style="font-size:11px;color:var(--green);min-width:56px;font-weight:600;">${teamName}</span>
+    <select class="goal-scorer" data-team="${teamId}" style="flex:1;">${opts}</select>
+    <label style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:3px;white-space:nowrap;"><input type="checkbox" class="goal-og" style="width:auto;"> OG</label>
+  </div>`;
+}
+
+function addCardRow(allP) {
+  const cardList = document.getElementById('cardList');
+  if (!cardList) return;
+  const allOpts = '<option value="">— Player —</option>' + allP.map(p => {
+    const t = S.teams.find(x => x.id === p.teamId);
+    return `<option value="${p.id}">${p.name} (${t ? t.name : ''})</option>`;
+  }).join('');
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;gap:7px;margin-bottom:5px;align-items:center;';
+  div.innerHTML = `<select class="card-player" style="flex:1;">${allOpts}</select>
+    <select class="card-type" style="max-width:120px;">
+      <option value="yellow">🟨 Yellow</option>
+      <option value="red">🟥 Red</option>
+      <option value="second-yellow">🟨🟥 2nd Yellow</option>
+    </select>
+    <button type="button" class="btn btn-red btn-sm" onclick="this.parentNode.remove()">✕</button>`;
+  cardList.appendChild(div);
+}
 
 function addOrUpdateMatch() {
   const homeId = +document.getElementById('match_home').value;
@@ -1245,62 +1081,36 @@ function addOrUpdateMatch() {
   if (!homeId || !awayId) return toast('Select both teams');
   if (homeId === awayId) return toast('Teams must be different');
 
-  // Collect Goal Scorers
+  // Collect goals
   const goals = [];
   document.querySelectorAll('.goal-scorer').forEach((sel, i) => {
-    const ogCheckbox = document.querySelectorAll('.goal-og')[i];
-    const og = ogCheckbox ? ogCheckbox.checked : false;
-    goals.push({
-      playerId: sel.value ? +sel.value : null,
-      teamId: +sel.dataset.team,
-      og: og
-    });
+    const ogCheckboxes = document.querySelectorAll('.goal-og');
+    const og = ogCheckboxes[i] ? ogCheckboxes[i].checked : false;
+    goals.push({ playerId: sel.value ? +sel.value : null, teamId: +sel.dataset.team, og });
   });
 
-  // Collect Cards
+  // Collect cards
   const cards = [];
-  document.querySelectorAll('.card-player').forEach((sel, i) => {
-    const typeSelect = document.querySelectorAll('.card-type')[i];
-    const type = typeSelect ? typeSelect.value : null;
-    if (sel.value && type) {
-      cards.push({ playerId: +sel.value, type: type });
-    }
+  const cardPlayers = document.querySelectorAll('.card-player');
+  const cardTypes = document.querySelectorAll('.card-type');
+  cardPlayers.forEach((sel, i) => {
+    const type = cardTypes[i] ? cardTypes[i].value : null;
+    if (sel.value && type) cards.push({ playerId: +sel.value, type });
   });
 
   if (editingMatchId) {
-    // Update existing match
     const m = S.matches.find(x => x.id === editingMatchId);
-    if (m) {
-      Object.assign(m, {homeId, awayId, date, label, homeScore, awayScore, goals, cards, isFinal});
-    }
+    if (m) Object.assign(m, { homeId, awayId, date, label, homeScore, awayScore, goals, cards, isFinal });
     editingMatchId = null;
-    document.getElementById('matchSubmitBtn').textContent = 'Save Match';
-    toast('Match updated successfully!');
+    toast('Match updated!');
   } else {
-    // Add new match
-    S.matches.push({
-      id: Date.now(),
-      homeId,
-      awayId,
-      date,
-      label,
-      homeScore,
-      awayScore,
-      goals,
-      cards,
-      isFinal
-    });
-    toast('Match saved successfully!');
+    S.matches.push({ id: Date.now(), homeId, awayId, date, label, homeScore, awayScore, goals, cards, isFinal });
+    toast('Match saved!');
     if (isFinal) showWinner(homeScore > awayScore ? homeId : awayId);
   }
 
   save();
-  renderMatches();
-  renderAdminMatches();
-  renderTable();
-  renderStats();
-
-  // Clear the form after saving
+  renderMatches(); renderAdminMatches(); renderTable(); renderStats();
   resetMatchForm();
 }
 
@@ -1314,14 +1124,16 @@ function resetMatchForm() {
   document.getElementById('goalScorerInputs').innerHTML = '';
   document.getElementById('cardInputs').innerHTML = '';
   document.getElementById('match_is_final').checked = false;
+  document.getElementById('homeScoreLbl').textContent = 'Home Goals';
+  document.getElementById('awayScoreLbl').textContent = 'Away Goals';
   editingMatchId = null;
   document.getElementById('matchSubmitBtn').textContent = 'Save Match';
+  document.getElementById('matchFormTitle').textContent = 'Add Match';
+  document.getElementById('matchCancelBtn').style.display = 'none';
 }
 
 function editMatch(id) {
-  const m = S.matches.find(x => x.id === id);
-  if (!m) return;
-
+  const m = S.matches.find(x => x.id === id); if (!m) return;
   document.getElementById('match_home').value = m.homeId;
   document.getElementById('match_away').value = m.awayId;
   document.getElementById('match_date').value = m.date || '';
@@ -1329,49 +1141,304 @@ function editMatch(id) {
   document.getElementById('match_home_score').value = m.homeScore;
   document.getElementById('match_away_score').value = m.awayScore;
   document.getElementById('match_is_final').checked = !!m.isFinal;
-
   editingMatchId = id;
   document.getElementById('matchSubmitBtn').textContent = 'Update Match';
+  document.getElementById('matchFormTitle').textContent = 'Edit Match';
+  document.getElementById('matchCancelBtn').style.display = 'inline-block';
 
+  // Rebuild goal/card UI then pre-fill scorers
+  updateMatchGoals();
+
+  // Pre-fill goal scorers after DOM update
   setTimeout(() => {
-    loadMatchPlayers();
-    updateMatchGoals();
-  }, 300);
+    const scorerSelects = document.querySelectorAll('.goal-scorer');
+    m.goals.forEach((g, i) => {
+      if (scorerSelects[i]) {
+        scorerSelects[i].value = g.playerId || '';
+        const ogCheckboxes = document.querySelectorAll('.goal-og');
+        if (ogCheckboxes[i]) ogCheckboxes[i].checked = !!g.og;
+      }
+    });
+    // Pre-fill cards
+    const allP = S.players.filter(p => p.teamId === m.homeId || p.teamId === m.awayId);
+    m.cards.forEach(c => {
+      addCardRow(allP);
+      const cardList = document.getElementById('cardList');
+      if (!cardList) return;
+      const rows = cardList.querySelectorAll('div');
+      const lastRow = rows[rows.length - 1];
+      if (lastRow) {
+        const pSel = lastRow.querySelector('.card-player');
+        const tSel = lastRow.querySelector('.card-type');
+        if (pSel) pSel.value = c.playerId;
+        if (tSel) tSel.value = c.type;
+      }
+    });
+    toast('Match loaded for editing — scroll up to form');
+  }, 100);
 
-  toast('Loading match for editing...');
+  // Scroll to form
+  document.getElementById('panel-matches-admin').scrollIntoView({ behavior: 'smooth' });
+}
+
+function deleteMatch(id) {
+  if (!confirm('Delete this match?')) return;
+  S.matches = S.matches.filter(m => m.id !== id);
+  save(); renderAdminMatches(); renderMatches(); renderTable(); renderStats();
+}
+
+function renderMatches() {
+  const list = document.getElementById('matchesList');
+  if (!S.matches.length) { list.innerHTML = '<p style="color:var(--muted)">No matches yet.</p>'; return; }
+  list.innerHTML = [...S.matches].reverse().map(m => {
+    const ht = S.teams.find(t => t.id === m.homeId), at = S.teams.find(t => t.id === m.awayId);
+    const finalBadge = m.isFinal ? '<span class="badge badge-gold" style="margin-left:6px;">🏆 Final</span>' : '';
+    const gBadges = m.goals.map(g => {
+      const p = S.players.find(x => x.id === g.playerId);
+      return `<span class="goal-badge">⚽ ${p ? p.name : g.og ? 'OG' : '?'}${g.og ? ' (OG)' : ''}</span>`;
+    }).join('');
+    const cBadges = m.cards.map(c => {
+      const p = S.players.find(x => x.id === c.playerId);
+      const icon = (c.type === 'red' || c.type === 'second-yellow') ? '<span class="card-icon card-r"></span>' : '<span class="card-icon card-y"></span>';
+      return `<span class="goal-badge">${icon}${p?.name || '?'}</span>`;
+    }).join('');
+    return `<div class="match-card">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:9px;">${m.date ? new Date(m.date).toDateString() : ''} ${m.label ? `· ${m.label}` : ''} ${finalBadge}</div>
+      <div class="match-teams">
+        <div class="match-team">${ht?.logo ? `<img class="player-photo-sm" src="${ht.logo}" style="width:40px;height:40px;">` : '<div style="font-size:26px;">👕</div>'}<div class="match-team-name">${ht?.name || 'Team'}</div></div>
+        <div class="match-score">${m.homeScore} – ${m.awayScore}</div>
+        <div class="match-team">${at?.logo ? `<img class="player-photo-sm" src="${at.logo}" style="width:40px;height:40px;">` : '<div style="font-size:26px;">👕</div>'}<div class="match-team-name">${at?.name || 'Team'}</div></div>
+      </div>
+      ${gBadges || cBadges ? `<div class="goal-list">${gBadges}${cBadges}</div>` : ''}
+    </div>`;
+  }).join('');
 }
 
 function renderAdminMatches() {
   const container = document.getElementById('adminMatchList');
-  if (!S.matches.length) {
-    container.innerHTML = '<p style="color:var(--muted)">No matches yet.</p>';
-    return;
-  }
-
+  if (!S.matches.length) { container.innerHTML = '<p style="color:var(--muted)">No matches yet.</p>'; return; }
   container.innerHTML = S.matches.map(m => {
     const ht = S.teams.find(t => t.id === m.homeId);
     const at = S.teams.find(t => t.id === m.awayId);
-    return `
-      <div class="ali">
-        <div class="ali-info">
-          <h4>${ht ? ht.name : '?'} ${m.homeScore} – ${m.awayScore} ${at ? at.name : '?'}</h4>
-          <p>${m.date ? new Date(m.date).toDateString() : ''} ${m.label ? `· ${m.label}` : ''}</p>
-        </div>
-        <button class="btn btn-outline btn-sm" onclick="editMatch(${m.id})" style="margin-right:6px;">Edit</button>
-        <button class="btn btn-red btn-sm" onclick="deleteMatch(${m.id})">Delete</button>
-      </div>`;
+    return `<div class="ali">
+      <div class="ali-info">
+        <h4>${ht ? ht.name : '?'} ${m.homeScore} – ${m.awayScore} ${at ? at.name : '?'}${m.isFinal ? ' 🏆' : ''}</h4>
+        <p>${m.date ? new Date(m.date).toDateString() : ''} ${m.label ? `· ${m.label}` : ''}</p>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="editMatch(${m.id})" style="margin-right:6px;">Edit</button>
+      <button class="btn btn-red btn-sm" onclick="deleteMatch(${m.id})">Delete</button>
+    </div>`;
   }).join('');
 }
 
-function addOrUpdateMatch() {
-  // ... (keep your existing addMatch logic here, but modify to support edit)
-  // For simplicity, I'll give full function in next message if needed.
-  // First test Teams & Players.
+// ════ POINTS TABLE ════
+function getTeamStats(id) {
+  let played = 0, won = 0, drawn = 0, lost = 0, gf = 0, ga = 0, pts = 0;
+  S.matches.forEach(m => {
+    if (m.homeId === id || m.awayId === id) {
+      const isH = m.homeId === id, tf = isH ? m.homeScore : m.awayScore, ta = isH ? m.awayScore : m.homeScore;
+      played++; gf += tf; ga += ta;
+      if (tf > ta) { won++; pts += 3; } else if (tf === ta) { drawn++; pts++; } else { lost++; }
+    }
+  });
+  return { played, won, drawn, lost, gf, ga, gd: gf - ga, pts };
 }
 
+function renderTable() {
+  const rows = S.teams.map(t => ({ ...t, ...getTeamStats(t.id) })).sort((a, b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf);
+  document.getElementById('pointsBody').innerHTML = rows.map((t, i) => `
+    <tr>
+      <td class="${i === 0 ? 'pos-1' : i === 1 ? 'pos-2' : i === 2 ? 'pos-3' : ''}" style="font-weight:700;">${i + 1}</td>
+      <td><div style="display:flex;align-items:center;gap:8px;">${t.logo ? `<img class="team-logo-sm" src="${t.logo}">` : '<span style="font-size:14px;">👕</span>'}<span style="font-weight:600;">${t.name}</span></div></td>
+      <td>${t.played}</td><td class="pt-w">${t.won}</td><td>${t.drawn}</td><td class="pt-l">${t.lost}</td>
+      <td>${t.gf}</td><td>${t.ga}</td><td>${t.gd >= 0 ? '+' : ''}${t.gd}</td><td class="pt-pts">${t.pts}</td>
+    </tr>`).join('') || '<tr><td colspan="10" style="color:var(--muted);text-align:center;padding:22px;">No data</td></tr>';
+}
 
-// ════ RENDER ALL ════
-// ════ RENDER ALL ADMIN PANELS ════
+// ════ STATS ════
+function renderStats() {
+  const sMap = {};
+  S.matches.forEach(m => m.goals.forEach(g => { if (!g.playerId || g.og) return; sMap[g.playerId] = (sMap[g.playerId] || 0) + 1; }));
+  document.getElementById('topScorers').innerHTML = Object.entries(sMap).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([id, g], i) => {
+    const p = S.players.find(x => x.id === +id), t = S.teams.find(x => x.id === p?.teamId);
+    return `<div class="stat-row"><div class="stat-rank">${i + 1}</div>${p?.photo ? `<img class="player-photo-sm" src="${p.photo}">` : '<div style="width:32px;height:32px;background:var(--bg);border-radius:50%;"></div>'}
+      <div class="stat-info"><div class="stat-name">${p?.name || '?'}</div><div class="stat-meta">${t?.name || ''}</div></div><div class="stat-count">${g}</div></div>`;
+  }).join('') || '<p style="color:var(--muted);font-size:13px;">No goals yet.</p>';
+
+  const yMap = {};
+  S.matches.forEach(m => m.cards.forEach(c => { if (c.type === 'yellow' || c.type === 'second-yellow') yMap[c.playerId] = (yMap[c.playerId] || 0) + 1; }));
+  document.getElementById('yellowCards').innerHTML = Object.entries(yMap).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([id, cnt], i) => {
+    const p = S.players.find(x => x.id === +id), t = S.teams.find(x => x.id === p?.teamId);
+    return `<div class="stat-row"><div class="stat-rank">${i + 1}</div>${p?.photo ? `<img class="player-photo-sm" src="${p.photo}">` : '<div style="width:32px;height:32px;background:var(--bg);border-radius:50%;"></div>'}
+      <div class="stat-info"><div class="stat-name">${p?.name || '?'}</div><div class="stat-meta">${t?.name || ''}</div></div><div class="stat-count" style="color:#d97706;">${cnt}</div></div>`;
+  }).join('') || '<p style="color:var(--muted);font-size:13px;">No cards.</p>';
+
+  const tg = S.teams.map(t => { const s = getTeamStats(t.id); return { name: t.name, gf: s.gf, ga: s.ga }; });
+  document.getElementById('bestAttack').innerHTML = [...tg].sort((a, b) => b.gf - a.gf).map((t, i) =>
+    `<tr><td style="font-weight:700;">${i + 1}</td><td>${t.name}</td><td style="color:var(--green);font-weight:700;">${t.gf}</td></tr>`).join('') || '<tr><td colspan="3" style="color:var(--muted)">No data</td></tr>';
+  document.getElementById('bestDefence').innerHTML = [...tg].sort((a, b) => a.ga - b.ga).map((t, i) =>
+    `<tr><td style="font-weight:700;">${i + 1}</td><td>${t.name}</td><td style="color:var(--green);font-weight:700;">${t.ga}</td></tr>`).join('') || '<tr><td colspan="3" style="color:var(--muted)">No data</td></tr>';
+}
+
+// ════ REVIEW ════
+let selFmVal = null, rankObj = {}, favRankObj = {}, fairRankObj = {};
+
+function setupReviewForm() {
+  document.getElementById('reviewFormCard').style.display = 'block';
+  document.getElementById('reviewSuccess').style.display = 'none';
+  const pOpts = '<option value="">— Select —</option>' + S.players.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+  const tOpts = '<option value="">— Select —</option>' + S.teams.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+  document.getElementById('reviewerName').innerHTML = pOpts;
+  ['q_best_captain', 'q_best_entertain', 'q_luckiest', 'q_unluckiest', 'q_improved'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = tOpts; });
+  ['q_emerging', 'q_fav_player', 'q_best_gk', 'q_skillful', 'q_mvp'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = pOpts; });
+  rankObj = {}; favRankObj = {}; fairRankObj = {};
+  renderRankSel('teamRankings', rankObj); renderRankSel('favTeamRankings', favRankObj); renderRankSel('fairPlayRankings', fairRankObj);
+}
+
+function renderRankSel(cId, obj) {
+  const n = S.teams.length; const el = document.getElementById(cId);
+  if (!n) { if (el) el.innerHTML = '<p style="color:var(--muted);font-size:13px;">No teams added.</p>'; return; }
+  let html = '';
+  for (let rank = 1; rank <= n; rank++) {
+    const used = Object.entries(obj).filter(([r]) => +r !== rank).map(([, v]) => v);
+    const opts = '<option value="">— Select —</option>' + S.teams.filter(t => !used.includes(t.name)).map(t => `<option value="${t.name}"${obj[rank] === t.name ? ' selected' : ''}>${t.name}</option>`).join('');
+    html += `<div class="ranking-row"><div class="rank-label">#${rank}</div><select onchange="onRankCh('${cId}',${rank},this.value)" style="flex:1;">${opts}</select></div>`;
+  }
+  if (el) el.innerHTML = html;
+}
+
+function onRankCh(cId, rank, value) {
+  const obj = cId === 'teamRankings' ? rankObj : cId === 'favTeamRankings' ? favRankObj : fairRankObj;
+  obj[rank] = value; renderRankSel(cId, obj);
+}
+
+function selFm(el, f) {
+  document.querySelectorAll('.formation-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected'); selFmVal = f; renderPlayerSlots(f);
+}
+
+function renderPlayerSlots(f) {
+  const [d, m, a] = f.split('-').map(Number);
+  const pOpts = '<option value="">— Select Player —</option>' + S.players.map(p => {
+    const t = S.teams.find(x => x.id === p.teamId);
+    return `<option value="${p.name}">${p.name} (${t?.name || ''} · ${p.position})</option>`;
+  }).join('');
+  let html = `<div class="form-group"><div class="slot-label">🧤 Goalkeeper</div><select>${pOpts}</select></div>`;
+  for (let i = 0; i < d; i++) html += `<div class="form-group"><div class="slot-label">🛡️ Defender ${i + 1}</div><select>${pOpts}</select></div>`;
+  for (let i = 0; i < m; i++) html += `<div class="form-group"><div class="slot-label">⚙️ Midfielder ${i + 1}</div><select>${pOpts}</select></div>`;
+  for (let i = 0; i < a; i++) html += `<div class="form-group"><div class="slot-label">⚡ Attacker ${i + 1}</div><select>${pOpts}</select></div>`;
+  document.getElementById('playerSlots').innerHTML = html;
+}
+
+function submitReview() {
+  const reviewer = document.getElementById('reviewerName').value;
+  if (!reviewer) return toast('Please select your name');
+  if (!selFmVal) return toast('Please select a formation');
+  const slots = document.querySelectorAll('#playerSlots select');
+  const team = Array.from(slots).map(s => s.value);
+  S.reviews.push({
+    id: Date.now(), reviewer, formation: selFmVal, team,
+    best_captain: document.getElementById('q_best_captain').value,
+    best_entertain: document.getElementById('q_best_entertain').value,
+    luckiest: document.getElementById('q_luckiest').value,
+    unluckiest: document.getElementById('q_unluckiest').value,
+    improved: document.getElementById('q_improved').value,
+    emerging: document.getElementById('q_emerging').value,
+    fav_player: document.getElementById('q_fav_player').value,
+    best_gk: document.getElementById('q_best_gk').value,
+    skillful: document.getElementById('q_skillful').value,
+    mvp: document.getElementById('q_mvp').value,
+    teamRankings: { ...rankObj }, favTeamRankings: { ...favRankObj }, fairPlayRankings: { ...fairRankObj },
+    comments: document.getElementById('q_comments').value,
+    submittedAt: new Date().toISOString()
+  });
+  save();
+  document.getElementById('reviewFormCard').style.display = 'none';
+  document.getElementById('reviewSuccess').style.display = 'block';
+  toast('Review submitted! 🎉');
+}
+
+// ════ ADMIN REVIEWS ════
+let editingReviewId = null;
+
+function renderAdminReviews() {
+  const el = document.getElementById('reviewsAdminList');
+  if (!S.reviews.length) { el.innerHTML = '<p style="color:var(--muted)">No reviews submitted yet.</p>'; return; }
+  el.innerHTML = S.reviews.map(r => `
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px;">
+        <strong style="font-size:14px;">👤 ${r.reviewer}</strong>
+        <span style="font-size:11px;color:var(--muted);white-space:nowrap;">${new Date(r.submittedAt).toLocaleString()}</span>
+      </div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:4px;">Formation: <b style="color:var(--text);">${r.formation}</b></div>
+      <div style="font-size:13px;margin-bottom:4px;">Squad: ${r.team.filter(Boolean).join(', ') || '—'}</div>
+      ${r.mvp ? `<div style="font-size:13px;margin-bottom:4px;">MVP: <b>${r.mvp}</b></div>` : ''}
+      ${r.best_captain ? `<div style="font-size:13px;margin-bottom:4px;">Best Captain Team: <b>${r.best_captain}</b></div>` : ''}
+      ${r.comments ? `<div style="font-style:italic;color:var(--muted);margin-top:8px;font-size:13px;">"${r.comments}"</div>` : ''}
+      <div style="display:flex;gap:7px;margin-top:12px;">
+        <button class="btn btn-outline btn-sm" onclick="openReviewEditModal(${r.id})">Edit</button>
+        <button class="btn btn-red btn-sm" onclick="deleteReview(${r.id})">Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+function deleteReview(id) {
+  if (!confirm('Delete this review?')) return;
+  S.reviews = S.reviews.filter(r => r.id !== id);
+  save(); renderAdminReviews(); toast('Review deleted');
+}
+
+function clearAllReviews() {
+  if (confirm('Delete ALL fan reviews?')) { S.reviews = []; save(); renderAdminReviews(); toast('All reviews cleared'); }
+}
+
+function openReviewEditModal(id) {
+  const r = S.reviews.find(x => x.id === id); if (!r) return;
+  editingReviewId = id;
+  document.getElementById('editReviewerName').value = r.reviewer || '';
+  document.getElementById('editReviewerFormation').value = r.formation || '';
+  document.getElementById('editReviewerMvp').value = r.mvp || '';
+  document.getElementById('editReviewerFavPlayer').value = r.fav_player || '';
+  document.getElementById('editReviewerBestCaptain').value = r.best_captain || '';
+  document.getElementById('editReviewerComments').value = r.comments || '';
+  document.getElementById('reviewEditModal').classList.add('show');
+}
+
+function closeReviewEditModal() {
+  document.getElementById('reviewEditModal').classList.remove('show');
+  editingReviewId = null;
+}
+
+function saveReviewEdit() {
+  const r = S.reviews.find(x => x.id === editingReviewId); if (!r) return;
+  r.reviewer = document.getElementById('editReviewerName').value.trim() || r.reviewer;
+  r.formation = document.getElementById('editReviewerFormation').value.trim() || r.formation;
+  r.mvp = document.getElementById('editReviewerMvp').value.trim();
+  r.fav_player = document.getElementById('editReviewerFavPlayer').value.trim();
+  r.best_captain = document.getElementById('editReviewerBestCaptain').value.trim();
+  r.comments = document.getElementById('editReviewerComments').value.trim();
+  save(); renderAdminReviews(); closeReviewEditModal(); toast('Review updated!');
+}
+
+// ════ WINNER ════
+let cf;
+function showWinner(teamId) {
+  const t = S.teams.find(x => x.id === teamId); if (!t) return;
+  document.getElementById('winnerTeamName').textContent = t.name;
+  document.getElementById('winnerOverlay').classList.add('show');
+  startConfetti();
+}
+function closeWinner() { document.getElementById('winnerOverlay').classList.remove('show'); stopConfetti(); }
+function startConfetti() {
+  const canvas = document.getElementById('confettiCanvas');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const pcs = Array.from({ length: 140 }, () => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height, r: Math.random() * 7 + 3, c: `hsl(${Math.random() * 360},75%,55%)`, d: Math.random() * 2.5 + 1, a: Math.random() * 6 }));
+  function draw() { ctx.clearRect(0, 0, canvas.width, canvas.height); pcs.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fillStyle = p.c; ctx.fill(); p.y += p.d; p.x += Math.sin(p.a) * 1.2; p.a += .05; if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; } }); cf = requestAnimationFrame(draw); } draw();
+}
+function stopConfetti() { cancelAnimationFrame(cf); }
+
+// ════ RENDER ALL ADMIN ════
 function renderAdminPanels() {
   populateDropdowns();
   renderAdminTeams();
@@ -1379,7 +1446,7 @@ function renderAdminPanels() {
   renderAdminMatches();
   renderAdminNews();
   renderAdminComments();
-  renderAdminReviews();     // This ensures Reviews list always refreshes
+  renderAdminReviews();
   if (S.logo) {
     document.getElementById('logoArea').innerHTML = `<img src="${S.logo}" alt="Logo">`;
     document.getElementById('logoCurrent').innerHTML = `<img src="${S.logo}" style="width:76px;height:76px;border-radius:50%;object-fit:cover;border:2px solid var(--border);">`;
@@ -1387,10 +1454,14 @@ function renderAdminPanels() {
 }
 
 // ════ TOAST ════
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600); }
 
 // ════ INIT ════
-window.onload=()=>{renderNews();renderCommentSlider();if(S.logo)document.getElementById('logoArea').innerHTML=`<img src="${S.logo}" alt="Logo">`;};
+window.onload = () => {
+  renderNews();
+  renderCommentSlider();
+  if (S.logo) document.getElementById('logoArea').innerHTML = `<img src="${S.logo}" alt="Logo">`;
+};
 </script>
 </body>
 </html>
