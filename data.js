@@ -1,14 +1,7 @@
 // ============================================================
 //  JOGA BONITO — DATA FILE
-//
-//  HOW TO UPDATE THE WEBSITE:
-//  1. Edit this file in VS Code
-//  2. Drop image files into the images/ folder if needed
-//  3. In terminal:
-//       git add .
-//       git commit -m "what you changed"
-//       git push
-//  Website updates for EVERYONE in ~30 seconds. Forever. Free.
+//  Edit this file → git add . → git commit -m "msg" → git push
+//  Website updates for EVERYONE in ~30 seconds. Free. Forever.
 // ============================================================
 
 const JB = {
@@ -19,35 +12,55 @@ const JB = {
     season:  "Season 1",
     venue:   "NIT Jalandhar",
     tagline: "Football Tournament of Mallus of NIT Jalandhar",
-    // Put your logo at:  images/logo.png
-    logo:    "images/logo.png"
+    logo:    "images/logo.png",         // nav + hero logo
+    // External links for hero badges (replace # with real URLs)
+    venueLink:   "#",
+    mallusLink:  "#",
+    auctionLink: "#",
   },
 
   // ── ADMIN PASSWORD ───────────────────────────────────────
   adminPassword: "19@Admin",
 
   // ── FORMSPREE FORM ID ────────────────────────────────────
-  // 1. Go to https://formspree.io → sign up free
-  // 2. Create new form → copy the ID (e.g. "xpwzabcd")
-  // 3. Paste it here
+  // SETUP STEPS:
+  // 1. Go to https://formspree.io → sign up free (use Gmail)
+  // 2. Click "+ New Form" → name it "Joga Bonito Review" → Create
+  // 3. You'll see your endpoint: https://formspree.io/f/xpwzabcd
+  //    Copy the ID part only: "xpwzabcd"
+  // 4. Paste it below
+  // 5. In Formspree dashboard → your form → Integrations → Google Sheets → Connect
+  // 6. git push → test by submitting one review
   formspreeId: "YOUR_FORM_ID",
 
   // ── WINNER ───────────────────────────────────────────────
-  // After the final match, set teamId to the winning team's id.
-  // Set showCelebration: true to show the banner + confetti.
   winner: {
-    teamId: 0,
-    showCelebration: false
+    teamId: 0,             // set to winning team's id after final
+    showCelebration: false // set true to show banner + confetti
   },
+
+  // ── USER ACCOUNTS (for form login) ───────────────────────
+  // usertype: "p" = player, "s" = sponsor, "f" = fan
+  // name shown in form automatically from username
+  // Players are auto-added from the players array below.
+  // Add sponsors and fans here manually:
+  users: [
+    // SPONSORS — add below:
+    // { username: "sponsor1", password: "pass123", usertype: "s", displayName: "Kerala Spices Co." },
+    // { username: "reliance",  password: "pass456", usertype: "s", displayName: "Reliance Foundation" },
+
+    // FANS — add below:
+    // { username: "arunk",    password: "fan001",  usertype: "f", displayName: "Arun K" },
+    // { username: "sreerag",  password: "fan002",  usertype: "f", displayName: "Sreerag M" },
+  ],
 
   // ── COMMENTS (homepage ticker) ───────────────────────────
   comments: [
-    // { id: 1, name: "Arun K",   text: "Best tournament ever! 🔥" , date: "13/23/23" },
-    // { id: 2, name: "Sreerag",  text: "FC Kerala all the way! 💚", date: "13/23/27" },
+    // { id: 1, name: "Arun K",   text: "Best tournament ever! 🔥" },
+    // { id: 2, name: "Sreerag",  text: "FC Kerala all the way! 💚" },
   ],
 
   // ── NEWS / STORIES ───────────────────────────────────────
-  // img: "images/news/filename.png"  OR  "" for no image
   news: [
     {
       id: 1,
@@ -55,24 +68,41 @@ const JB = {
       body:  "Joga Bonito Season 1 is officially underway at NIT Jalandhar!",
       emoji: "🏆",
       img:   "",
-      date:""
+      date:  ""
     },
     // {
     //   id: 2,
     //   title: "Quarter Finals Confirmed",
-    //   body:  "All four quarter final spots have been decided...",
+    //   body:  "All four QF spots decided after a thrilling group stage!",
     //   emoji: "⚽",
-    //   img:   "images/news/qf.png"
+    //   img:   "images/news/qf.png",
+    //   date:  "April 20, 2026"
     // },
   ],
 
+  // ── EVENTS (homepage carousel) ───────────────────────────
+  // Each event = one large photo with caption
+  // img: "images/events/filename.png"
+  events: [
+    // { id: 1, img: "images/events/opening.png",  caption: "Opening Ceremony",      date: "April 1" },
+    // { id: 2, img: "images/events/match1.png",   caption: "Group Stage Match Day 1", date: "April 5" },
+    // { id: 3, img: "images/events/auction.png",  caption: "Player Auction Night",   date: "March 28" },
+  ],
+
+  // ── SPONSORS ─────────────────────────────────────────────
+  // photo: "images/sponsors/filename.png" OR "" for initial avatar
+  sponsors: [
+    // { id: 1, name: "Kerala Spices Co.",   photo: "images/sponsors/kerala-spices.png",  role: "Title Sponsor",     message: "Proud to support Joga Bonito Season 1!" },
+    // { id: 2, name: "Reliance Foundation", photo: "images/sponsors/reliance.png",       role: "Gold Sponsor",      message: "Football unites us all!" },
+    // { id: 3, name: "NIT Canteen",         photo: "",                                   role: "Refreshment Partner", message: "Fuelling the players!" },
+  ],
+
   // ── TEAMS ────────────────────────────────────────────────
-  // logo: "images/teams/filename.png"  OR  "" for no logo
   teams: [
-    { id: 1, name: "Real Fighters",       logo: "images/teams/real_fighters.png"    },
-    { id: 2, name: "Malabar FC",   logo: "images/teams/malabar.png"   },
-    { id: 3, name: "Al Nassar FC",     logo: "images/teams/al_nassar.png"        },
-    { id: 4, name: "Gunners FC", logo: "images/teams/gunners.png" },
+    { id: 1, name: "Real Fighters",  logo: "images/teams/real_fighters.png" },
+    { id: 2, name: "Malabar FC",     logo: "images/teams/malabar.png"       },
+    { id: 3, name: "Al Nassar FC",   logo: "images/teams/al_nassar.png"     },
+    { id: 4, name: "Gunners FC",     logo: "images/teams/gunners.png"       },
   ],
 
   // ── PLAYERS ──────────────────────────────────────────────
@@ -80,91 +110,237 @@ const JB = {
   // position → "Goalkeeper" | "Defender" | "Midfielder" | "Attacker"
   // captain  → true for exactly ONE player per team
   // photo    → "images/players/filename.png"  OR  ""
-  // card     → "images/cards/filename.png"    OR  ""  (9:16 portrait card)
-  // order    → controls display order (0, 1, 2, …)
-players: [
-  { id: 101, name: "Anshu", teamId: 1, position: "Goal Keeper", captain: false, photo: "images/players/anshu.png", card: "images/cards/anshu.png", order: 0 },
-  { id: 102, name: "Haris", teamId: 1, position: "Midfielder", captain: false, photo: "images/players/haris.png", card: "images/cards/haris.png", order: 1 },
-  { id: 103, name: "Irfan", teamId: 1, position: "Attaker", captain: false, photo: "images/players/irfan.png", card: "images/cards/irfan.png", order: 2 },
-  { id: 104, name: "Johan", teamId: 1, position: "Defender", captain: false, photo: "images/players/johan.png", card: "images/cards/johan.png", order: 3 },
-  { id: 105, name: "Nandkishor", teamId: 1, position: "Defender", captain: false, photo: "images/players/nandkishor.png", card: "images/cards/nandkishor.png", order: 4 },
-  { id: 106, name: "Sanish", teamId: 1, position: "Midfielder", captain: false, photo: "images/players/sanish.png", card: "images/cards/sanish.png", order: 5 },
-  { id: 107, name: "Shahal", teamId: 1, position: "Midfielder", captain: false, photo: "images/players/shahal.png", card: "images/cards/shahal.png", order: 6 },
-
-  { id: 108, name: "Albin", teamId: 2, position: "Defender", captain: false, photo: "images/players/albin.png", card: "images/cards/albin.png", order: 7 },
-  { id: 109, name: "Allen", teamId: 2, position: "Attaker", captain: false, photo: "images/players/allen.png", card: "images/cards/allen.png", order: 8 },
-  { id: 110, name: "Anson", teamId: 2, position: "Midfielder", captain: false, photo: "images/players/anson.png", card: "images/cards/anson.png", order: 9 },
-  { id: 111, name: "Aswin", teamId: 2, position: "Defender", captain: false, photo: "images/players/aswin.png", card: "images/cards/aswin.png", order: 10 },
-  { id: 112, name: "Diljith", teamId: 2, position: "Midfielder", captain: false, photo: "images/players/diljith.png", card: "images/cards/diljith.png", order: 11 },
-  { id: 113, name: "Fabiz", teamId: 2, position: "Midfielder", captain: false, photo: "images/players/fabiz.png", card: "images/cards/fabiz.png", order: 12 },
-
-  { id: 114, name: "Adith", teamId: 3, position: "Attaker", captain: false, photo: "images/players/adith.png", card: "images/cards/adith.png", order: 13 },
-  { id: 115, name: "Adithyan", teamId: 3, position: "Defender", captain: false, photo: "images/players/adithyan.png", card: "images/cards/adithyan.png", order: 14 },
-  { id: 116, name: "Fahad", teamId: 3, position: "Midfielder", captain: false, photo: "images/players/fahad.png", card: "images/cards/fahad.png", order: 15 },
-  { id: 117, name: "Rohith", teamId: 3, position: "Defender", captain: false, photo: "images/players/rohith.png", card: "images/cards/rohith.png", order: 16 },
-  { id: 118, name: "Sam", teamId: 3, position: "Attaker", captain: false, photo: "images/players/sam.png", card: "images/cards/sam.png", order: 17 },
-  { id: 119, name: "Shebeeb", teamId: 3, position: "Defender", captain: false, photo: "images/players/shebeeb.png", card: "images/cards/shebeeb.png", order: 18 },
-
-  { id: 120, name: "Aakash", teamId: 4, position: "Goal Keeper", captain: false, photo: "images/players/aakash.png", card: "images/cards/aakash.png", order: 19 },
-  { id: 121, name: "Aswin Murali", teamId: 4, position: "Defender", captain: false, photo: "images/players/aswin murali.png", card: "images/cards/aswin murali.png", order: 20 },
-  { id: 122, name: "Devanand", teamId: 4, position: "Midfielder", captain: false, photo: "images/players/devanand.png", card: "images/cards/devanand.png", order: 21 },
-  { id: 123, name: "Eren", teamId: 4, position: "Attaker", captain: false, photo: "images/players/eren.png", card: "images/cards/eren.png", order: 22 },
-  { id: 124, name: "Hafees", teamId: 4, position: "Goal Keeper", captain: false, photo: "images/players/hafees.png", card: "images/cards/hafees.png", order: 23 },
-  { id: 125, name: "Hari", teamId: 4, position: "Midfielder", captain: false, photo: "images/players/hari.png", card: "images/cards/hari.png", order: 24 },
-  { id: 126, name: "Milind", teamId: 4, position: "Defender", captain: false, photo: "images/players/milind.png", card: "images/cards/milind.png", order: 25 }
-],
+  // card     → "images/cards/filename.png"    OR  ""  (9:16 ratio)
+  // order    → display order in cards carousel (0, 1, 2 …)
+  // username → login username for this player (auto-links to user account)
+  // password → login password
+  // performance → extra details shown on Players page
+  players: [
+    {
+      id: 101, name: "Anshu", teamId: 1, position: "Goalkeeper", captain: false,
+      photo: "images/players/anshu.png", card: "images/cards/anshu.png", order: 0,
+      username: "anshu", password: "19@anshu",
+      performance: { jerseyNumber: 1, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 102, name: "Haris", teamId: 1, position: "Midfielder", captain: true,
+      photo: "images/players/haris.png", card: "images/cards/haris.png", order: 1,
+      username: "haris", password: "19@haris",
+      performance: { jerseyNumber: 7, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 103, name: "Irfan", teamId: 1, position: "Attacker", captain: false,
+      photo: "images/players/irfan.png", card: "images/cards/irfan.png", order: 2,
+      username: "irfan", password: "19@irfan",
+      performance: { jerseyNumber: 9, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 104, name: "Johan", teamId: 1, position: "Defender", captain: false,
+      photo: "images/players/johan.png", card: "images/cards/johan.png", order: 3,
+      username: "johan", password: "19@johan",
+      performance: { jerseyNumber: 4, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 105, name: "Nandkishor", teamId: 1, position: "Defender", captain: false,
+      photo: "images/players/nandkishor.png", card: "images/cards/nandkishor.png", order: 4,
+      username: "nandkishor", password: "19@nandkishor",
+      performance: { jerseyNumber: 5, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 106, name: "Sanish", teamId: 1, position: "Midfielder", captain: false,
+      photo: "images/players/sanish.png", card: "images/cards/sanish.png", order: 5,
+      username: "sanish", password: "19@sanish",
+      performance: { jerseyNumber: 8, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 107, name: "Shahal", teamId: 1, position: "Midfielder", captain: false,
+      photo: "images/players/shahal.png", card: "images/cards/shahal.png", order: 6,
+      username: "shahal", password: "19@shahal",
+      performance: { jerseyNumber: 11, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 108, name: "Albin", teamId: 2, position: "Defender", captain: false,
+      photo: "images/players/albin.png", card: "images/cards/albin.png", order: 7,
+      username: "albin", password: "19@albin",
+      performance: { jerseyNumber: 3, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 109, name: "Allen", teamId: 2, position: "Attacker", captain: false,
+      photo: "images/players/allen.png", card: "images/cards/allen.png", order: 8,
+      username: "allen", password: "19@allen",
+      performance: { jerseyNumber: 10, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 110, name: "Anson", teamId: 2, position: "Midfielder", captain: false,
+      photo: "images/players/anson.png", card: "images/cards/anson.png", order: 9,
+      username: "anson", password: "19@anson",
+      performance: { jerseyNumber: 6, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 111, name: "Aswin", teamId: 2, position: "Defender", captain: true,
+      photo: "images/players/aswin.png", card: "images/cards/aswin.png", order: 10,
+      username: "aswin", password: "19@aswin",
+      performance: { jerseyNumber: 2, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 112, name: "Diljith", teamId: 2, position: "Midfielder", captain: false,
+      photo: "images/players/diljith.png", card: "images/cards/diljith.png", order: 11,
+      username: "diljith", password: "19@diljith",
+      performance: { jerseyNumber: 8, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 113, name: "Fabiz", teamId: 2, position: "Midfielder", captain: false,
+      photo: "images/players/fabiz.png", card: "images/cards/fabiz.png", order: 12,
+      username: "fabiz", password: "19@fabiz",
+      performance: { jerseyNumber: 14, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 114, name: "Adith", teamId: 3, position: "Attacker", captain: false,
+      photo: "images/players/adith.png", card: "images/cards/adith.png", order: 13,
+      username: "adith", password: "19@adith",
+      performance: { jerseyNumber: 9, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 115, name: "Adithyan", teamId: 3, position: "Defender", captain: false,
+      photo: "images/players/adithyan.png", card: "images/cards/adithyan.png", order: 14,
+      username: "adithyan", password: "19@adithyan",
+      performance: { jerseyNumber: 5, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 116, name: "Fahad", teamId: 3, position: "Midfielder", captain: true,
+      photo: "images/players/fahad.png", card: "images/cards/fahad.png", order: 15,
+      username: "fahad", password: "19@fahad",
+      performance: { jerseyNumber: 7, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 117, name: "Rohith", teamId: 3, position: "Defender", captain: false,
+      photo: "images/players/rohith.png", card: "images/cards/rohith.png", order: 16,
+      username: "rohith", password: "19@rohith",
+      performance: { jerseyNumber: 4, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 118, name: "Sam", teamId: 3, position: "Attacker", captain: false,
+      photo: "images/players/sam.png", card: "images/cards/sam.png", order: 17,
+      username: "sam", password: "19@sam",
+      performance: { jerseyNumber: 10, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 119, name: "Shebeeb", teamId: 3, position: "Defender", captain: false,
+      photo: "images/players/shebeeb.png", card: "images/cards/shebeeb.png", order: 18,
+      username: "shebeeb", password: "19@shebeeb",
+      performance: { jerseyNumber: 3, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 120, name: "Aakash", teamId: 4, position: "Goalkeeper", captain: false,
+      photo: "images/players/aakash.png", card: "images/cards/aakash.png", order: 19,
+      username: "aakash", password: "19@aakash",
+      performance: { jerseyNumber: 1, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 121, name: "Aswin Murali", teamId: 4, position: "Defender", captain: false,
+      photo: "images/players/aswin_murali.png", card: "images/cards/aswin_murali.png", order: 20,
+      username: "aswinmurali", password: "19@aswinmurali",
+      performance: { jerseyNumber: 2, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 122, name: "Devanand", teamId: 4, position: "Midfielder", captain: false,
+      photo: "images/players/devanand.png", card: "images/cards/devanand.png", order: 21,
+      username: "devanand", password: "19@devanand",
+      performance: { jerseyNumber: 6, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 123, name: "Eren", teamId: 4, position: "Attacker", captain: false,
+      photo: "images/players/eren.png", card: "images/cards/eren.png", order: 22,
+      username: "eren", password: "19@eren",
+      performance: { jerseyNumber: 9, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 124, name: "Hafees", teamId: 4, position: "Goalkeeper", captain: false,
+      photo: "images/players/hafees.png", card: "images/cards/hafees.png", order: 23,
+      username: "hafees", password: "19@hafees",
+      performance: { jerseyNumber: 12, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 125, name: "Hari", teamId: 4, position: "Midfielder", captain: true,
+      photo: "images/players/hari.png", card: "images/cards/hari.png", order: 24,
+      username: "hari", password: "19@hari",
+      performance: { jerseyNumber: 8, appearances: 0, cleanSheets: 0, note: "" }
+    },
+    {
+      id: 126, name: "Milind", teamId: 4, position: "Defender", captain: false,
+      photo: "images/players/milind.png", card: "images/cards/milind.png", order: 25,
+      username: "milind", password: "19@milind",
+      performance: { jerseyNumber: 5, appearances: 0, cleanSheets: 0, note: "" }
+    },
+  ],
 
   // ── MATCHES ──────────────────────────────────────────────
-  // homeId / awayId  → must match team ids above
-  // date             → "YYYY-MM-DD"
-  // label            → "Group Stage" | "Quarter Final" | "Semi Final" | "Final" | ""
-  // goals            → array of { playerId, teamId, og }
-  //                    playerId: 0 = unknown scorer
-  //                    og: true = own goal
-  // cards            → array of { playerId, type }
-  //                    type: "yellow" | "red" | "second-yellow"
-  // isFinal          → true only for the championship match
+  // goals → { playerId, teamId, og, assistId }
+  //   assistId: player id of assister, or 0 for no assist
+  //   og: true = own goal (shows red ball, listed under scorer's team opponent side)
+  // cards → { playerId, type }  type: "yellow"|"red"|"second-yellow"
+  // time  → "HH:MM" kick-off time string e.g. "16:30"
   matches: [
     // {
     //   id: 1001,
-    //   homeId: 1,  awayId: 2,
+    //   homeId: 1, awayId: 2,
     //   date:  "2026-04-10",
+    //   time:  "16:30",
     //   label: "Group Stage",
-    //   homeScore: 2,  awayScore: 1,
+    //   homeScore: 2, awayScore: 1,
     //   goals: [
-    //     { playerId: 101, teamId: 1, og: false },
-    //     { playerId: 101, teamId: 1, og: false },
-    //     { playerId: 103, teamId: 1, og: true  },
+    //     { playerId: 102, teamId: 1, og: false, assistId: 103 },  // Haris scores, Irfan assists
+    //     { playerId: 103, teamId: 1, og: false, assistId: 0   },  // Irfan scores, no assist
+    //     { playerId: 111, teamId: 1, og: true,  assistId: 0   },  // Aswin own goal (for team 1)
     //   ],
     //   cards: [
-    //     { playerId: 102, type: "yellow" },
+    //     { playerId: 108, type: "yellow" },
+    //     { playerId: 114, type: "red"    },
     //   ],
     //   isFinal: false
     // },
   ],
 
   // ── FAN REVIEWS ──────────────────────────────────────────
-  // You receive these from your Google Sheet (via Formspree).
-  // Copy each row here to publish the analytics on the website.
+  // Paste rows from Google Sheet here to publish analytics.
   reviews: [
     // {
     //   id: 9001,
-    //   reviewer:      "Arun K",
-    //   formation:     "2-2-1",
-    //   squad:         "Rahul M, Akhil S, Vishnu P, Sreerag, Lokesh, Arjun K",
-    //   mvp:           "Rahul M",
-    //   best_captain:  "FC Kerala",
-    //   best_entertain:"Mallus United",
-    //   luckiest:      "Cochin Strikers",
-    //   unluckiest:    "Thrissur FC",
-    //   improved:      "Thrissur FC",
-    //   emerging:      "Sreerag",
-    //   fav_player:    "Rahul M",
-    //   best_gk:       "Vishnu P",
-    //   skillful:      "Akhil S",
-    //   team_rankings: "#1: FC Kerala, #2: Mallus United",
-    //   comments:      "Amazing tournament, loved every match!",
-    //   submittedAt:   "2026-04-10T14:30:00.000Z"
+    //   reviewer:        "Haris",
+    //   formation:       "2-2-1",
+    //   squad:           "Anshu, Haris, Irfan, Johan, Nandkishor, Sanish",
+    //   mvp:             "Irfan",
+    //   best_attacker:   "Irfan",
+    //   best_defender:   "Johan",
+    //   best_gk:         "Anshu",
+    //   most_agile:      "Sanish",
+    //   best_captain:    "Real Fighters",
+    //   best_entertain:  "Malabar FC",
+    //   luckiest:        "Gunners FC",
+    //   unluckiest:      "Al Nassar FC",
+    //   improved:        "Al Nassar FC",
+    //   emerging:        "Eren",
+    //   fav_player:      "Haris",
+    //   skillful:        "Fabiz",
+    //   team_rankings:   "#1: Real Fighters | #2: Malabar FC",
+    //   fav_rankings:    "#1: Real Fighters | #2: Gunners FC",
+    //   fair_rankings:   "#1: Malabar FC | #2: Al Nassar FC",
+    //   feedback:        "Great tournament organisation!",
+    //   comments:        "Loved every moment, keep it up!",
+    //   committee_auction: 4,
+    //   committee_dates:   5,
+    //   committee_inform:  4,
+    //   committee_ground:  3,
+    //   committee_arrange: 4,
+    //   committee_fair:    5,
+    //   committee_ref:     3,
+    //   committee_site:    4,
+    //   committee_fans:    4,
+    //   committee_sponsor: 5,
+    //   committee_trophy:  5,
+    //   committee_post:    4,
+    //   committee_note:    "Everything was well managed!",
+    //   submittedAt:       "2026-04-10T14:30:00.000Z"
     // },
   ],
 

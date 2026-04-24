@@ -6,295 +6,20 @@
 <title>Joga Bonito Season 1</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<!-- ALL DATA comes from data.js — edit that file, then git push -->
+<link rel="stylesheet" href="styles.css">
 <script src="data.js"></script>
-<style>
-:root{
-  --green:#16a34a;--gl:#dcfce7;--gm:#86efac;--gold:#d97706;--red:#dc2626;
-  --bg:#f8fafc;--card:#fff;--border:#e2e8f0;--border2:#cbd5e1;
-  --text:#0f172a;--text2:#334155;--muted:#94a3b8;
-  --shadow:0 1px 3px rgba(0,0,0,.07),0 4px 16px rgba(0,0,0,.04);
-  --shadow2:0 4px 24px rgba(0,0,0,.10);
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;font-size:15px;}
-
-/* ── NAV ── */
-nav{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.04);}
-.nav-left{display:flex;align-items:center;gap:24px;}
-.nav-logo{font-family:'Bebas Neue';font-size:26px;color:var(--green);letter-spacing:2px;cursor:pointer;user-select:none;}
-.nav-links{display:flex;gap:2px;}
-.nav-btn{background:none;border:none;color:var(--text2);font-family:'Outfit';font-size:13px;font-weight:600;cursor:pointer;padding:6px 11px;border-radius:6px;transition:all .18s;}
-.nav-btn:hover,.nav-btn.active{color:var(--green);background:var(--gl);}
-.nav-right{display:flex;align-items:center;gap:8px;}
-.live-btn{background:var(--red);color:#fff;border:none;border-radius:6px;padding:6px 13px;font-family:'Outfit';font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;}
-.live-btn::before{content:'';width:6px;height:6px;background:#fff;border-radius:50%;animation:blink 1.2s infinite;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-.admin-dot{width:8px;height:8px;background:var(--border2);border-radius:50%;cursor:pointer;opacity:.35;transition:opacity .2s;border:none;display:block;}
-.admin-dot:hover{opacity:1;}
-
-/* ── OVERLAYS ── */
-.overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:500;align-items:center;justify-content:center;}
-.overlay.show{display:flex;}
-@keyframes popIn{from{transform:scale(.88);opacity:0}to{transform:scale(1);opacity:1}}
-.popup-box{background:#fff;border-radius:16px;padding:30px 26px;width:320px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:popIn .22s ease;position:relative;}
-.popup-box h2{font-family:'Bebas Neue';font-size:24px;color:var(--green);letter-spacing:2px;margin-bottom:4px;}
-.pop-sub{font-size:13px;color:var(--muted);margin-bottom:22px;}
-.popup-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.pop-opt{padding:16px 10px;border-radius:12px;border:1.5px solid var(--border);cursor:pointer;transition:all .18s;background:var(--bg);}
-.pop-opt:hover{border-color:var(--green);background:var(--gl);}
-.pop-opt-icon{font-size:28px;margin-bottom:7px;}
-.pop-opt-label{font-size:13px;font-weight:700;color:var(--text);}
-.pop-close{position:absolute;top:12px;right:12px;background:var(--bg);border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:13px;color:var(--muted);display:flex;align-items:center;justify-content:center;}
-.s2-box{background:#fff;border-radius:16px;padding:40px 30px;width:340px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:popIn .22s ease;position:relative;}
-
-/* ── PAGES ── */
-.page{display:none;}.page.active{display:block;}
-.inner{max-width:1160px;margin:0 auto;padding:32px 24px;}
-
-/* ── WINNER BANNER ── */
-.winner-banner{background:linear-gradient(90deg,#78350f,#d97706,#fbbf24,#d97706,#78350f);background-size:300%;animation:shimmer 4s linear infinite;padding:13px 24px;text-align:center;display:none;}
-.winner-banner.show{display:block;}
-@keyframes shimmer{0%{background-position:0%}100%{background-position:300%}}
-.winner-banner p{color:#fff;font-family:'Bebas Neue';font-size:22px;letter-spacing:3px;}
-
-/* ── HERO ── */
-.hero{background:linear-gradient(135deg,#052e16 0%,#14532d 50%,#166534 100%);min-height:380px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding:48px 24px 36px;}
-.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
-.hero-logo-area{width:116px;height:116px;border:3px solid rgba(255,255,255,.25);border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;margin-bottom:18px;overflow:hidden;backdrop-filter:blur(8px);position:relative;z-index:1;}
-.hero-logo-area img{width:100%;height:100%;object-fit:cover;}
-.hero-title{font-family:'Bebas Neue';font-size:clamp(54px,9vw,96px);color:#fff;letter-spacing:5px;line-height:1;position:relative;z-index:1;}
-.hero-title span{color:#86efac;}
-.hero-season{font-size:13px;color:rgba(255,255,255,.55);letter-spacing:4px;text-transform:uppercase;margin-top:7px;position:relative;z-index:1;}
-.hero-tagline{font-size:13px;color:rgba(255,255,255,.45);margin-top:5px;position:relative;z-index:1;}
-.hero-badges{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap;justify-content:center;position:relative;z-index:1;}
-.hero-badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:20px;padding:4px 13px;font-size:12px;font-weight:500;}
-
-/* ── NEWS ── */
-.news-section{background:#fff;border-bottom:1px solid var(--border);padding:18px 0;}
-.news-inner{max-width:1160px;margin:0 auto;padding:0 24px;}
-.section-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
-.stories-scroll{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
-.stories-scroll::-webkit-scrollbar{display:none;}
-.story-card{min-width:128px;height:200px;border-radius:12px;overflow:hidden;position:relative;cursor:pointer;flex-shrink:0;border:1.5px solid var(--border);transition:transform .2s,box-shadow .2s;box-shadow:var(--shadow);}
-.story-card:hover{transform:translateY(-3px);box-shadow:var(--shadow2);}
-.story-bg{width:100%;height:100%;background:linear-gradient(160deg,var(--green),#052e16);display:flex;align-items:center;justify-content:center;font-size:38px;}
-.story-bg img{width:100%;height:100%;object-fit:cover;}
-.story-overlay{position:absolute;bottom:0;left:0;right:0;padding:10px 8px 8px;background:linear-gradient(transparent,rgba(0,0,0,.82));}
-.story-overlay h3{font-size:11px;font-weight:700;line-height:1.3;color:#fff;}
-
-/* ── STORY MODAL ── */
-#story-modal .modal-box{background:#000;padding:0;max-width:340px;height:540px;}
-.story-full{width:100%;height:100%;display:flex;flex-direction:column;}
-.story-full-img{flex:1;background:linear-gradient(160deg,var(--green),#052e16);display:flex;align-items:center;justify-content:center;font-size:68px;overflow:hidden;}
-.story-full-img img{width:100%;height:100%;object-fit:cover;}
-.story-full-content{padding:16px;background:linear-gradient(transparent,rgba(0,0,0,.95));}
-.story-full-content h2{font-size:17px;font-weight:700;color:#fff;}
-.story-full-content p{font-size:12px;color:rgba(255,255,255,.65);margin-top:5px;}
-.story-progress{display:flex;gap:4px;padding:11px 13px 0;}
-.story-seg{flex:1;height:2px;background:rgba(255,255,255,.22);border-radius:1px;}
-.story-seg.done{background:rgba(255,255,255,.7);}.story-seg.act{background:#fff;}
-
-/* ── PLAYER CARDS ── */
-.player-cards-section{padding:24px 0;background:linear-gradient(135deg,#0f172a,#1e293b);overflow:hidden;}
-.pc-heading{font-family:'Bebas Neue';font-size:28px;color:#fff;letter-spacing:2px;padding:0 24px;margin-bottom:14px;}
-.cards-track-wrap{overflow:hidden;}
-.cards-track{display:flex;gap:16px;padding:8px 24px 16px;width:max-content;animation:slideCards 70s linear infinite;}
-.cards-track:hover{animation-play-state:paused;}
-@keyframes slideCards{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.pc-item{flex-shrink:0;width:138px;cursor:pointer;transition:transform .3s;z-index:1;position:relative;}
-.pc-item:hover{transform:translateY(-14px) scale(1.1);z-index:10;}
-.pc-card-img{width:138px;height:calc(138px * 16/9);border-radius:12px;object-fit:cover;border:2px solid rgba(255,255,255,.15);box-shadow:0 8px 24px rgba(0,0,0,.4);display:block;}
-.pc-placeholder{width:138px;height:calc(138px * 16/9);border-radius:12px;background:linear-gradient(160deg,#1e3a5f,#0f172a);border:2px solid rgba(255,255,255,.1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,.4);}
-.pc-placeholder img{width:56px;height:56px;border-radius:50%;object-fit:cover;}
-.pc-placeholder .pc-icon{font-size:36px;}
-.pc-placeholder p{font-size:10px;color:rgba(255,255,255,.5);font-weight:700;text-align:center;padding:0 6px;line-height:1.4;}
-.pc-name{font-size:11px;font-weight:700;color:#fff;text-align:center;margin-top:7px;}
-.pc-pos{font-size:10px;color:rgba(255,255,255,.45);text-align:center;margin-top:2px;}
-.cap-c{background:#fef3c7;color:#92400e;font-size:9px;font-weight:800;padding:1px 5px;border-radius:8px;margin-left:4px;vertical-align:middle;}
-
-/* player card full modal */
-#pcModal .modal-box{max-width:340px;padding:0;overflow:hidden;background:#0f172a;}
-.pcm-img{width:100%;aspect-ratio:9/16;object-fit:cover;display:block;}
-.pcm-placeholder{width:100%;aspect-ratio:9/16;background:linear-gradient(160deg,#1e3a5f,#0f172a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;}
-.pcm-placeholder img{width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.2);}
-.pcm-placeholder .pcm-icon{font-size:70px;}
-.pcm-info{padding:16px 18px 22px;}
-.pcm-name{font-family:'Bebas Neue';font-size:26px;color:#fff;letter-spacing:2px;}
-.pcm-sub{font-size:13px;color:rgba(255,255,255,.5);margin-top:3px;}
-
-/* ── GRAPHS ── */
-.graphs-section{background:#fff;padding:28px 0;border-bottom:1px solid var(--border);}
-.graphs-inner{max-width:1160px;margin:0 auto;padding:0 24px;}
-.graphs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:20px;margin-top:16px;}
-.graph-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:18px;}
-.graph-card h4{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:14px;}
-.graph-canvas-wrap{position:relative;height:180px;}
-
-/* ── COMMENTS SLIDER ── */
-.comments-section{background:#f1f5f9;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:18px 0;overflow:hidden;}
-.comments-inner{max-width:1160px;margin:0 auto;padding:0 24px;}
-.slider-track{display:flex;gap:14px;animation:slideC 50s linear infinite;width:max-content;}
-.slider-track:hover{animation-play-state:paused;}
-@keyframes slideC{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.comment-chip{background:#fff;border:1px solid var(--border);border-radius:40px;padding:9px 16px;display:flex;align-items:center;gap:10px;white-space:nowrap;box-shadow:var(--shadow);flex-shrink:0;}
-.cc-av{width:28px;height:28px;border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--green);flex-shrink:0;}
-.cc-name{font-size:12px;font-weight:700;}
-.cc-text{font-size:12px;color:var(--muted);}
-
-/* ── QUICK GRID ── */
-.quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:26px;}
-.quick-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 16px;cursor:pointer;transition:all .18s;box-shadow:var(--shadow);}
-.quick-card:hover{border-color:var(--green);box-shadow:0 4px 20px rgba(22,163,74,.12);transform:translateY(-2px);}
-.quick-card-icon{font-size:26px;margin-bottom:9px;}
-.quick-card h3{font-size:14px;font-weight:700;}
-.quick-card p{font-size:12px;color:var(--muted);margin-top:3px;}
-
-/* ── SECTION HEADERS ── */
-.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
-.sec-title{font-family:'Bebas Neue';font-size:30px;letter-spacing:1.5px;}
-.sec-divider{height:2px;background:linear-gradient(90deg,var(--green),transparent 60%);border-radius:2px;margin-bottom:20px;}
-
-/* ── FORMS ── */
-.form-group{margin-bottom:13px;}
-label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:4px;}
-input,select,textarea{width:100%;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:'Outfit';font-size:14px;outline:none;transition:border-color .18s;}
-input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(22,163,74,.09);}
-
-/* ── BUTTONS ── */
-.btn{padding:9px 18px;border-radius:8px;border:none;cursor:pointer;font-family:'Outfit';font-weight:600;font-size:13px;transition:all .18s;}
-.btn-green{background:var(--green);color:#fff;}.btn-green:hover{background:#15803d;}
-.btn-outline{background:none;border:1.5px solid var(--green);color:var(--green);}.btn-outline:hover{background:var(--gl);}
-.btn-red{background:var(--red);color:#fff;}
-.btn-sm{padding:5px 10px;font-size:11px;}.btn-full{width:100%;}
-
-/* ── TABLES ── */
-.table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);box-shadow:var(--shadow);}
-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;}
-th{background:var(--green);color:#fff;padding:11px 14px;text-align:left;font-weight:700;font-size:12px;letter-spacing:.4px;text-transform:uppercase;}
-td{padding:11px 14px;border-bottom:1px solid var(--border);color:var(--text2);}
-tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg);}
-.team-logo-sm{width:26px;height:26px;border-radius:50%;object-fit:cover;border:1px solid var(--border);}
-.player-photo-sm{width:32px;height:32px;border-radius:50%;object-fit:cover;border:1px solid var(--border);}
-
-/* ── MATCH CARD ── */
-.match-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:11px;box-shadow:var(--shadow);}
-.match-teams{display:flex;align-items:center;justify-content:space-between;gap:10px;}
-.match-team{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;}
-.match-team-name{font-weight:700;font-size:14px;text-align:center;}
-.match-score{font-family:'Bebas Neue';font-size:42px;color:var(--green);min-width:86px;text-align:center;line-height:1;}
-.goal-list{margin-top:9px;display:flex;flex-wrap:wrap;gap:5px;}
-.goal-badge{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:3px 9px;font-size:11px;color:var(--text2);}
-.card-icon{display:inline-block;width:9px;height:13px;border-radius:2px;margin-right:3px;vertical-align:middle;}
-.card-y{background:#facc15;}.card-r{background:var(--red);}
-.badge-gold{background:#fef3c7;color:var(--gold);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;}
-
-/* ── STAT ROW ── */
-.stat-row{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid var(--border);cursor:pointer;border-radius:8px;transition:background .15s;}
-.stat-row:hover{background:var(--gl);}
-.stat-row:last-child{border-bottom:none;}
-.stat-rank{font-family:'Bebas Neue';font-size:24px;color:var(--green);width:30px;text-align:center;}
-.stat-info{flex:1;}.stat-name{font-weight:700;font-size:14px;}.stat-meta{font-size:11px;color:var(--muted);}
-.stat-count{font-family:'Bebas Neue';font-size:26px;color:var(--gold);}
-
-/* ── TEAM GRID ── */
-.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:13px;}
-.team-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 14px;text-align:center;cursor:pointer;transition:all .18s;box-shadow:var(--shadow);}
-.team-card:hover{border-color:var(--green);box-shadow:0 4px 20px rgba(22,163,74,.12);transform:translateY(-2px);}
-.tc-logo{width:60px;height:60px;border-radius:50%;object-fit:cover;margin:0 auto 9px;display:block;border:2px solid var(--border);}
-
-/* ── MODAL ── */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:400;align-items:center;justify-content:center;padding:20px;}
-.modal-overlay.show{display:flex;}
-.modal-box{background:#fff;border-radius:16px;padding:26px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:popIn .2s ease;}
-.modal-close{position:absolute;top:13px;right:13px;background:var(--bg);border:1.5px solid var(--border);color:var(--muted);width:27px;height:27px;border-radius:50%;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;}
-.player-row{display:flex;align-items:center;gap:12px;padding:9px 6px;border-bottom:1px solid var(--border);cursor:pointer;border-radius:8px;transition:background .15s;}
-.player-row:hover{background:var(--gl);}
-.player-row:last-child{border-bottom:none;}
-
-/* ── PLAYER STATS ── */
-.pstats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
-.pstat-box{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
-.pstat-val{font-family:'Bebas Neue';font-size:32px;color:var(--green);}
-.pstat-lbl{font-size:11px;color:var(--muted);margin-top:2px;}
-
-/* ── REVIEW FORM ── */
-.review-wrap{max-width:680px;margin:0 auto;}
-.review-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px;box-shadow:var(--shadow2);}
-.review-card h2{font-family:'Bebas Neue';font-size:28px;letter-spacing:1.5px;color:var(--green);margin-bottom:4px;}
-.rev-sub{font-size:13px;color:var(--muted);margin-bottom:20px;}
-.formation-grid{display:flex;gap:7px;flex-wrap:wrap;margin-top:5px;}
-.formation-opt{padding:6px 13px;border:1.5px solid var(--border);border-radius:7px;cursor:pointer;font-size:13px;font-weight:700;transition:all .18s;background:var(--bg);color:var(--text2);}
-.formation-opt:hover{border-color:var(--green);}
-.formation-opt.selected{border-color:var(--green);background:var(--gl);color:var(--green);}
-.slot-label{font-size:11px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;}
-.ranking-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
-.rank-label{font-weight:700;font-size:13px;color:var(--gold);min-width:44px;}
-.success-box{background:var(--gl);border:1.5px solid var(--gm);border-radius:12px;padding:28px;text-align:center;display:none;}
-.success-box h3{font-family:'Bebas Neue';font-size:28px;color:var(--green);}
-
-/* ── ANALYTICS ── */
-.analytics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px;}
-.analytics-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:var(--shadow);}
-.analytics-card h4{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;}
-.vote-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.vote-bar-wrap{flex:1;background:var(--bg);border-radius:20px;height:8px;overflow:hidden;}
-.vote-bar{height:100%;background:var(--green);border-radius:20px;transition:width .4s;}
-.vote-label{font-size:13px;font-weight:600;min-width:90px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.vote-count{font-size:12px;color:var(--muted);min-width:20px;text-align:right;font-weight:700;}
-
-/* ── ADMIN ── */
-.admin-login-area{min-height:calc(100vh - 58px);display:flex;align-items:center;justify-content:center;}
-.login-box{background:#fff;border:1px solid var(--border);border-radius:16px;padding:34px 30px;width:340px;box-shadow:var(--shadow2);}
-.login-box h2{font-family:'Bebas Neue';font-size:26px;color:var(--green);letter-spacing:2px;margin-bottom:3px;}
-.login-sub{font-size:13px;color:var(--muted);margin-bottom:22px;}
-.admin-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px;border-bottom:1px solid var(--border);padding-bottom:13px;}
-.atab{padding:6px 13px;border-radius:7px;background:var(--bg);border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:12px;font-weight:700;transition:all .18s;}
-.atab.active,.atab:hover{background:var(--green);color:#fff;border-color:var(--green);}
-.admin-panel{display:none;}.admin-panel.active{display:block;}
-.guide-box{background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px;}
-.guide-box h4{font-size:14px;font-weight:700;margin-bottom:9px;}
-.guide-box p,.guide-box li{font-size:13px;color:var(--text2);line-height:1.7;}
-.guide-box ol,.guide-box ul{padding-left:18px;}
-.code-block{background:#0f172a;color:#86efac;font-family:monospace;font-size:12px;padding:12px 14px;border-radius:8px;margin-top:10px;overflow-x:auto;line-height:1.7;white-space:pre;}
-.step{display:inline-block;background:var(--green);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;margin-right:6px;}
-
-/* ── WINNER OVERLAY ── */
-.winner-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:999;align-items:center;justify-content:center;}
-.winner-overlay.show{display:flex;}
-.winner-box{background:#fff;border:3px solid var(--gold);border-radius:20px;padding:38px;text-align:center;max-width:400px;animation:popIn .5s;box-shadow:0 0 60px rgba(217,119,6,.28);}
-.winner-box h2{font-family:'Bebas Neue';font-size:38px;color:var(--gold);}
-.winner-box h3{font-size:24px;font-weight:700;margin:8px 0;}
-.confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:998;}
-
-/* ── TOAST ── */
-.toast{position:fixed;bottom:22px;right:22px;background:var(--green);color:#fff;padding:10px 16px;border-radius:10px;font-weight:700;font-size:13px;z-index:9999;opacity:0;transform:translateY(12px);transition:all .3s;box-shadow:0 4px 20px rgba(22,163,74,.28);}
-.toast.show{opacity:1;transform:translateY(0);}
-
-/* ── MISC ── */
-.mini-divider{height:1px;background:var(--border);margin:20px 0;}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:var(--shadow);}
-.pos-1{color:var(--gold);font-weight:800;}.pos-2{color:var(--text2);font-weight:700;}.pos-3{color:#b45309;font-weight:700;}
-footer{text-align:center;padding:18px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);background:#fff;margin-top:40px;}
-footer a{color:var(--green);text-decoration:none;font-weight:700;}
-@media(max-width:640px){
-  nav{padding:0 14px;}.nav-links{gap:0;}.nav-btn{font-size:11px;padding:5px 7px;}
-  .hero-title{font-size:52px;}.inner{padding:20px 14px;}
-  .grid-2{grid-template-columns:1fr;}.graphs-grid{grid-template-columns:1fr;}
-  .team-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}
-}
-</style>
 </head>
 <body>
 
 <!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
 <nav>
   <div class="nav-left">
-    <div class="nav-logo" onclick="showPage('home')">JB</div>
+    <!-- Replace logo.png with your actual logo file path -->
+    <img class="nav-logo-img" src="images/logo.png" alt="Joga Bonito" onclick="showPage('home')"
+         onerror="this.outerHTML='<span style=font-family:Bebas Neue;font-size:22px;color:var(--green);cursor:pointer;font-weight:700;letter-spacing:2px onclick=showPage(&quot;home&quot;)>JB</span>'">
     <div class="nav-links">
       <button class="nav-btn active" onclick="showPage('home')">Home</button>
+      <button class="nav-btn" onclick="showPage('players')">Players</button>
       <button class="nav-btn" onclick="showPage('teams')">Teams</button>
       <button class="nav-btn" onclick="showPage('matches')">Matches</button>
       <button class="nav-btn" onclick="showPage('table')">Table</button>
@@ -303,9 +28,18 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
   </div>
   <div class="nav-right">
     <button class="live-btn" onclick="openLivePopup()">Live</button>
+    <!-- Profile icon — shown only when logged in -->
+    <div class="profile-btn" id="profileBtn" onclick="openProfileModal()" style="display:none;">
+      <img id="profileBtnImg" src="" alt="" onerror="this.style.display='none'">
+      <span id="profileBtnInitial"></span>
+    </div>
+    <!-- Login button for form access — shown when not logged in -->
+    <button class="btn btn-outline btn-sm" id="loginNavBtn" onclick="openUserLogin()" style="font-size:12px;padding:5px 11px;">Login</button>
     <button class="admin-dot" onclick="showPage('admin-login')" title="Admin"></button>
   </div>
 </nav>
+
+<!-- ════════════════ OVERLAYS & POPUPS ════════════════ -->
 
 <!-- LIVE POPUP -->
 <div class="overlay" id="liveOverlay" onclick="closeLivePopup(event)">
@@ -324,16 +58,36 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
 <div class="overlay" id="s2Overlay" onclick="closeS2(event)">
   <div class="s2-box">
     <button class="pop-close" onclick="document.getElementById('s2Overlay').classList.remove('show')">✕</button>
-    <div style="font-size:52px;margin-bottom:12px;">⚽</div>
-    <h2 style="font-family:'Bebas Neue';font-size:30px;color:var(--green);letter-spacing:2px;">SEASON 2</h2>
+    <div style="font-size:50px;margin-bottom:12px;">⚽</div>
+    <h2 style="font-family:'Bebas Neue';font-size:28px;color:var(--green);letter-spacing:2px;">SEASON 2</h2>
     <p style="color:var(--muted);margin-top:8px;font-size:14px;">Season 2 will be announced shortly.<br>Stay tuned!</p>
   </div>
 </div>
 
+<!-- USER LOGIN POPUP -->
+<div class="overlay" id="userLoginOverlay" onclick="closeUserLoginOverlay(event)">
+  <div class="user-login-box">
+    <button class="pop-close" onclick="document.getElementById('userLoginOverlay').classList.remove('show')">✕</button>
+    <div style="font-size:36px;margin-bottom:8px;">🔑</div>
+    <h2 style="font-family:'Bebas Neue';font-size:22px;color:var(--green);letter-spacing:2px;margin-bottom:3px;">Login</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:16px;">Login to fill the fan review form</p>
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="ulUsername" placeholder="your username" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="ulPassword" placeholder="your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')userLogin()">
+    </div>
+    <p id="ulErr" style="color:var(--red);font-size:12px;margin-bottom:10px;display:none;">Wrong username or password.</p>
+    <button class="btn btn-green btn-full" onclick="userLogin()">Login</button>
+  </div>
+</div>
+
 <!-- STORY MODAL -->
-<div class="modal-overlay" id="story-modal" onclick="closeModal('story-modal',event)">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closeModal('story-modal')" style="background:rgba(0,0,0,.4);color:#fff;border:none;">✕</button>
+<div class="modal-overlay" id="storyModal" onclick="closeModal('storyModal',event)">
+  <div class="modal-box" style="background:#000;padding:0;max-width:340px;height:520px;">
+    <button class="modal-close" onclick="closeModal('storyModal')" style="background:rgba(0,0,0,.4);color:#fff;border:none;">✕</button>
     <div class="story-full">
       <div class="story-progress" id="storyProgress"></div>
       <div class="story-full-img" id="storyFullImg"></div>
@@ -352,7 +106,7 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
 
 <!-- PLAYER CARD MODAL -->
 <div class="modal-overlay" id="pcModal" onclick="closeModal('pcModal',event)">
-  <div class="modal-box" style="max-width:340px;padding:0;overflow:hidden;background:#0f172a;">
+  <div class="modal-box" style="max-width:320px;padding:0;overflow:hidden;background:#0f172a;">
     <button class="modal-close" onclick="closeModal('pcModal')" style="background:rgba(255,255,255,.15);color:#fff;border:none;z-index:10;">✕</button>
     <div id="pcModalContent"></div>
   </div>
@@ -366,10 +120,34 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
   </div>
 </div>
 
+<!-- MATCH DETAIL MODAL -->
+<div class="modal-overlay" id="matchDetailModal" onclick="closeModal('matchDetailModal',event)">
+  <div class="modal-box" style="max-width:600px;">
+    <button class="modal-close" onclick="closeModal('matchDetailModal')">✕</button>
+    <div id="matchDetailContent"></div>
+  </div>
+</div>
+
+<!-- SPONSOR MODAL -->
+<div class="modal-overlay" id="sponsorModal" onclick="closeModal('sponsorModal',event)">
+  <div class="modal-box" style="text-align:center;max-width:420px;">
+    <button class="modal-close" onclick="closeModal('sponsorModal')">✕</button>
+    <div id="sponsorModalContent"></div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profileModal" onclick="closeModal('profileModal',event)">
+  <div class="modal-box" style="max-width:460px;">
+    <button class="modal-close" onclick="closeModal('profileModal')">✕</button>
+    <div id="profileModalContent"></div>
+  </div>
+</div>
+
 <!-- ═══════════════════════════════ HOME ═══════════════════════════════ -->
 <div id="page-home" class="page active" style="padding:0;max-width:100%;">
 
-  <!-- Winner banner (hidden until winner set in data.js) -->
+  <!-- Winner banner -->
   <div class="winner-banner" id="winnerBanner">
     <p id="winnerBannerText">🏆 CHAMPIONS — —</p>
   </div>
@@ -383,59 +161,121 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
     <div class="hero-season" id="heroSeason">Season 1 · NIT Jalandhar</div>
     <div class="hero-tagline" id="heroTagline">Football Tournament of Mallus of NIT Jalandhar</div>
     <div class="hero-badges">
-      <span class="hero-badge">⚽ Season 1</span>
-      <span class="hero-badge" id="heroBadgeVenue">🏟️ NIT Jalandhar</span>
-      <span class="hero-badge">🌴 Mallus FC</span>
+      <!-- Season selector -->
+      <div class="season-badge-wrap">
+        <button class="season-select-btn" id="seasonSelectBtn" onclick="toggleSeasonDropdown()">
+          ⚽ Season 1 <span style="font-size:10px;">▼</span>
+        </button>
+        <div class="season-dropdown" id="seasonDropdown">
+          <div class="season-option active" onclick="selectSeason(1)">⚽ Season 1</div>
+          <div class="season-option" onclick="selectSeason(2)">🆕 Season 2</div>
+        </div>
+      </div>
+      <!-- Clickable badges -->
+      <a class="hero-badge clickable" id="heroBadgeVenue" href="#" target="_blank">🏟️ NIT Jalandhar</a>
+      <a class="hero-badge clickable" id="heroBadgeMallus" href="#" target="_blank">🌴 Mallus FC</a>
+      <a class="hero-badge clickable" id="heroBadgeAuction" href="#" target="_blank">💰 Auction</a>
     </div>
   </div>
 
-  <!-- News -->
-  <div class="news-section">
-    <div class="news-inner">
-      <div class="section-label">📢 Latest News</div>
-      <div class="stories-scroll" id="storiesContainer"></div>
-    </div>
-  </div>
+  <!-- Season 1 content wrapper -->
+  <div id="season1Content">
 
-  <!-- Player Cards (hidden if no players) -->
-  <div class="player-cards-section" id="playerCardsSection" style="display:none;">
-    <div style="padding:0 24px;">
-      <div class="section-label" style="color:rgba(255,255,255,.4);">⚽ Squad Cards</div>
-    </div>
-    <div class="pc-heading">Player Cards</div>
-    <div class="cards-track-wrap"><div class="cards-track" id="cardsTrack"></div></div>
-  </div>
-
-  <!-- Graphs (hidden if no data) -->
-  <div class="graphs-section" id="graphsSection" style="display:none;">
-    <div class="graphs-inner">
-      <div class="section-label">📊 Live Stats</div>
-      <div class="graphs-grid">
-        <div class="graph-card"><h4>🏆 Points Table</h4><div class="graph-canvas-wrap"><canvas id="chartPts"></canvas></div></div>
-        <div class="graph-card"><h4>⚽ Top Scorers</h4><div class="graph-canvas-wrap"><canvas id="chartScorers"></canvas></div></div>
-        <div class="graph-card"><h4>🎯 Goals per Team</h4><div class="graph-canvas-wrap"><canvas id="chartGoals"></canvas></div></div>
-        <div class="graph-card"><h4>🟨 Yellow Cards</h4><div class="graph-canvas-wrap"><canvas id="chartCards"></canvas></div></div>
+    <!-- News -->
+    <div class="news-section">
+      <div class="news-inner">
+        <div class="section-label">📢 Latest News</div>
+        <div class="stories-scroll" id="storiesContainer"></div>
       </div>
     </div>
-  </div>
 
-  <!-- Comments slider (hidden if no comments) -->
-  <div class="comments-section" id="commentSection" style="display:none;">
-    <div class="comments-inner">
-      <div class="section-label" style="margin-bottom:9px;">💬 Fan Comments</div>
-      <div style="overflow:hidden;"><div class="slider-track" id="sliderTrack"></div></div>
+    <!-- Player Cards -->
+    <div class="player-cards-section" id="playerCardsSection" style="display:none;">
+      <div style="padding:0 24px;">
+        <div class="pc-heading">⚽ Player Cards</div>
+        <p style="font-size:12px;color:rgba(255,255,255,.35);padding:0 0 10px;margin-top:-6px;">Click a card · Drag to browse</p>
+      </div>
+      <div class="cards-track-wrap" id="cardsTrackWrap">
+        <div class="cards-track animating" id="cardsTrack"></div>
+      </div>
+    </div>
+
+    <!-- Live Stats (graphs) -->
+    <div class="graphs-section" id="graphsSection" style="display:none;">
+      <div class="graphs-inner">
+        <div class="section-label">📊 Live Stats</div>
+        <div class="graphs-grid">
+          <div class="graph-card"><h4>🏆 Points</h4><div class="graph-canvas-wrap"><canvas id="chartPts"></canvas></div></div>
+          <div class="graph-card"><h4>⚽ Top Scorers</h4><div class="graph-canvas-wrap"><canvas id="chartScorers"></canvas></div></div>
+          <div class="graph-card"><h4>🎯 Top Assisters</h4><div class="graph-canvas-wrap"><canvas id="chartAssists"></canvas></div></div>
+          <div class="graph-card"><h4>🍕 Goals by Team</h4><div class="graph-canvas-wrap"><canvas id="chartGoals"></canvas></div></div>
+          <div class="graph-card"><h4>🟨 Yellow Cards</h4><div class="graph-canvas-wrap"><canvas id="chartCards"></canvas></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sponsors section -->
+    <div class="sponsors-section" id="sponsorsSection" style="display:none;">
+      <div class="sponsors-inner">
+        <div class="sec-header"><div class="sec-title">🌟 Our Sponsors</div></div>
+        <div class="sec-divider"></div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Thank you to everyone who made this tournament possible.</p>
+        <div class="sponsors-grid" id="sponsorsGrid"></div>
+      </div>
+    </div>
+
+    <!-- Events carousel -->
+    <div class="events-section" id="eventsSection" style="display:none;">
+      <div class="events-inner">
+        <div class="sec-header"><div class="sec-title">📸 Events</div></div>
+        <div class="sec-divider"></div>
+        <div class="events-carousel" id="eventsCarousel">
+          <div class="events-slides" id="eventsSlides"></div>
+          <button class="carousel-btn carousel-prev" onclick="carouselMove(-1)">‹</button>
+          <button class="carousel-btn carousel-next" onclick="carouselMove(1)">›</button>
+        </div>
+        <div class="carousel-dots" id="carouselDots"></div>
+      </div>
+    </div>
+
+    <!-- Comments slider -->
+    <div class="comments-section" id="commentSection" style="display:none;">
+      <div class="comments-inner">
+        <div class="section-label" style="margin-bottom:8px;">💬 Fan Comments</div>
+        <div style="overflow:hidden;"><div class="slider-track" id="sliderTrack"></div></div>
+      </div>
+    </div>
+
+    <!-- Quick links -->
+    <div class="inner">
+      <div class="section-label">Quick Access</div>
+      <div class="quick-grid">
+        <div class="quick-card" onclick="showPage('matches')"><div class="quick-card-icon">⚽</div><h3>Match Results</h3><p>Fixtures & scores</p></div>
+        <div class="quick-card" onclick="showPage('table')"><div class="quick-card-icon">📊</div><h3>Points Table</h3><p>League standings</p></div>
+        <div class="quick-card" onclick="showPage('stats')"><div class="quick-card-icon">🏅</div><h3>Statistics</h3><p>Goals, assists & cards</p></div>
+        <div class="quick-card" onclick="showPage('teams')"><div class="quick-card-icon">👕</div><h3>Teams & Squads</h3><p>All registered teams</p></div>
+      </div>
+    </div>
+
+  </div><!-- /season1Content -->
+
+  <!-- Season 2 placeholder -->
+  <div id="season2Content" style="display:none;">
+    <div class="season2-placeholder">
+      <div class="s2-big">🚧</div>
+      <h2>Season 2 Coming Soon</h2>
+      <p>Season 2 will be announced shortly. Stay tuned!</p>
     </div>
   </div>
 
-  <!-- Quick links -->
+</div><!-- /page-home -->
+
+<!-- ═══════════════════════════════ PLAYERS ═══════════════════════════════ -->
+<div id="page-players" class="page">
   <div class="inner">
-    <div class="section-label">Quick Access</div>
-    <div class="quick-grid">
-      <div class="quick-card" onclick="showPage('matches')"><div class="quick-card-icon">⚽</div><h3>Match Results</h3><p>Fixtures & scores</p></div>
-      <div class="quick-card" onclick="showPage('table')"><div class="quick-card-icon">📊</div><h3>Points Table</h3><p>League standings</p></div>
-      <div class="quick-card" onclick="showPage('stats')"><div class="quick-card-icon">🏅</div><h3>Statistics</h3><p>Goals, assists & cards</p></div>
-      <div class="quick-card" onclick="showPage('teams')"><div class="quick-card-icon">👕</div><h3>Teams & Squads</h3><p>All registered teams</p></div>
-    </div>
+    <div class="sec-header"><div class="sec-title">Players</div></div>
+    <div class="sec-divider"></div>
+    <div id="playersListContent"></div>
   </div>
 </div>
 
@@ -476,13 +316,34 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
   <div class="inner">
     <div class="sec-header"><div class="sec-title">Statistics</div></div>
     <div class="sec-divider"></div>
-    <div class="grid-2" style="margin-bottom:22px;">
-      <div class="card"><div style="font-weight:700;font-size:14px;margin-bottom:13px;">⚽ Top Scorers</div><div id="topScorers"></div></div>
-      <div class="card"><div style="font-weight:700;font-size:14px;margin-bottom:13px;">🟨 Yellow Cards</div><div id="yellowCards"></div></div>
+    <div class="grid-2" style="margin-bottom:18px;">
+      <div class="card">
+        <div style="font-weight:700;font-size:14px;margin-bottom:12px;">⚽ Top Scorers</div>
+        <div id="topScorers"></div>
+      </div>
+      <div class="card">
+        <div style="font-weight:700;font-size:14px;margin-bottom:12px;">🎯 Top Assisters</div>
+        <div id="topAssisters"></div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:18px;">
+      <div style="font-weight:700;font-size:14px;margin-bottom:12px;">🃏 Cards</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Player</th><th>Team</th><th>🟨</th><th>🟥</th></tr></thead>
+          <tbody id="cardsTable"></tbody>
+        </table>
+      </div>
     </div>
     <div class="grid-2">
-      <div class="card"><div style="font-weight:700;font-size:14px;margin-bottom:13px;">⚔️ Best Attack</div><div class="table-wrap"><table><thead><tr><th>#</th><th>Team</th><th>Goals</th></tr></thead><tbody id="bestAttack"></tbody></table></div></div>
-      <div class="card"><div style="font-weight:700;font-size:14px;margin-bottom:13px;">🛡️ Best Defence</div><div class="table-wrap"><table><thead><tr><th>#</th><th>Team</th><th>Conceded</th></tr></thead><tbody id="bestDefence"></tbody></table></div></div>
+      <div class="card">
+        <div style="font-weight:700;font-size:14px;margin-bottom:12px;">⚔️ Best Attack</div>
+        <div class="table-wrap"><table><thead><tr><th>#</th><th>Team</th><th>Goals</th></tr></thead><tbody id="bestAttack"></tbody></table></div>
+      </div>
+      <div class="card">
+        <div style="font-weight:700;font-size:14px;margin-bottom:12px;">🛡️ Best Defence</div>
+        <div class="table-wrap"><table><thead><tr><th>#</th><th>Team</th><th>Conceded</th></tr></thead><tbody id="bestDefence"></tbody></table></div>
+      </div>
     </div>
   </div>
 </div>
@@ -493,93 +354,148 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
     <div class="sec-header"><div class="sec-title">Fan Review</div></div>
     <div class="sec-divider"></div>
     <div class="review-wrap">
+
+      <!-- Login wall — shown when not logged in -->
+      <div class="login-wall" id="reviewLoginWall" style="display:none;">
+        <h3>🔒 Login Required</h3>
+        <p>You need to login to fill the fan review form.</p>
+        <button class="btn btn-green" onclick="openUserLogin()">Login Now</button>
+      </div>
+
+      <!-- Edit notice — shown if already submitted -->
+      <div class="edit-notice" id="editNotice" style="display:none;">
+        ✏️ You have already submitted a review. You can edit your answers below.
+      </div>
+
+      <!-- The form card -->
       <div class="review-card" id="reviewFormCard">
         <h2>JOGA BONITO — SEASON 1</h2>
-        <p class="rev-sub">Pick your all-star squad, vote for awards, and rank the teams. Your submission goes directly to the tournament admin.</p>
+        <p class="rev-sub">Share your all-star picks, award votes, rankings, and feedback. Login required.</p>
 
-        <!--
-          IMPORTANT: Replace YOUR_FORM_ID in data.js (formspreeId field).
-          The form action is set automatically from data.js.
-        -->
         <form id="reviewForm" method="POST" onsubmit="handleSubmit(event)">
           <input type="hidden" name="_subject" value="Joga Bonito Fan Review">
+          <input type="hidden" name="submittedBy" id="hiddenSubmittedBy">
 
-          <div class="form-group">
-            <label>Your Name *</label>
-            <select name="name" id="reviewerName" required>
-              <option value="">— Select Your Name —</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Formation (Def – Mid – Att) *</label>
-            <div class="formation-grid">
-              <div class="formation-opt" onclick="selFm(this,'2-2-1')">2-2-1</div>
-              <div class="formation-opt" onclick="selFm(this,'3-1-1')">3-1-1</div>
-              <div class="formation-opt" onclick="selFm(this,'1-3-1')">1-3-1</div>
-              <div class="formation-opt" onclick="selFm(this,'2-1-2')">2-1-2</div>
-              <div class="formation-opt" onclick="selFm(this,'1-2-2')">1-2-2</div>
-              <div class="formation-opt" onclick="selFm(this,'3-2-0')">3-2-0</div>
-              <div class="formation-opt" onclick="selFm(this,'0-2-3')">0-2-3</div>
-              <div class="formation-opt" onclick="selFm(this,'2-3-0')">2-3-0</div>
+          <!-- ── SECTION 0: Your Name (auto-filled, read-only) ── -->
+          <div class="form-section">
+            <div class="form-section-title">👤 Your Name</div>
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" name="name" id="reviewerName" readonly
+                     style="background:var(--bg);color:var(--text2);cursor:not-allowed;"
+                     placeholder="Login to see your name">
             </div>
-            <input type="hidden" name="formation" id="fmInput">
           </div>
 
-          <div id="playerSlots"></div>
-          <!-- squad hidden field is filled on submit -->
-          <input type="hidden" name="squad" id="squadInput">
-
-          <div class="mini-divider"></div>
-          <div style="font-weight:700;font-size:14px;margin-bottom:13px;">🏅 Tournament Awards</div>
-
-          <div class="form-group"><label>Best Captain's Team</label>
-            <select name="best_captain" id="q_best_captain"><option value="">— Select —</option></select></div>
-          <div class="form-group"><label>Best Entertainment Team</label>
-            <select name="best_entertain" id="q_best_entertain"><option value="">— Select —</option></select></div>
-          <div class="form-group"><label>Luckiest Team</label>
-            <select name="luckiest" id="q_luckiest"><option value="">— Select —</option></select></div>
-          <div class="form-group"><label>Unluckiest Team</label>
-            <select name="unluckiest" id="q_unluckiest"><option value="">— Select —</option></select></div>
-          <div class="form-group"><label>Most Improved Team</label>
-            <select name="improved" id="q_improved"><option value="">— Select —</option></select></div>
-          <div class="form-group"><label>Best Emerging Player</label>
-            <select name="emerging" id="q_emerging"><option value="">— Select —</option></select></div>
-          <div class="form-group"><label>Fan Favourite Player</label>
-            <select name="fav_player" id="q_fav_player"><option value="">— Select —</option></select></div>
-          <div class="form-group"><label>Best Goalkeeper</label>
-            <select name="best_gk" id="q_best_gk"><option value="">— Select —</option></select></div>
-          <div class="form-group"><label>Most Skillful Player</label>
-            <select name="skillful" id="q_skillful"><option value="">— Select —</option></select></div>
-          <div class="form-group"><label>Tournament MVP</label>
-            <select name="mvp" id="q_mvp"><option value="">— Select —</option></select></div>
-
-          <div class="mini-divider"></div>
-          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">Overall Team Rankings</div>
-          <div id="teamRankings"></div>
-          <div style="font-weight:700;font-size:14px;margin:13px 0 6px;">Fan Favourite Team Rankings</div>
-          <div id="favTeamRankings"></div>
-          <div style="font-weight:700;font-size:14px;margin:13px 0 6px;">Fair Play Rankings</div>
-          <div id="fairPlayRankings"></div>
-          <!-- hidden fields carry rankings as readable strings -->
-          <input type="hidden" name="overall_rankings" id="rankInput">
-          <input type="hidden" name="fav_rankings"     id="favRankInput">
-          <input type="hidden" name="fairplay_rankings" id="fairRankInput">
-
-          <div class="mini-divider"></div>
-          <div class="form-group">
-            <label>Your Comments & Feedback</label>
-            <textarea name="comments" id="q_comments" rows="3" placeholder="Share your thoughts about the tournament..."></textarea>
+          <!-- ── SECTION 1: Create Your Tournament XI ── -->
+          <div class="form-section">
+            <div class="form-section-title">🏟️ Create Your Tournament XI</div>
+            <div class="form-group">
+              <label>Formation (Def – Mid – Att)</label>
+              <div class="formation-grid">
+                <div class="formation-opt" onclick="selFm(this,'2-2-1')">2-2-1</div>
+                <div class="formation-opt" onclick="selFm(this,'3-1-1')">3-1-1</div>
+                <div class="formation-opt" onclick="selFm(this,'1-3-1')">1-3-1</div>
+                <div class="formation-opt" onclick="selFm(this,'2-1-2')">2-1-2</div>
+                <div class="formation-opt" onclick="selFm(this,'1-2-2')">1-2-2</div>
+                <div class="formation-opt" onclick="selFm(this,'3-2-0')">3-2-0</div>
+                <div class="formation-opt" onclick="selFm(this,'0-2-3')">0-2-3</div>
+                <div class="formation-opt" onclick="selFm(this,'2-3-0')">2-3-0</div>
+              </div>
+              <input type="hidden" name="formation" id="fmInput">
+            </div>
+            <div id="playerSlots"></div>
+            <input type="hidden" name="squad" id="squadInput">
           </div>
 
-          <button type="submit" class="btn btn-green btn-full" style="padding:13px;font-size:15px;">✅ Submit Review</button>
+          <!-- ── SECTION 2: Tournament Awards ── -->
+          <div class="form-section">
+            <div class="form-section-title">🏅 Tournament Awards</div>
+            <div class="form-group"><label>Tournament MVP</label>
+              <select name="mvp" id="q_mvp"><option value="">— Select —</option></select></div>
+            <div class="form-group"><label>Best Goalkeeper</label>
+              <select name="best_gk" id="q_best_gk"><option value="">— Select —</option></select></div>
+            <div class="form-group"><label>Best Attacker</label>
+              <select name="best_attacker" id="q_best_attacker"><option value="">— Select —</option></select></div>
+            <div class="form-group"><label>Best Defender</label>
+              <select name="best_defender" id="q_best_defender"><option value="">— Select —</option></select></div>
+            <div class="form-group"><label>Most Agile Player</label>
+              <select name="most_agile" id="q_most_agile"><option value="">— Select —</option></select></div>
+            <div class="form-group"><label>Most Skillful Player</label>
+              <select name="skillful" id="q_skillful"><option value="">— Select —</option></select></div>
+            <div class="form-group"><label>Best Emerging Player</label>
+              <select name="emerging" id="q_emerging"><option value="">— Select —</option></select></div>
+            <div class="form-group"><label>Fan Favourite Player</label>
+              <select name="fav_player" id="q_fav_player"><option value="">— Select —</option></select></div>
+            <div class="form-group"><label>Best Captain's Team</label>
+              <select name="best_captain" id="q_best_captain"><option value="">— Select —</option></select></div>
+            <div class="form-group"><label>Best Entertainment Team</label>
+              <select name="best_entertain" id="q_best_entertain"><option value="">— Select —</option></select></div>
+            <div class="form-group"><label>Luckiest Team</label>
+              <select name="luckiest" id="q_luckiest"><option value="">— Select —</option></select></div>
+            <div class="form-group"><label>Unluckiest Team</label>
+              <select name="unluckiest" id="q_unluckiest"><option value="">— Select —</option></select></div>
+            <div class="form-group"><label>Most Improved Team</label>
+              <select name="improved" id="q_improved"><option value="">— Select —</option></select></div>
+          </div>
+
+          <!-- ── SECTION 3: Team Rankings ── -->
+          <div class="form-section">
+            <div class="form-section-title">📋 Team Rankings</div>
+            <div style="font-weight:700;font-size:13px;margin-bottom:8px;color:var(--text2);">Overall Rankings</div>
+            <div id="teamRankings"></div>
+            <div style="font-weight:700;font-size:13px;margin:14px 0 8px;color:var(--text2);">Fan Favourite Rankings</div>
+            <div id="favTeamRankings"></div>
+            <div style="font-weight:700;font-size:13px;margin:14px 0 8px;color:var(--text2);">Fair Play Rankings</div>
+            <div id="fairPlayRankings"></div>
+            <input type="hidden" name="team_rankings" id="rankInput">
+            <input type="hidden" name="fav_rankings" id="favRankInput">
+            <input type="hidden" name="fair_rankings" id="fairRankInput">
+          </div>
+
+          <!-- ── SECTION 4: Feedback ── -->
+          <div class="form-section">
+            <div class="form-section-title">💬 Feedback</div>
+            <div class="form-group">
+              <label>Feedback</label>
+              <textarea name="feedback" id="q_feedback" rows="3" placeholder="How was the overall tournament experience?"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Comments</label>
+              <textarea name="comments" id="q_comments" rows="3" placeholder="Anything else you'd like to share?"></textarea>
+            </div>
+          </div>
+
+          <!-- ── SECTION 5: Rate the Committee ── -->
+          <div class="form-section">
+            <div class="form-section-title">⭐ Rate the Committee</div>
+            <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Click stars to rate. 1 = Poor, 5 = Excellent.</p>
+
+            <div id="committeeStars">
+              <!-- Generated by JS -->
+            </div>
+
+            <div class="form-group" style="margin-top:14px;">
+              <label>Any Comments on the Above?</label>
+              <textarea name="committee_note" id="q_committee_note" rows="3" placeholder="Optional comments about the committee..."></textarea>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-green btn-full" style="padding:13px;font-size:15px;margin-top:8px;">✅ Submit Review</button>
         </form>
       </div>
+
+      <!-- Success animation box -->
       <div class="success-box" id="reviewSuccess">
-        <div style="font-size:44px;margin-bottom:10px;">🎉</div>
-        <h3>Thank You!</h3>
-        <p style="font-size:14px;color:var(--text2);margin-top:8px;">Your review was submitted successfully.<br>The admin will publish the results soon!</p>
+        <div class="success-confetti" id="successConfetti"></div>
+        <div style="font-size:56px;margin-bottom:10px;position:relative;z-index:1;">🎉</div>
+        <h3 id="successName" style="position:relative;z-index:1;">Thank You!</h3>
+        <p style="font-size:14px;color:var(--text2);margin-top:10px;position:relative;z-index:1;">
+          Your review has been submitted successfully.<br>
+          Your responses will <strong>reflect on the home page statistics and comments</strong> once published.
+        </p>
       </div>
+
     </div>
   </div>
 </div>
@@ -588,14 +504,14 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
 <div id="page-admin-login" class="page" style="padding:0;max-width:100%;">
   <div class="admin-login-area">
     <div class="login-box">
-      <div style="font-size:38px;margin-bottom:10px;">🔐</div>
-      <h2 style="font-family:'Bebas Neue';font-size:26px;color:var(--green);letter-spacing:2px;margin-bottom:3px;">Admin Panel</h2>
+      <div style="font-size:36px;margin-bottom:10px;">🔐</div>
+      <h2>Admin Panel</h2>
       <div class="login-sub">Joga Bonito — Tournament Management</div>
       <div class="form-group">
         <label>Password</label>
-        <input type="password" id="adminPass" placeholder="Enter password" onkeydown="if(event.key==='Enter')adminLogin()">
+        <input type="password" id="adminPass" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')adminLogin()">
       </div>
-      <button class="btn btn-green btn-full" style="padding:12px;" onclick="adminLogin()">Login</button>
+      <button class="btn btn-green btn-full" style="padding:11px;" onclick="adminLogin()">Login</button>
       <p id="loginErr" style="color:var(--red);font-size:12px;margin-top:10px;text-align:center;display:none;">Wrong password.</p>
     </div>
   </div>
@@ -617,110 +533,84 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
 
     <!-- GUIDE -->
     <div class="admin-panel active" id="panel-guide">
-
       <div class="guide-box">
         <h4>🗂️ How This Works</h4>
-        <p>All data lives in <strong>data.js</strong>. You edit it, push to GitHub, and the website updates for everyone worldwide in ~30 seconds — permanently, for free, forever.</p>
-        <p style="margin-top:8px;">No database. No server. No cost. Just a text file.</p>
+        <p>All data lives in <strong>data.js</strong>. Edit it, push to GitHub, and the website updates in ~30 seconds — free, forever.</p>
       </div>
-
       <div class="guide-box">
-        <h4>📁 Your Repo Folder Structure</h4>
+        <h4>📁 Repo Structure</h4>
         <div class="code-block">Joga-Bonito/
-├── index.html        ← website (rarely need to touch)
+├── index.html        ← website structure
 ├── data.js           ← YOUR DATABASE ← edit this
+├── script.js         ← all JavaScript
+├── styles.css        ← all styles
 └── images/
     ├── logo.png
-    ├── teams/
-    │   └── fc-kerala.png
-    ├── players/
-    │   └── rahul.jpg
-    ├── cards/
-    │   └── rahul-card.jpg   ← 9:16 portrait
-    └── news/
-        └── matchday.jpg</div>
+    ├── teams/        ← team logos
+    ├── players/      ← player photos
+    ├── cards/        ← 9:16 player cards
+    ├── events/       ← event carousel photos
+    └── sponsors/     ← sponsor photos</div>
       </div>
-
       <div class="guide-box">
         <h4>⚡ Every Update — 3 Commands</h4>
         <ol>
-          <li>Open VS Code → edit <strong>data.js</strong></li>
-          <li>Drop any new images into the <code>images/</code> folder</li>
-          <li>Open terminal (Ctrl+`) and run:</li>
+          <li>Edit <strong>data.js</strong> in VS Code</li>
+          <li>Drop images into <code>images/</code> subfolder</li>
+          <li>Run in terminal:</li>
         </ol>
         <div class="code-block">git add .
-git commit -m "Added match result: FC Kerala 2-1 Mallus United"
+git commit -m "Updated match result"
 git push</div>
-        <p style="margin-top:8px;">✅ Live in ~30 seconds for everyone.</p>
+        <p style="margin-top:8px;">✅ Live in ~30 seconds.</p>
       </div>
-
       <div class="guide-box">
-        <h4>➕ Add a Match Result</h4>
-        <p>In <strong>data.js</strong>, find the <code>matches</code> array and add:</p>
+        <h4>👥 Add Login Users</h4>
+        <p>Players are auto-added from the players array. For sponsors and fans, edit the <code>users</code> array in data.js:</p>
+        <div class="code-block">users: [
+  // Sponsors:
+  { username: "reliance", password: "pass123", usertype: "s", displayName: "Reliance Foundation" },
+  // Fans:
+  { username: "arun",    password: "fan001",  usertype: "f", displayName: "Arun K" },
+],</div>
+      </div>
+      <div class="guide-box">
+        <h4>➕ Add a Match Result (with goals & cards)</h4>
         <div class="code-block">{
   id: 1001,
-  homeId: 1,  awayId: 2,
-  date:  "2026-04-15",
+  homeId: 1, awayId: 2,
+  date: "2026-04-15", time: "16:30",
   label: "Group Stage",
-  homeScore: 2,  awayScore: 1,
+  homeScore: 2, awayScore: 1,
   goals: [
-    { playerId: 101, teamId: 1, og: false },
-    { playerId: 101, teamId: 1, og: false },
-    { playerId: 103, teamId: 1, og: true  }, // own goal
+    { playerId: 102, teamId: 1, og: false, assistId: 103 },
+    { playerId: 103, teamId: 1, og: false, assistId: 0   },
+    { playerId: 111, teamId: 1, og: true,  assistId: 0   }, // own goal
   ],
   cards: [
-    { playerId: 102, type: "yellow" },
+    { playerId: 108, type: "yellow" },
+    { playerId: 114, type: "red"    },
   ],
   isFinal: false
 },</div>
-        <p style="margin-top:8px;">Points table and stats update automatically.</p>
       </div>
-
-      <div class="guide-box">
-        <h4>👤 Add a Player</h4>
-        <div class="code-block">{
-  id: 101,
-  name: "Rahul M",
-  teamId: 1,              // matches team id
-  position: "Attacker",   // Goalkeeper|Defender|Midfielder|Attacker
-  captain: true,          // only ONE true per team
-  photo: "images/players/rahul.jpg",
-  card:  "images/cards/rahul-card.jpg", // 9:16 ratio
-  order: 0                // display order (0,1,2,...)
-},</div>
-      </div>
-
-      <div class="guide-box">
-        <h4>🖼️ Add Images</h4>
-        <ol>
-          <li>Rename file simply: <code>rahul.jpg</code>, <code>fc-kerala.png</code></li>
-          <li>Resize to under 300KB at <a href="https://squoosh.app" target="_blank" style="color:var(--green);">squoosh.app</a></li>
-          <li>Drag into the correct <code>images/</code> subfolder in VS Code</li>
-          <li>In data.js set: <code>photo: "images/players/rahul.jpg"</code></li>
-          <li>git add, commit, push</li>
-        </ol>
-      </div>
-
       <div class="guide-box">
         <h4>🏆 Set the Winner</h4>
         <div class="code-block">winner: {
-  teamId: 1,              // winning team's id
-  showCelebration: true   // shows banner + confetti
+  teamId: 1,            // winning team's id
+  showCelebration: true // shows banner + confetti
 },</div>
         <p style="margin-top:8px;">Also set <code>isFinal: true</code> on the championship match.</p>
       </div>
-
       <div class="guide-box">
-        <h4>📋 Publish Fan Reviews (from Google Sheet)</h4>
+        <h4>📋 Publish Fan Reviews</h4>
         <ol>
-          <li>Open your Google Sheet (connected via Formspree — see Form Setup tab)</li>
-          <li>Copy a fan's answers</li>
-          <li>Add to the <code>reviews</code> array in data.js (template is in data.js)</li>
-          <li>git push — analytics appear instantly for everyone</li>
+          <li>Fan submits form → lands in your Google Sheet (via Formspree)</li>
+          <li>Copy their row into the <code>reviews</code> array in data.js</li>
+          <li>git push — analytics update instantly for everyone</li>
         </ol>
       </div>
-
-    </div><!-- /panel-guide -->
+    </div>
 
     <!-- FORMSPREE SETUP -->
     <div class="admin-panel" id="panel-formspree">
@@ -728,24 +618,20 @@ git push</div>
         <h4>📬 One-Time Setup: Fan Form → Google Sheet</h4>
         <p><strong>Do this once. Takes about 10 minutes.</strong></p>
         <ol style="margin-top:10px;">
-          <li><span class="step">1</span>Go to <a href="https://formspree.io" target="_blank" style="color:var(--green);font-weight:700;">formspree.io</a> → Sign up free (use your Google account)</li>
+          <li><span class="step">1</span>Go to <a href="https://formspree.io" target="_blank" style="color:var(--green);font-weight:700;">formspree.io</a> → Sign up free</li>
           <li><span class="step">2</span>Click <strong>"+ New Form"</strong> → name it "Joga Bonito Review" → Create</li>
-          <li><span class="step">3</span>Copy the Form ID (looks like <code>xpwzabcd</code>)</li>
-          <li><span class="step">4</span>Open <strong>data.js</strong> and paste it:<br>
+          <li><span class="step">3</span>Copy the Form ID (e.g. <code>xpwzabcd</code>)</li>
+          <li><span class="step">4</span>Open <strong>data.js</strong> and paste:
             <div class="code-block">formspreeId: "xpwzabcd"</div>
           </li>
-          <li><span class="step">5</span>In Formspree → your form → <strong>Integrations tab</strong> → <strong>Google Sheets</strong> → Connect → choose or create a Google Sheet</li>
+          <li><span class="step">5</span>Formspree → your form → <strong>Integrations</strong> → <strong>Google Sheets</strong> → Connect</li>
           <li><span class="step">6</span>git push your updated data.js</li>
-          <li><span class="step">7</span>Test: submit one review on the website → check your Google Sheet for the row</li>
+          <li><span class="step">7</span>Test: submit one review → check Google Sheet</li>
         </ol>
       </div>
       <div class="guide-box">
-        <h4>✅ What You Get</h4>
-        <p>Every fan submission auto-appears as a new row in your Google Sheet with: name, formation, squad picks, all award votes, team rankings, comments, and timestamp. The data is yours forever in Google Drive.</p>
-      </div>
-      <div class="guide-box">
         <h4>💰 Cost?</h4>
-        <p>Formspree free plan: <strong>50 submissions/month</strong>. That's more than enough for a tournament of 30–50 players. GitHub Pages: <strong>free forever</strong>. Total cost: <strong>₹0</strong>.</p>
+        <p>Formspree free plan: <strong>50 submissions/month</strong>. GitHub Pages: <strong>free forever</strong>. Total: <strong>₹0</strong>.</p>
       </div>
       <div id="formspreeStatus" style="margin-top:14px;"></div>
     </div>
@@ -753,14 +639,14 @@ git push</div>
     <!-- REVIEWS -->
     <div class="admin-panel" id="panel-reviews-admin">
       <h3 style="font-weight:700;font-size:15px;margin-bottom:4px;">Reviews in data.js</h3>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">These are reviews you have already added to data.js. New fan submissions arrive in your Google Sheet — add them to data.js and push to publish.</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">New fan submissions arrive in your Google Sheet — add them to data.js and push to publish.</p>
       <div id="reviewsAdminList"></div>
     </div>
 
     <!-- ANALYTICS -->
     <div class="admin-panel" id="panel-analytics">
       <h3 style="font-weight:700;font-size:15px;margin-bottom:4px;">Fan Vote Analytics</h3>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Based on reviews published in data.js.</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Based on reviews published in data.js.</p>
       <div id="analyticsContent"></div>
     </div>
 
@@ -775,659 +661,16 @@ git push</div>
     <h2>CHAMPIONS!</h2>
     <h3 id="winnerTeamName">—</h3>
     <p style="color:var(--muted);margin-top:5px;font-size:13px;">Joga Bonito Season 1 · NIT Jalandhar</p>
-    <button class="btn btn-outline" style="margin-top:18px;" onclick="closeWinner()">Close</button>
+    <button class="btn btn-outline" style="margin-top:16px;" onclick="closeWinner()">Close</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <footer>
-  <p>Joga Bonito Season 1 · NIT Jalandhar &nbsp;|&nbsp; <a href="#">cmshebeeb</a></p>
+  <p>Joga Bonito Season 1 · NIT Jalandhar &nbsp;|&nbsp; <a href="https://github.com/cmshebeeb" target="_blank">cmshebeeb</a></p>
 </footer>
 
-<!-- ═══════════════════════════════ SCRIPTS ═══════════════════════════════ -->
-<script>
-// ═══════════════════════════════════════════════════════════════
-//  ALL DATA IS IN JB (from data.js). THIS FILE ONLY RENDERS IT.
-//  No localStorage. No Firebase. No uploads. No S object.
-// ═══════════════════════════════════════════════════════════════
-
-// ── NAV ──────────────────────────────────────────────────────
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  if (id === 'admin-login' && sessionStorage.getItem('jbAdmin')) { showPage('admin'); return; }
-  const pg = document.getElementById('page-' + id);
-  if (pg) { pg.classList.add('active'); window.scrollTo(0, 0); }
-  if (id === 'matches') renderMatches();
-  if (id === 'table')   renderTable();
-  if (id === 'stats')   renderStats();
-  if (id === 'teams')   renderTeams();
-  if (id === 'review')  setupReviewForm();
-  if (id === 'admin')   { renderAdminPanels(); renderAdminReviews(); }
-  document.querySelectorAll('.nav-btn').forEach(b => {
-    if (b.textContent.toLowerCase() === id) b.classList.add('active');
-  });
-  if (id === 'home') document.querySelectorAll('.nav-btn')[0]?.classList.add('active');
-}
-
-// ── POPUPS ────────────────────────────────────────────────────
-function openLivePopup() { document.getElementById('liveOverlay').classList.add('show'); }
-function closeLivePopup(e) { if (e.target === document.getElementById('liveOverlay')) document.getElementById('liveOverlay').classList.remove('show'); }
-function openReview() { document.getElementById('liveOverlay').classList.remove('show'); showPage('review'); }
-function openS2() { document.getElementById('liveOverlay').classList.remove('show'); document.getElementById('s2Overlay').classList.add('show'); }
-function closeS2(e) { if (!e || e.target === document.getElementById('s2Overlay')) document.getElementById('s2Overlay').classList.remove('show'); }
-function closeModal(id, e) { if (!e || e.target === document.getElementById(id)) document.getElementById(id).classList.remove('show'); }
-
-// ── ADMIN AUTH ────────────────────────────────────────────────
-function adminLogin() {
-  const p = document.getElementById('adminPass').value;
-  if (p === JB.adminPassword) {
-    sessionStorage.setItem('jbAdmin', '1');
-    document.getElementById('page-admin-login').classList.remove('active');
-    document.getElementById('page-admin').classList.add('active');
-    renderAdminPanels();
-    renderAdminReviews();
-  } else {
-    document.getElementById('loginErr').style.display = 'block';
-  }
-}
-function adminLogout() { sessionStorage.removeItem('jbAdmin'); showPage('home'); }
-function switchAdmin(tab, event) {
-  document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.atab').forEach(t => t.classList.remove('active'));
-  const p = document.getElementById('panel-' + tab); if (p) p.classList.add('active');
-  if (event && event.target) event.target.classList.add('active');
-  if (tab === 'analytics') renderAnalytics();
-  if (tab === 'reviews-admin') renderAdminReviews();
-  if (tab === 'formspree') checkFormspree();
-}
-
-// ── HERO ──────────────────────────────────────────────────────
-function renderHero() {
-  const T = JB.tournament;
-  document.getElementById('heroSeason').textContent  = T.season + ' · ' + T.venue;
-  document.getElementById('heroTagline').textContent = T.tagline;
-  document.getElementById('heroBadgeVenue').textContent = '🏟️ ' + T.venue;
-  if (T.logo) {
-    document.getElementById('logoArea').innerHTML =
-      `<img src="${T.logo}" alt="Logo" onerror="this.parentNode.innerHTML='<span style=color:rgba(255,255,255,.5);font-family:Bebas Neue;font-size:22px;letter-spacing:2px>JB</span>'">`;
-  }
-  // Winner banner
-  const W = JB.winner;
-  if (W && W.showCelebration && W.teamId) {
-    const wt = JB.teams.find(t => t.id === W.teamId);
-    if (wt) {
-      document.getElementById('winnerBannerText').textContent = '🏆  CHAMPIONS  —  ' + wt.name.toUpperCase() + '  —  🏆';
-      document.getElementById('winnerBanner').classList.add('show');
-    }
-  }
-}
-
-// ── NEWS ──────────────────────────────────────────────────────
-function renderNews() {
-  const c = document.getElementById('storiesContainer');
-  if (!JB.news || !JB.news.length) { c.innerHTML = '<p style="color:var(--muted)">No news yet.</p>'; return; }
-  c.innerHTML = JB.news.map((n, i) => `
-    <div class="story-card" onclick="openStory(${i})">
-      ${n.img
-        ? `<div class="story-bg"><img src="${n.img}" onerror="this.parentNode.innerHTML='${n.emoji}'"></div>`
-        : `<div class="story-bg">${n.emoji}</div>`}
-      <div class="story-overlay"><h3>${n.title}</h3></div>
-    </div>`).join('');
-}
-
-function openStory(idx) {
-  const n = JB.news[idx]; if (!n) return;
-  document.getElementById('storyFullTitle').textContent = n.title;
-  document.getElementById('storyFullBody').textContent  = n.body;
-  const img = document.getElementById('storyFullImg');
-  img.innerHTML = n.img ? `<img src="${n.img}" onerror="this.innerHTML='${n.emoji}'">` : n.emoji;
-  document.getElementById('storyProgress').innerHTML = JB.news.map((_, i) =>
-    `<div class="story-seg ${i < idx ? 'done' : i === idx ? 'act' : ''}"></div>`).join('');
-  document.getElementById('story-modal').classList.add('show');
-}
-
-// ── PLAYER CARDS ──────────────────────────────────────────────
-function renderPlayerCards() {
-  const sec = document.getElementById('playerCardsSection');
-  if (!JB.players || !JB.players.length) { sec.style.display = 'none'; return; }
-  sec.style.display = 'block';
-  const sorted = [...JB.players].sort((a, b) => (a.order || 0) - (b.order || 0));
-  const doubled = [...sorted, ...sorted]; // seamless loop
-  document.getElementById('cardsTrack').innerHTML = doubled.map(p => {
-    const t = JB.teams.find(x => x.id === p.teamId);
-    const cap = p.captain ? '<span class="cap-c">C</span>' : '';
-    const cardHTML = p.card
-      ? `<img class="pc-card-img" src="${p.card}" alt="${p.name}" onerror="this.style.display='none'">`
-      : `<div class="pc-placeholder">
-          ${p.photo
-            ? `<img src="${p.photo}" onerror="this.style.display='none'">`
-            : `<div class="pc-icon">👤</div>`}
-          <p>${p.name}</p>
-        </div>`;
-    return `<div class="pc-item" onclick="openPlayerCard(${p.id})">
-      ${cardHTML}
-      <div class="pc-name">${p.name}${cap}</div>
-      <div class="pc-pos">${p.position || ''} · ${t ? t.name : ''}</div>
-    </div>`;
-  }).join('');
-}
-
-function openPlayerCard(pid) {
-  const p = JB.players.find(x => x.id === pid); if (!p) return;
-  const t = JB.teams.find(x => x.id === p.teamId);
-  document.getElementById('pcModalContent').innerHTML = `
-    ${p.card
-      ? `<img class="pcm-img" src="${p.card}" onerror="this.style.display='none'">`
-      : `<div class="pcm-placeholder">
-          ${p.photo
-            ? `<img src="${p.photo}" onerror="this.style.display='none'">`
-            : `<div class="pcm-icon">👤</div>`}
-        </div>`}
-    <div class="pcm-info">
-      <div class="pcm-name">${p.name}${p.captain ? ' 👑' : ''}</div>
-      <div class="pcm-sub">${p.position || ''} · ${t ? t.name : ''}</div>
-      <button class="btn btn-green btn-full" style="margin-top:14px;"
-        onclick="closeModal('pcModal');openPlayerStats(${p.id})">📊 View Full Stats</button>
-    </div>`;
-  document.getElementById('pcModal').classList.add('show');
-}
-
-function openPlayerStats(pid) {
-  const p = JB.players.find(x => x.id === pid); if (!p) return;
-  const t = JB.teams.find(x => x.id === p.teamId);
-  let goals = 0, og = 0, yellow = 0, red = 0, played = 0;
-  JB.matches.forEach(m => {
-    if (m.homeId === p.teamId || m.awayId === p.teamId) played++;
-    m.goals.forEach(g => { if (g.playerId === p.id) { g.og ? og++ : goals++; } });
-    m.cards.forEach(c => { if (c.playerId === p.id) { (c.type === 'red' || c.type === 'second-yellow') ? red++ : yellow++; } });
-  });
-  document.getElementById('statsModalContent').innerHTML = `
-    <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
-      ${p.photo
-        ? `<img src="${p.photo}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--border);" onerror="this.style.display='none'">`
-        : `<div style="width:64px;height:64px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:28px;">👤</div>`}
-      <div>
-        <div style="font-family:'Bebas Neue';font-size:24px;color:var(--text);letter-spacing:1px;">${p.name}${p.captain ? ' 👑' : ''}</div>
-        <div style="display:flex;align-items:center;gap:7px;margin-top:4px;">
-          ${t?.logo ? `<img src="${t.logo}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;" onerror="this.style.display='none'">` : ''}
-          <span style="font-size:13px;color:var(--muted);">${p.position || ''} · ${t ? t.name : 'Unknown'}</span>
-        </div>
-      </div>
-    </div>
-    <div class="pstats-grid">
-      <div class="pstat-box"><div class="pstat-val">${played}</div><div class="pstat-lbl">Matches Played</div></div>
-      <div class="pstat-box"><div class="pstat-val" style="color:var(--green);">${goals}</div><div class="pstat-lbl">Goals</div></div>
-      <div class="pstat-box"><div class="pstat-val" style="color:#d97706;">🟨 ${yellow}</div><div class="pstat-lbl">Yellow Cards</div></div>
-      <div class="pstat-box"><div class="pstat-val" style="color:var(--red);">🟥 ${red}</div><div class="pstat-lbl">Red Cards</div></div>
-    </div>
-    ${og > 0 ? `<p style="margin-top:12px;font-size:13px;color:var(--muted);">Own Goals: ${og}</p>` : ''}`;
-  document.getElementById('statsModal').classList.add('show');
-}
-
-// ── COMMENTS ──────────────────────────────────────────────────
-function renderComments() {
-  const sec = document.getElementById('commentSection');
-  if (!JB.comments || !JB.comments.length) { sec.style.display = 'none'; return; }
-  sec.style.display = 'block';
-  const all = [...JB.comments, ...JB.comments, ...JB.comments, ...JB.comments];
-  document.getElementById('sliderTrack').innerHTML = all.map(c => `
-    <div class="comment-chip">
-      <div class="cc-av">${c.name.charAt(0).toUpperCase()}</div>
-      <div><div class="cc-name">${c.name}</div><div class="cc-text">${c.text}</div></div>
-    </div>`).join('');
-}
-
-// ── GRAPHS ────────────────────────────────────────────────────
-let _charts = {};
-function renderGraphs() {
-  const sec = document.getElementById('graphsSection');
-  if (!JB.teams.length && !JB.matches.length) { sec.style.display = 'none'; return; }
-  sec.style.display = 'block';
-  Object.values(_charts).forEach(c => { try { c.destroy(); } catch(e) {} });
-  _charts = {};
-
-  const GREEN = '#16a34a', GOLD = '#d97706';
-  const PALETTE = ['#16a34a','#d97706','#dc2626','#2563eb','#9333ea','#06b6d4','#f97316','#ec4899'];
-  const sorted = JB.teams.map(t => ({ ...t, ...getTeamStats(t.id) }))
-                          .sort((a, b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf);
-
-  // Points
-  if (sorted.length) {
-    const c = document.getElementById('chartPts');
-    if (c) _charts.pts = new Chart(c, {
-      type: 'bar',
-      data: { labels: sorted.map(t => t.name), datasets: [{ data: sorted.map(t => t.pts), backgroundColor: sorted.map((_, i) => i === 0 ? GOLD : GREEN), borderRadius: 6 }] },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
-    });
-  }
-
-  // Top scorers
-  const sMap = {};
-  JB.matches.forEach(m => m.goals.forEach(g => { if (!g.playerId || g.og) return; sMap[g.playerId] = (sMap[g.playerId] || 0) + 1; }));
-  const scorers = Object.entries(sMap).sort((a, b) => b[1] - a[1]).slice(0, 6);
-  if (scorers.length) {
-    const c = document.getElementById('chartScorers');
-    if (c) _charts.sc = new Chart(c, {
-      type: 'bar',
-      data: { labels: scorers.map(([id]) => JB.players.find(p => p.id === +id)?.name || '?'), datasets: [{ data: scorers.map(([, g]) => g), backgroundColor: GOLD, borderRadius: 6 }] },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
-    });
-  }
-
-  // Goals per team (doughnut)
-  if (sorted.length) {
-    const c = document.getElementById('chartGoals');
-    if (c) _charts.gl = new Chart(c, {
-      type: 'doughnut',
-      data: { labels: sorted.map(t => t.name), datasets: [{ data: sorted.map(t => t.gf), backgroundColor: PALETTE }] },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } }
-    });
-  }
-
-  // Yellow cards
-  const yMap = {};
-  JB.matches.forEach(m => m.cards.forEach(c => { if (c.type === 'yellow' || c.type === 'second-yellow') yMap[c.playerId] = (yMap[c.playerId] || 0) + 1; }));
-  const ycards = Object.entries(yMap).sort((a, b) => b[1] - a[1]).slice(0, 6);
-  if (ycards.length) {
-    const c = document.getElementById('chartCards');
-    if (c) _charts.yc = new Chart(c, {
-      type: 'bar',
-      data: { labels: ycards.map(([id]) => JB.players.find(p => p.id === +id)?.name || '?'), datasets: [{ data: ycards.map(([, c]) => c), backgroundColor: GOLD, borderRadius: 6 }] },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
-    });
-  }
-}
-
-// ── TEAMS PAGE ────────────────────────────────────────────────
-function renderTeams() {
-  const g = document.getElementById('teamsGrid');
-  if (!JB.teams.length) {
-    g.innerHTML = '<p style="color:var(--muted)">No teams yet. Add them to data.js and push.</p>'; return;
-  }
-  g.innerHTML = JB.teams.map(t => `
-    <div class="team-card" onclick="openTeamModal(${t.id})">
-      ${t.logo
-        ? `<img class="tc-logo" src="${t.logo}" alt="${t.name}" onerror="this.style.display='none'">`
-        : `<div style="width:60px;height:60px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 9px;">👕</div>`}
-      <h3 style="font-weight:700;font-size:14px;">${t.name}</h3>
-      <p style="font-size:11px;color:var(--muted);margin-top:3px;">${JB.players.filter(p => p.teamId === t.id).length} players</p>
-    </div>`).join('');
-}
-
-function openTeamModal(id) {
-  const t = JB.teams.find(x => x.id === id); if (!t) return;
-  const players = JB.players.filter(p => p.teamId === id);
-  const captain = players.find(p => p.captain);
-  const st = getTeamStats(id);
-  document.getElementById('teamModalContent').innerHTML = `
-    <div style="text-align:center;margin-bottom:18px;">
-      ${t.logo
-        ? `<img src="${t.logo}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--border);margin-bottom:9px;" onerror="this.style.display='none'">`
-        : `<div style="font-size:44px;margin-bottom:9px;">👕</div>`}
-      <h2 style="font-size:22px;font-weight:800;">${t.name}</h2>
-      ${captain ? `<div style="font-size:12px;color:var(--gold);margin-top:3px;">👑 Captain: ${captain.name}</div>` : ''}
-      <div style="display:flex;gap:12px;justify-content:center;margin-top:13px;flex-wrap:wrap;">
-        ${[['P', st.played],['W', st.won],['D', st.drawn],['L', st.lost],['GF', st.gf],['GA', st.ga],['GD', (st.gd >= 0 ? '+' : '') + st.gd],['Pts', st.pts]]
-          .map(([l, v]) => `<div style="text-align:center;"><div style="font-family:'Bebas Neue';font-size:22px;color:var(--green)">${v}</div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">${l}</div></div>`).join('')}
-      </div>
-    </div>
-    <div style="font-weight:700;font-size:13px;margin-bottom:10px;color:var(--text2);">Squad</div>
-    ${players.length
-      ? players.map(p => `
-        <div class="player-row" onclick="closeModal('teamModal');openPlayerStats(${p.id})">
-          ${p.photo
-            ? `<img class="player-photo-sm" src="${p.photo}" onerror="this.style.display='none'">`
-            : `<div style="width:32px;height:32px;background:var(--bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;">👤</div>`}
-          <div style="flex:1;">
-            <div style="font-weight:700;font-size:14px;">${p.name}${p.captain ? ' <span class="cap-c">C</span>' : ''}</div>
-            <div style="font-size:11px;color:var(--muted);">${p.position || ''}</div>
-          </div>
-          <span style="font-size:11px;color:var(--green);font-weight:600;">Stats →</span>
-        </div>`).join('')
-      : '<p style="color:var(--muted);font-size:13px;">No players added yet.</p>'}`;
-  document.getElementById('teamModal').classList.add('show');
-}
-
-// ── MATCHES ───────────────────────────────────────────────────
-function renderMatches() {
-  const list = document.getElementById('matchesList');
-  if (!JB.matches.length) { list.innerHTML = '<p style="color:var(--muted)">No matches recorded yet.</p>'; return; }
-  list.innerHTML = [...JB.matches].reverse().map(m => {
-    const ht = JB.teams.find(t => t.id === m.homeId);
-    const at = JB.teams.find(t => t.id === m.awayId);
-    const finalBadge = m.isFinal ? '<span class="badge-gold" style="margin-left:6px;">🏆 Final</span>' : '';
-    const gBadges = m.goals.map(g => {
-      const p = JB.players.find(x => x.id === g.playerId);
-      return `<span class="goal-badge">⚽ ${p ? p.name : g.og ? 'OG' : '?'}${g.og ? ' (OG)' : ''}</span>`;
-    }).join('');
-    const cBadges = m.cards.map(c => {
-      const p = JB.players.find(x => x.id === c.playerId);
-      const icon = (c.type === 'red' || c.type === 'second-yellow')
-        ? '<span class="card-icon card-r"></span>' : '<span class="card-icon card-y"></span>';
-      return `<span class="goal-badge">${icon}${p?.name || '?'}</span>`;
-    }).join('');
-    return `<div class="match-card">
-      <div style="font-size:11px;color:var(--muted);margin-bottom:9px;">
-        ${m.date ? new Date(m.date).toDateString() : ''} ${m.label ? '· ' + m.label : ''} ${finalBadge}
-      </div>
-      <div class="match-teams">
-        <div class="match-team">
-          ${ht?.logo ? `<img style="width:40px;height:40px;border-radius:50%;object-fit:cover;" src="${ht.logo}" onerror="this.style.display='none'">` : '<div style="font-size:26px;">👕</div>'}
-          <div class="match-team-name">${ht?.name || 'TBD'}</div>
-        </div>
-        <div class="match-score">${m.homeScore} – ${m.awayScore}</div>
-        <div class="match-team">
-          ${at?.logo ? `<img style="width:40px;height:40px;border-radius:50%;object-fit:cover;" src="${at.logo}" onerror="this.style.display='none'">` : '<div style="font-size:26px;">👕</div>'}
-          <div class="match-team-name">${at?.name || 'TBD'}</div>
-        </div>
-      </div>
-      ${gBadges || cBadges ? `<div class="goal-list">${gBadges}${cBadges}</div>` : ''}
-    </div>`;
-  }).join('');
-}
-
-// ── POINTS TABLE — Pts↓ → GD↓ → GF↓ ─────────────────────────
-function getTeamStats(id) {
-  let played = 0, won = 0, drawn = 0, lost = 0, gf = 0, ga = 0, pts = 0;
-  JB.matches.forEach(m => {
-    if (m.homeId === id || m.awayId === id) {
-      const isH = m.homeId === id;
-      const tf = isH ? m.homeScore : m.awayScore;
-      const ta = isH ? m.awayScore : m.homeScore;
-      played++; gf += tf; ga += ta;
-      if (tf > ta) { won++; pts += 3; } else if (tf === ta) { drawn++; pts++; } else { lost++; }
-    }
-  });
-  return { played, won, drawn, lost, gf, ga, gd: gf - ga, pts };
-}
-
-function renderTable() {
-  const rows = JB.teams
-    .map(t => ({ ...t, ...getTeamStats(t.id) }))
-    .sort((a, b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf);
-  document.getElementById('pointsBody').innerHTML = rows.map((t, i) => `
-    <tr>
-      <td class="${['pos-1','pos-2','pos-3'][i] || ''}" style="font-weight:700;">${i + 1}</td>
-      <td>
-        <div style="display:flex;align-items:center;gap:8px;">
-          ${t.logo ? `<img class="team-logo-sm" src="${t.logo}" onerror="this.style.display='none'">` : '<span style="font-size:14px;">👕</span>'}
-          <span style="font-weight:600;">${t.name}</span>
-        </div>
-      </td>
-      <td>${t.played}</td>
-      <td style="color:var(--green);font-weight:700;">${t.won}</td>
-      <td>${t.drawn}</td>
-      <td style="color:var(--red);font-weight:700;">${t.lost}</td>
-      <td>${t.gf}</td><td>${t.ga}</td>
-      <td>${t.gd >= 0 ? '+' : ''}${t.gd}</td>
-      <td style="font-weight:800;color:var(--green);font-size:15px;">${t.pts}</td>
-    </tr>`).join('') || '<tr><td colspan="10" style="color:var(--muted);text-align:center;padding:22px;">No data yet. Add matches to data.js.</td></tr>';
-}
-
-// ── STATS ─────────────────────────────────────────────────────
-function renderStats() {
-  // Top scorers
-  const sMap = {};
-  JB.matches.forEach(m => m.goals.forEach(g => { if (!g.playerId || g.og) return; sMap[g.playerId] = (sMap[g.playerId] || 0) + 1; }));
-  document.getElementById('topScorers').innerHTML = Object.entries(sMap)
-    .sort((a, b) => b[1] - a[1]).slice(0, 8)
-    .map(([id, g], i) => {
-      const p = JB.players.find(x => x.id === +id);
-      const t = JB.teams.find(x => x.id === p?.teamId);
-      return `<div class="stat-row" onclick="openPlayerStats(${id})">
-        <div class="stat-rank">${i + 1}</div>
-        ${p?.photo ? `<img class="player-photo-sm" src="${p.photo}" onerror="this.style.display='none'">` : '<div style="width:32px;height:32px;background:var(--bg);border-radius:50%;"></div>'}
-        <div class="stat-info"><div class="stat-name">${p?.name || '?'}</div><div class="stat-meta">${t?.name || ''}</div></div>
-        <div class="stat-count">${g}</div>
-      </div>`;
-    }).join('') || '<p style="color:var(--muted);font-size:13px;">No goals yet.</p>';
-
-  // Yellow cards
-  const yMap = {};
-  JB.matches.forEach(m => m.cards.forEach(c => { if (c.type === 'yellow' || c.type === 'second-yellow') yMap[c.playerId] = (yMap[c.playerId] || 0) + 1; }));
-  document.getElementById('yellowCards').innerHTML = Object.entries(yMap)
-    .sort((a, b) => b[1] - a[1]).slice(0, 8)
-    .map(([id, cnt], i) => {
-      const p = JB.players.find(x => x.id === +id);
-      const t = JB.teams.find(x => x.id === p?.teamId);
-      return `<div class="stat-row" onclick="openPlayerStats(${id})">
-        <div class="stat-rank">${i + 1}</div>
-        ${p?.photo ? `<img class="player-photo-sm" src="${p.photo}" onerror="this.style.display='none'">` : '<div style="width:32px;height:32px;background:var(--bg);border-radius:50%;"></div>'}
-        <div class="stat-info"><div class="stat-name">${p?.name || '?'}</div><div class="stat-meta">${t?.name || ''}</div></div>
-        <div class="stat-count" style="color:#d97706;">${cnt}</div>
-      </div>`;
-    }).join('') || '<p style="color:var(--muted);font-size:13px;">No cards yet.</p>';
-
-  // Best attack / defence
-  const tg = JB.teams.map(t => { const s = getTeamStats(t.id); return { name: t.name, gf: s.gf, ga: s.ga }; });
-  document.getElementById('bestAttack').innerHTML = [...tg].sort((a, b) => b.gf - a.gf)
-    .map((t, i) => `<tr><td style="font-weight:700;">${i+1}</td><td>${t.name}</td><td style="color:var(--green);font-weight:700;">${t.gf}</td></tr>`).join('')
-    || '<tr><td colspan="3" style="color:var(--muted)">No data</td></tr>';
-  document.getElementById('bestDefence').innerHTML = [...tg].sort((a, b) => a.ga - b.ga)
-    .map((t, i) => `<tr><td style="font-weight:700;">${i+1}</td><td>${t.name}</td><td style="color:var(--green);font-weight:700;">${t.ga}</td></tr>`).join('')
-    || '<tr><td colspan="3" style="color:var(--muted)">No data</td></tr>';
-}
-
-// ── REVIEW FORM ───────────────────────────────────────────────
-let _fm = null, _rObj = {}, _favObj = {}, _fairObj = {};
-
-function setupReviewForm() {
-  document.getElementById('reviewFormCard').style.display = 'block';
-  document.getElementById('reviewSuccess').style.display = 'none';
-
-  // Set Formspree action from data.js
-  const fid = JB.formspreeId;
-  document.getElementById('reviewForm').action =
-    (fid && fid !== 'YOUR_FORM_ID')
-      ? `https://formspree.io/f/${fid}`
-      : '#';
-
-  // Populate dropdowns from JB data
-  const pOpts = '<option value="">— Select —</option>' +
-    JB.players.map(p => { const t = JB.teams.find(x => x.id === p.teamId); return `<option value="${p.name}">${p.name}${t ? ' (' + t.name + ')' : ''}</option>`; }).join('');
-  const tOpts = '<option value="">— Select —</option>' +
-    JB.teams.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
-
-  document.getElementById('reviewerName').innerHTML =
-    '<option value="">— Select Your Name —</option>' +
-    JB.players.map(p => { const t = JB.teams.find(x => x.id === p.teamId); return `<option value="${p.name}">${p.name}${t ? ' (' + t.name + ')' : ''}</option>`; }).join('');
-
-  ['q_best_captain','q_best_entertain','q_luckiest','q_unluckiest','q_improved'].forEach(id => {
-    const el = document.getElementById(id); if (el) el.innerHTML = tOpts;
-  });
-  ['q_emerging','q_fav_player','q_best_gk','q_skillful','q_mvp'].forEach(id => {
-    const el = document.getElementById(id); if (el) el.innerHTML = pOpts;
-  });
-
-  _fm = null; _rObj = {}; _favObj = {}; _fairObj = {};
-  renderRankSel('teamRankings', _rObj);
-  renderRankSel('favTeamRankings', _favObj);
-  renderRankSel('fairPlayRankings', _fairObj);
-  document.querySelectorAll('.formation-opt').forEach(o => o.classList.remove('selected'));
-  document.getElementById('playerSlots').innerHTML = '';
-  document.getElementById('fmInput').value = '';
-}
-
-function renderRankSel(cId, obj) {
-  const n = JB.teams.length;
-  const el = document.getElementById(cId);
-  if (!n) { if (el) el.innerHTML = '<p style="color:var(--muted);font-size:13px;">No teams in data.js yet.</p>'; return; }
-  let html = '';
-  for (let rank = 1; rank <= n; rank++) {
-    const used = Object.entries(obj).filter(([r]) => +r !== rank).map(([, v]) => v);
-    const opts = '<option value="">— Select —</option>' +
-      JB.teams.filter(t => !used.includes(t.name))
-              .map(t => `<option value="${t.name}"${obj[rank] === t.name ? ' selected' : ''}>${t.name}</option>`).join('');
-    html += `<div class="ranking-row"><div class="rank-label">#${rank}</div><select onchange="onRankCh('${cId}',${rank},this.value)" style="flex:1;">${opts}</select></div>`;
-  }
-  if (el) el.innerHTML = html;
-}
-
-function onRankCh(cId, rank, val) {
-  const obj = cId === 'teamRankings' ? _rObj : cId === 'favTeamRankings' ? _favObj : _fairObj;
-  obj[rank] = val; renderRankSel(cId, obj);
-}
-
-function selFm(el, f) {
-  document.querySelectorAll('.formation-opt').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected'); _fm = f;
-  document.getElementById('fmInput').value = f;
-  const [d, m, a] = f.split('-').map(Number);
-  const pOpts = '<option value="">— Select Player —</option>' +
-    JB.players.map(p => { const t = JB.teams.find(x => x.id === p.teamId); return `<option value="${p.name}">${p.name} (${t?.name || ''} · ${p.position || ''})</option>`; }).join('');
-  let html = `<div class="form-group"><div class="slot-label">🧤 Goalkeeper</div><select name="slot_gk">${pOpts}</select></div>`;
-  for (let i = 0; i < d; i++) html += `<div class="form-group"><div class="slot-label">🛡️ Defender ${i+1}</div><select name="slot_def${i+1}">${pOpts}</select></div>`;
-  for (let i = 0; i < m; i++) html += `<div class="form-group"><div class="slot-label">⚙️ Midfielder ${i+1}</div><select name="slot_mid${i+1}">${pOpts}</select></div>`;
-  for (let i = 0; i < a; i++) html += `<div class="form-group"><div class="slot-label">⚡ Attacker ${i+1}</div><select name="slot_att${i+1}">${pOpts}</select></div>`;
-  document.getElementById('playerSlots').innerHTML = html;
-}
-
-function handleSubmit(e) {
-  if (!document.getElementById('reviewerName').value) { e.preventDefault(); toast('Please select your name'); return; }
-  if (!_fm) { e.preventDefault(); toast('Please select a formation'); return; }
-  // Pack rankings into hidden fields (readable strings for Google Sheet)
-  document.getElementById('rankInput').value    = Object.entries(_rObj).map(([r,v]) => `#${r}: ${v}`).join(' | ');
-  document.getElementById('favRankInput').value = Object.entries(_favObj).map(([r,v]) => `#${r}: ${v}`).join(' | ');
-  document.getElementById('fairRankInput').value = Object.entries(_fairObj).map(([r,v]) => `#${r}: ${v}`).join(' | ');
-  // Collect squad
-  document.getElementById('squadInput').value = Array.from(document.querySelectorAll('#playerSlots select')).map(s => s.value).filter(Boolean).join(', ');
-  // Show success after slight delay (form submits naturally to Formspree)
-  const fid = JB.formspreeId;
-  if (!fid || fid === 'YOUR_FORM_ID') {
-    e.preventDefault();
-    toast('⚠️ Set formspreeId in data.js first! See Admin → Form Setup.');
-    return;
-  }
-  setTimeout(() => {
-    document.getElementById('reviewFormCard').style.display = 'none';
-    document.getElementById('reviewSuccess').style.display = 'block';
-  }, 500);
-}
-
-// ── ADMIN PANELS ──────────────────────────────────────────────
-function renderAdminPanels() { /* tabs handle on-demand */ }
-
-function renderAdminReviews() {
-  const el = document.getElementById('reviewsAdminList'); if (!el) return;
-  if (!JB.reviews || !JB.reviews.length) {
-    el.innerHTML = '<p style="color:var(--muted)">No reviews in data.js yet. Add them from your Google Sheet to publish analytics.</p>'; return;
-  }
-  el.innerHTML = JB.reviews.map(r => `
-    <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;">
-        <strong>👤 ${r.reviewer || 'Anonymous'}</strong>
-        <span style="font-size:11px;color:var(--muted);">${r.submittedAt ? new Date(r.submittedAt).toLocaleDateString() : ''}</span>
-      </div>
-      <p style="font-size:13px;color:var(--text2);">Formation: <b>${r.formation || '—'}</b> · MVP: <b>${r.mvp || '—'}</b> · Best Team: <b>${r.best_captain || '—'}</b></p>
-      ${r.comments ? `<p style="font-size:12px;color:var(--muted);margin-top:6px;font-style:italic;">"${r.comments}"</p>` : ''}
-    </div>`).join('');
-}
-
-function renderAnalytics() {
-  const el = document.getElementById('analyticsContent'); if (!el) return;
-  if (!JB.reviews || !JB.reviews.length) {
-    el.innerHTML = '<p style="color:var(--muted)">No reviews published yet. Add reviews to data.js and push.</p>'; return;
-  }
-  const total = JB.reviews.length;
-  function countVotes(field) {
-    const map = {};
-    JB.reviews.forEach(r => { const v = r[field]; if (v) map[v] = (map[v] || 0) + 1; });
-    return Object.entries(map).sort((a, b) => b[1] - a[1]);
-  }
-  function voteBars(entries) {
-    if (!entries.length) return '<p style="color:var(--muted);font-size:13px;">No votes yet.</p>';
-    return entries.map(([name, count]) => `
-      <div class="vote-row">
-        <div class="vote-label" title="${name}">${name}</div>
-        <div class="vote-bar-wrap"><div class="vote-bar" style="width:${Math.round(count / total * 100)}%"></div></div>
-        <div class="vote-count">${count}</div>
-      </div>`).join('');
-  }
-  const sections = [
-    ['🏆 Tournament MVP', 'mvp'], ['⭐ Fan Favourite Player', 'fav_player'], ['🧤 Best Goalkeeper', 'best_gk'],
-    ['🎯 Most Skillful', 'skillful'], ['🌱 Best Emerging Player', 'emerging'],
-    ['👑 Best Captain\'s Team', 'best_captain'], ['🎉 Best Entertainment', 'best_entertain'],
-    ['🍀 Luckiest Team', 'luckiest'], ['😢 Unluckiest Team', 'unluckiest'], ['📈 Most Improved', 'improved']
-  ];
-  el.innerHTML = `
-    <p style="font-size:13px;color:var(--muted);margin-bottom:18px;">Based on <b>${total}</b> published review${total !== 1 ? 's' : ''}</p>
-    <div class="analytics-grid">
-      ${sections.map(([title, field]) => `
-        <div class="analytics-card">
-          <h4>${title}</h4>
-          ${voteBars(countVotes(field))}
-        </div>`).join('')}
-    </div>`;
-}
-
-function checkFormspree() {
-  const el = document.getElementById('formspreeStatus'); if (!el) return;
-  const fid = JB.formspreeId;
-  if (!fid || fid === 'YOUR_FORM_ID') {
-    el.innerHTML = '<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:12px 14px;font-size:13px;color:var(--red);">⚠️ <strong>formspreeId not set.</strong> Open data.js, set <code>formspreeId: "your_id"</code>, then git push.</div>';
-  } else {
-    el.innerHTML = `<div style="background:var(--gl);border:1px solid var(--gm);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--green);">✅ Formspree ID set: <strong>${fid}</strong>. Fan reviews will be sent to your linked Google Sheet.</div>`;
-  }
-}
-
-// ── WINNER ────────────────────────────────────────────────────
-let _cf;
-function showWinner(teamId) {
-  const t = JB.teams.find(x => x.id === teamId); if (!t) return;
-  document.getElementById('winnerTeamName').textContent = t.name;
-  document.getElementById('winnerOverlay').classList.add('show');
-  startConfetti();
-}
-function closeWinner() { document.getElementById('winnerOverlay').classList.remove('show'); stopConfetti(); }
-function startConfetti() {
-  const canvas = document.getElementById('confettiCanvas');
-  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-  const ctx = canvas.getContext('2d');
-  const pcs = Array.from({ length: 150 }, () => ({
-    x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height,
-    r: Math.random() * 7 + 3, c: `hsl(${Math.random() * 360},75%,55%)`,
-    d: Math.random() * 2.5 + 1, a: Math.random() * 6
-  }));
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    pcs.forEach(p => {
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = p.c; ctx.fill();
-      p.y += p.d; p.x += Math.sin(p.a) * 1.2; p.a += .05;
-      if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; }
-    });
-    _cf = requestAnimationFrame(draw);
-  }
-  draw();
-}
-function stopConfetti() { cancelAnimationFrame(_cf); }
-
-// ── TOAST ─────────────────────────────────────────────────────
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
-}
-
-// ── INIT — runs once on page load ─────────────────────────────
-window.onload = () => {
-  renderHero();       // logo, season info, winner banner
-  renderNews();       // news stories
-  renderPlayerCards(); // player card carousel
-  renderGraphs();     // live stats graphs
-  renderComments();   // fan comments ticker
-  renderTeams();      // needed so teams page is ready
-  renderMatches();    // needed so matches page is ready
-  renderTable();      // points table
-  renderStats();      // statistics
-
-  // Auto-show winner celebration if set in data.js
-  if (JB.winner && JB.winner.showCelebration && JB.winner.teamId) {
-    setTimeout(() => showWinner(JB.winner.teamId), 1000);
-  }
-};
-</script>
+<script src="script.js"></script>
 </body>
 </html>
