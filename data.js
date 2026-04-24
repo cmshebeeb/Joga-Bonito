@@ -280,26 +280,30 @@ const JB = {
   //   og: true = own goal (shows red ball, listed under scorer's team opponent side)
   // cards → { playerId, type }  type: "yellow"|"red"|"second-yellow"
   // time  → "HH:MM" kick-off time string e.g. "16:30"
-  matches: [
-    // {
-    //   id: 1001,
-    //   homeId: 1, awayId: 2,
-    //   date:  "2026-04-10",
-    //   time:  "16:30",
-    //   label: "Group Stage",
-    //   homeScore: 2, awayScore: 1,
-    //   goals: [
-    //     { playerId: 102, teamId: 1, og: false, assistId: 103 },  // Haris scores, Irfan assists
-    //     { playerId: 103, teamId: 1, og: false, assistId: 0   },  // Irfan scores, no assist
-    //     { playerId: 111, teamId: 1, og: true,  assistId: 0   },  // Aswin own goal (for team 1)
-    //   ],
-    //   cards: [
-    //     { playerId: 108, type: "yellow" },
-    //     { playerId: 114, type: "red"    },
-    //   ],
-    //   isFinal: false
-    // },
-  ],
+matches: [
+  {
+    id: 1,
+    homeId: 1,
+    awayId: 2,
+    date: "2026-04-24",
+
+    homeScore: 2,
+    awayScore: 1,
+
+    goals: [
+      { playerId: 102, teamId: 1, assistId: 106 },
+      { playerId: 103, teamId: 1, assistId: 0 },
+      { playerId: 109, teamId: 2, assistId: 110 }
+    ],
+
+    cards: [
+      { playerId: 104, teamId: 1, type: "yellow" },
+      { playerId: 108, teamId: 2, type: "yellow" }
+    ],
+
+    isFinal: false
+  }
+],
 
   // ── FAN REVIEWS ──────────────────────────────────────────
   // Paste rows from Google Sheet here to publish analytics.
