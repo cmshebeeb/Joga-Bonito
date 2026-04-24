@@ -70,9 +70,9 @@ const JB = {
   // logo: "images/teams/filename.png"  OR  "" for no logo
   teams: [
     { id: 1, name: "Real Fighters",       logo: "images/teams/real_fighters.jpeg"    },
-    { id: 2, name: "Mallus United",   logo: "images/teams/mallus-united.png"   },
-    { id: 3, name: "Thrissur FC",     logo: "images/teams/thrissur.png"        },
-    { id: 4, name: "Cochin Strikers", logo: "images/teams/cochin-strikers.png" },
+    { id: 2, name: "Malabar FC",   logo: "images/teams/malabar.png"   },
+    { id: 3, name: "Al Nassar FC",     logo: "images/teams/al_nassar.png"        },
+    { id: 4, name: "Gunners FC", logo: "images/teams/gunners.png" },
   ],
 
   // ── PLAYERS ──────────────────────────────────────────────
@@ -82,32 +82,37 @@ const JB = {
   // photo    → "images/players/filename.jpg"  OR  ""
   // card     → "images/cards/filename.jpg"    OR  ""  (9:16 portrait card)
   // order    → controls display order (0, 1, 2, …)
-  players: [
-        {
-          id: 101,
-          name: "Fahad",
-          teamId: 1,
-          position: "Midfielder",
-          captain: true,
-          photo: "images/players/fahad.jpg",
-          card: "images/cards/fahad.jpg",
-          order: 0
-        }
-    // {
-    //   id: 102, name: "Akhil S",   teamId: 1,
-    //   position: "Midfielder", captain: false,
-    //   photo: "images/players/akhil.jpg",
-    //   card:  "",
-    //   order: 1
-    // },
-    // {
-    //   id: 103, name: "Vishnu P",  teamId: 2,
-    //   position: "Goalkeeper", captain: true,
-    //   photo: "images/players/vishnu.jpg",
-    //   card:  "images/cards/vishnu-card.jpg",
-    //   order: 2
-    // },
-  ],
+players: [
+  { id: 101, name: "Anshu", teamId: 1, position: "Goal Keeper", captain: false, photo: "images/players/anshu.png", card: "images/cards/anshu.png", order: 0 },
+  { id: 102, name: "Haris", teamId: 1, position: "Midfielder", captain: false, photo: "images/players/haris.png", card: "images/cards/haris.png", order: 1 },
+  { id: 103, name: "Irfan", teamId: 1, position: "Attaker", captain: false, photo: "images/players/irfan.png", card: "images/cards/irfan.png", order: 2 },
+  { id: 104, name: "Johan", teamId: 1, position: "Defender", captain: false, photo: "images/players/johan.png", card: "images/cards/johan.png", order: 3 },
+  { id: 105, name: "Nandkishor", teamId: 1, position: "Defender", captain: false, photo: "images/players/nandkishor.png", card: "images/cards/nandkishor.png", order: 4 },
+  { id: 106, name: "Sanish", teamId: 1, position: "Midfielder", captain: false, photo: "images/players/sanish.png", card: "images/cards/sanish.png", order: 5 },
+  { id: 107, name: "Shahal", teamId: 1, position: "Midfielder", captain: false, photo: "images/players/shahal.png", card: "images/cards/shahal.png", order: 6 },
+
+  { id: 108, name: "Albin", teamId: 2, position: "Defender", captain: false, photo: "images/players/albin.png", card: "images/cards/albin.png", order: 7 },
+  { id: 109, name: "Allen", teamId: 2, position: "Attaker", captain: false, photo: "images/players/allen.png", card: "images/cards/allen.png", order: 8 },
+  { id: 110, name: "Anson", teamId: 2, position: "Midfielder", captain: false, photo: "images/players/anson.png", card: "images/cards/anson.png", order: 9 },
+  { id: 111, name: "Aswin", teamId: 2, position: "Defender", captain: false, photo: "images/players/aswin.png", card: "images/cards/aswin.png", order: 10 },
+  { id: 112, name: "Diljith", teamId: 2, position: "Midfielder", captain: false, photo: "images/players/diljith.png", card: "images/cards/diljith.png", order: 11 },
+  { id: 113, name: "Fabiz", teamId: 2, position: "Midfielder", captain: false, photo: "images/players/fabiz.png", card: "images/cards/fabiz.png", order: 12 },
+
+  { id: 114, name: "Adith", teamId: 3, position: "Attaker", captain: false, photo: "images/players/adith.png", card: "images/cards/adith.png", order: 13 },
+  { id: 115, name: "Adithyan", teamId: 3, position: "Defender", captain: false, photo: "images/players/adithyan.png", card: "images/cards/adithyan.png", order: 14 },
+  { id: 116, name: "Fahad", teamId: 3, position: "Midfielder", captain: false, photo: "images/players/fahad.png", card: "images/cards/fahad.png", order: 15 },
+  { id: 117, name: "Rohith", teamId: 3, position: "Defender", captain: false, photo: "images/players/rohith.png", card: "images/cards/rohith.png", order: 16 },
+  { id: 118, name: "Sam", teamId: 3, position: "Attaker", captain: false, photo: "images/players/sam.png", card: "images/cards/sam.png", order: 17 },
+  { id: 119, name: "Shebeeb", teamId: 3, position: "Defender", captain: false, photo: "images/players/shebeeb.png", card: "images/cards/shebeeb.png", order: 18 },
+
+  { id: 120, name: "Aakash", teamId: 4, position: "Goal Keeper", captain: false, photo: "images/players/aakash.png", card: "images/cards/aakash.png", order: 19 },
+  { id: 121, name: "Aswin Murali", teamId: 4, position: "Defender", captain: false, photo: "images/players/aswin murali.png", card: "images/cards/aswin murali.png", order: 20 },
+  { id: 122, name: "Devanand", teamId: 4, position: "Midfielder", captain: false, photo: "images/players/devanand.png", card: "images/cards/devanand.png", order: 21 },
+  { id: 123, name: "Eren", teamId: 4, position: "Attaker", captain: false, photo: "images/players/eren.png", card: "images/cards/eren.png", order: 22 },
+  { id: 124, name: "Hafees", teamId: 4, position: "Goal Keeper", captain: false, photo: "images/players/hafees.png", card: "images/cards/hafees.png", order: 23 },
+  { id: 125, name: "Hari", teamId: 4, position: "Midfielder", captain: false, photo: "images/players/hari.png", card: "images/cards/hari.png", order: 24 },
+  { id: 126, name: "Milind", teamId: 4, position: "Defender", captain: false, photo: "images/players/milind.png", card: "images/cards/milind.png", order: 25 }
+],
 
   // ── MATCHES ──────────────────────────────────────────────
   // homeId / awayId  → must match team ids above
