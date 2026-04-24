@@ -55,9 +55,13 @@ const JB = {
   ],
 
   // ── COMMENTS (homepage ticker) ───────────────────────────
+// { id: 1, name: "Arun K",   text: "Best tournament ever! 🔥" },
+// { id: 2, name: "Sreerag",  text: "FC Kerala all the way! 💚" },
   comments: [
-    // { id: 1, name: "Arun K",   text: "Best tournament ever! 🔥" },
-    // { id: 2, name: "Sreerag",  text: "FC Kerala all the way! 💚" },
+      { id: 1, name: "Mammootty", text:"Real Fighters 🔥" },
+      { id: 2, name: "Narenra Modi", text: "Desh vasiyoooom Al Nassar hamara priend he" },
+      { id: 3, name: "Anushka Sharma", text: "Final was intense ⚽" },
+      { id: 4, name: "Drump", text: "hai Mwolooo jada aano??!!"}
   ],
 
   // ── NEWS / STORIES ───────────────────────────────────────
@@ -83,10 +87,28 @@ const JB = {
   // ── EVENTS (homepage carousel) ───────────────────────────
   // Each event = one large photo with caption
   // img: "images/events/filename.png"
-  events: [
     // { id: 1, img: "images/events/opening.png",  caption: "Opening Ceremony",      date: "April 1" },
     // { id: 2, img: "images/events/match1.png",   caption: "Group Stage Match Day 1", date: "April 5" },
     // { id: 3, img: "images/events/auction.png",  caption: "Player Auction Night",   date: "March 28" },
+  events: [
+    {
+      id: 1,
+      title: "Opening Ceremony",
+      subtitle: "Season 1 Kickoff",
+      img: "images/events/event1.jpg"
+    },
+    {
+      id: 2,
+      title: "Semi Finals",
+      subtitle: "Top teams clash",
+      img: "images/events/event2.png"
+    },
+    {
+      id: 3,
+      title: "Grand Final",
+      subtitle: "Championship Night",
+      img: "images/events/event3.png"
+    }
   ],
 
   // ── SPONSORS ─────────────────────────────────────────────

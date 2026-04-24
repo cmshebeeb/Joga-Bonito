@@ -119,7 +119,13 @@ nav{background:#fff;border-bottom:1px solid var(--border);display:flex;align-ite
 .events-carousel{position:relative;overflow:hidden;border-radius:14px;margin-top:12px;}
 .events-slides{display:flex;transition:transform .5s ease;will-change:transform;}
 .event-slide{flex-shrink:0;width:100%;position:relative;border-radius:14px;overflow:hidden;}
-.event-slide img{width:100%;height:320px;object-fit:cover;display:block;}
+.event-slide img {
+  width: 100%;
+  aspect-ratio: 16 / 9;   /* THIS is the key */
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
 .event-caption{position:absolute;bottom:0;left:0;right:0;padding:14px 18px;background:linear-gradient(transparent,rgba(0,0,0,.8));color:#fff;}
 .event-caption h3{font-size:16px;font-weight:700;}
 .event-caption p{font-size:12px;opacity:.7;margin-top:2px;}
@@ -436,7 +442,10 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
   .player-list-card{padding:11px 12px;}
   .plc-photo{width:42px;height:42px;}
   .plc-name{font-size:14px;}
-  .event-slide img{height:220px;}
+  .event-slide img{
+    aspect-ratio: 16 / 9;
+    height: auto;
+  }
   .pstats-grid{grid-template-columns:repeat(2,1fr);}
 }
 @media(max-width:480px){
