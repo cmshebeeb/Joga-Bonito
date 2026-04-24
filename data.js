@@ -113,10 +113,26 @@ const JB = {
 
   // ── SPONSORS ─────────────────────────────────────────────
   // photo: "images/sponsors/filename.png" OR "" for initial avatar
-  sponsors: [
+  
     // { id: 1, name: "Kerala Spices Co.",   photo: "images/sponsors/kerala-spices.png",  role: "Title Sponsor",     message: "Proud to support Joga Bonito Season 1!" },
     // { id: 2, name: "Reliance Foundation", photo: "images/sponsors/reliance.png",       role: "Gold Sponsor",      message: "Football unites us all!" },
     // { id: 3, name: "NIT Canteen",         photo: "",                                   role: "Refreshment Partner", message: "Fuelling the players!" },
+  
+  sponsors: [
+    {
+    id: 1,
+    name: "Kerala Spices Co.",
+    photo: "images/sponsors/spice.png",
+    role: "Title Sponsor",
+    message: "Proud to support Joga Bonito 🔥"
+  },
+  {
+    id: 2,
+    name: "Malabar Cafe",
+    photo: "images/sponsors/cafe.png",
+    role: "Food Partner",
+    message: "Fueling players with energy ⚽"
+  }
   ],
 
   // ── TEAMS ────────────────────────────────────────────────
