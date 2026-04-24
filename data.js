@@ -303,6 +303,29 @@ matches: [
     ],
 
     isFinal: false
+  },
+    {
+    id: 2,
+    homeId: 3,
+    awayId: 4,
+    date: "2026-04-24",
+
+    homeScore: 3,
+    awayScore: 1,
+
+    goals: [
+      { playerId: 116, teamId: 3, assistId: 117 },
+      { playerId: 117, teamId: 3, assistId: 0 },
+      { playerId: 124, teamId: 3, og:true},
+      { playerId: 125, teamId: 4, assistId: 123 }
+    ],
+
+    cards: [
+      { playerId: 118, teamId: 3, type: "red" },
+      { playerId: 126, teamId: 3, type: "yellow" }
+    ],
+
+    isFinal: false
   }
 ],
 
