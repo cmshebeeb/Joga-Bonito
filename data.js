@@ -287,12 +287,13 @@ matches: [
     awayId: 2,
     date: "2026-04-24",
 
-    homeScore: 2,
+    homeScore: 3,
     awayScore: 1,
 
     goals: [
       { playerId: 102, teamId: 1, assistId: 106 },
       { playerId: 103, teamId: 1, assistId: 0 },
+      { playerId: 109, teamId: 2, og:true},
       { playerId: 109, teamId: 2, assistId: 110 }
     ],
 
