@@ -774,7 +774,7 @@ function buildStandings(matches, teams) {
   teams.forEach(t => map[t.id] = { teamId: t.id, played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, pts: 0 });
 
   matches.forEach(m => {
-    if (m.homeScore == null || m.awayScore == null) return;
+    if (m.homeScore === null || m.awayScore === null || m.isFinal) return;
     const h = map[m.homeId], a = map[m.awayId];
     if (!h || !a) return;
     h.played++; a.played++;

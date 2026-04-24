@@ -504,6 +504,27 @@ matches: [
     cards: [],
 
     isFinal: false
+  },
+
+  {
+    id: 20,
+    homeId: 3, // Al Nassar FC
+    awayId: 2, // Malabar FC
+    date: "2026-04-18 19:00",
+
+    homeScore: 2,
+    awayScore: 0,
+
+    goals: [
+      { playerId: 115, teamId: 3 }, // Adithyan ⚽
+      { playerId: 116, teamId: 3 }  // Fahad ⚽
+    ],
+
+    cards: [],
+
+    isFinal: true,
+
+    note: "🏆 FINAL — Al Nassar FC crowned champions"
   }
 ],
 
