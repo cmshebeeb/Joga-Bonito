@@ -274,56 +274,234 @@ const JB = {
     },
   ],
 
-  // ── MATCHES ──────────────────────────────────────────────
-  // goals → { playerId, teamId, og, assistId }
-  //   assistId: player id of assister, or 0 for no assist
-  //   og: true = own goal (shows red ball, listed under scorer's team opponent side)
-  // cards → { playerId, type }  type: "yellow"|"red"|"second-yellow"
-  // time  → "HH:MM" kick-off time string e.g. "16:30"
+// ── MATCHES ──────────────────────────────────────────────
+// goals → { playerId, teamId, og, assistId }
+//   assistId: player id of assister, or 0 for no assist
+//   og: true = own goal (shows red ball, listed under scorer's team opponent side)
+// cards → { playerId, type }  type: "yellow"|"red"|"second-yellow"
+// time  → "HH:MM" kick-off time string e.g. "16:30"
+
 matches: [
   {
     id: 1,
-    homeId: 1,
-    awayId: 2,
-    date: "2026-04-24",
+    homeId: 2,
+    awayId: 1,
+    date: "2026-01-26 18:00",
 
-    homeScore: 3,
+    homeScore: 0,
     awayScore: 1,
 
     goals: [
-      { playerId: 102, teamId: 1, assistId: 106 },
-      { playerId: 103, teamId: 1, assistId: 0 },
-      { playerId: 109, teamId: 2, og:true},
-      { playerId: 109, teamId: 2, assistId: 110 }
+      { playerId: 102, teamId: 1, assistId: 101 } // Haris, assist Anshu
+    ],
+
+    cards: [],
+
+    isFinal: false
+  },
+
+  {
+    id: 2,
+    homeId: 3,
+    awayId: 4,
+    date: "2026-01-28 18:00",
+
+    homeScore: 3,
+    awayScore: 0,
+
+    goals: [
+      { playerId: 116, teamId: 3, assistId: 0 },       // Fahad
+      { playerId: 114, teamId: 3, assistId: 115 },     // Adith, assist Adithyan
+      { playerId: 125, teamId: 4, og: true }           // Hari own goal
+    ],
+
+    cards: [],
+
+    isFinal: false
+  },
+
+  {
+    id: 10,
+    homeId: 1,
+    awayId: 3,
+    date: "date not mentioned",
+
+    homeScore: 1,
+    awayScore: 1,
+
+    goals: [
+      { playerId: 107, teamId: 1, assistId: 0 },
+      { playerId: 116, teamId: 3, assistId: 0 }
     ],
 
     cards: [
-      { playerId: 104, teamId: 1, type: "yellow" },
-      { playerId: 108, teamId: 2, type: "yellow" }
+      { playerId: 107, teamId: 1, type: "yellow" },
+      { playerId: 116, teamId: 3, type: "yellow" }
     ],
 
     isFinal: false
   },
-    {
-    id: 2,
-    homeId: 3,
-    awayId: 4,
-    date: "2026-04-24",
 
-    homeScore: 3,
-    awayScore: 1,
+  {
+    id: 11,
+    homeId: 2,
+    awayId: 4,
+    date: "date not mentioned",
+
+    homeScore: 1,
+    awayScore: 0,
 
     goals: [
-      { playerId: 116, teamId: 3, assistId: 117 },
-      { playerId: 117, teamId: 3, assistId: 0 },
-      { playerId: 124, teamId: 3, og:true},
-      { playerId: 125, teamId: 4, assistId: 123 }
+      { playerId: 113, teamId: 2, assistId: 110 }
+    ],
+
+    cards: [],
+
+    isFinal: false
+  },
+
+  {
+    id: 12,
+    homeId: 2,
+    awayId: 3,
+    date: "date not mentioned",
+
+    homeScore: 1,
+    awayScore: 0,
+
+    goals: [
+      { playerId: 115, teamId: 3, og: true }
     ],
 
     cards: [
-      { playerId: 118, teamId: 3, type: "red" },
-      { playerId: 126, teamId: 3, type: "yellow" }
+      { playerId: 112, teamId: 2, type: "yellow" }
     ],
+
+    isFinal: false
+  },
+
+  {
+    id: 13,
+    homeId: 1,
+    awayId: 4,
+    date: "date not mentioned",
+
+    homeScore: 0,
+    awayScore: 1,
+
+    goals: [
+      { playerId: 123, teamId: 4, assistId: 0 }
+    ],
+
+    cards: [
+      { playerId: 126, teamId: 4, type: "yellow" }
+    ],
+
+    isFinal: false
+  },
+
+  {
+    id: 14,
+    homeId: 1,
+    awayId: 2,
+    date: "date not mentioned",
+
+    homeScore: 0,
+    awayScore: 0,
+
+    goals: [],
+
+    cards: [],
+
+    isFinal: false
+  },
+
+  {
+    id: 15,
+    homeId: 1,
+    awayId: 3,
+    date: "date not mentioned",
+
+    homeScore: 0,
+    awayScore: 0,
+
+    goals: [],
+
+    cards: [],
+
+    isFinal: false
+  },
+
+  {
+    id: 16,
+    homeId: 2,
+    awayId: 3,
+    date: "date not mentioned",
+
+    homeScore: 0,
+    awayScore: 0,
+
+    goals: [],
+
+    cards: [],
+
+    isFinal: false
+  },
+
+  {
+    id: 17,
+    homeId: 2,
+    awayId: 4,
+    date: "date not mentioned",
+
+    homeScore: 1,
+    awayScore: 0,
+
+    goals: [
+      { playerId: 113, teamId: 2, assistId: 0 }
+    ],
+
+    cards: [
+      { playerId: 121, teamId: 4, type: "yellow" }
+    ],
+
+    isFinal: false
+  },
+
+  {
+    id: 18,
+    homeId: 4,
+    awayId: 1,
+    date: "2026-04-03 18:30",
+
+    homeScore: 3,
+    awayScore: 0,
+
+    goals: [
+      { playerId: 123, teamId: 4, assistId: 126 },
+      { playerId: 123, teamId: 4, assistId: 125 },
+      { playerId: 123, teamId: 4, assistId: 125 }
+    ],
+
+    cards: [
+      { playerId: 103, teamId: 1, type: "yellow" }
+    ],
+
+    isFinal: false
+  },
+
+  {
+    id: 19,
+    homeId: 3,
+    awayId: 4,
+    date: "2026-04-04 18:30",
+
+    homeScore: 0,
+    awayScore: 0,
+
+    goals: [],
+
+    cards: [],
 
     isFinal: false
   }
