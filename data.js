@@ -20,7 +20,7 @@ const JB = {
     venue:   "NIT Jalandhar",
     tagline: "Football Tournament of Mallus of NIT Jalandhar",
     // Put your logo at:  images/logo.png
-    logo:    "images/logo.jpeg"
+    logo:    "images/logo.png"
   },
 
   // ── ADMIN PASSWORD ───────────────────────────────────────
@@ -47,7 +47,7 @@ const JB = {
   ],
 
   // ── NEWS / STORIES ───────────────────────────────────────
-  // img: "images/news/filename.jpg"  OR  "" for no image
+  // img: "images/news/filename.png"  OR  "" for no image
   news: [
     {
       id: 1,
@@ -62,14 +62,14 @@ const JB = {
     //   title: "Quarter Finals Confirmed",
     //   body:  "All four quarter final spots have been decided...",
     //   emoji: "⚽",
-    //   img:   "images/news/qf.jpg"
+    //   img:   "images/news/qf.png"
     // },
   ],
 
   // ── TEAMS ────────────────────────────────────────────────
   // logo: "images/teams/filename.png"  OR  "" for no logo
   teams: [
-    { id: 1, name: "Real Fighters",       logo: "images/teams/real_fighters.jpeg"    },
+    { id: 1, name: "Real Fighters",       logo: "images/teams/real_fighters.png"    },
     { id: 2, name: "Malabar FC",   logo: "images/teams/malabar.png"   },
     { id: 3, name: "Al Nassar FC",     logo: "images/teams/al_nassar.png"        },
     { id: 4, name: "Gunners FC", logo: "images/teams/gunners.png" },
@@ -79,8 +79,8 @@ const JB = {
   // teamId   → must match an id in teams[] above
   // position → "Goalkeeper" | "Defender" | "Midfielder" | "Attacker"
   // captain  → true for exactly ONE player per team
-  // photo    → "images/players/filename.jpg"  OR  ""
-  // card     → "images/cards/filename.jpg"    OR  ""  (9:16 portrait card)
+  // photo    → "images/players/filename.png"  OR  ""
+  // card     → "images/cards/filename.png"    OR  ""  (9:16 portrait card)
   // order    → controls display order (0, 1, 2, …)
 players: [
   { id: 101, name: "Anshu", teamId: 1, position: "Goal Keeper", captain: false, photo: "images/players/anshu.png", card: "images/cards/anshu.png", order: 0 },
