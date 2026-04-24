@@ -455,7 +455,7 @@ function openSponsorModal(sponsorId) {
   if (!s) return;
 
   const initials = s.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-  const flowers  = '🌸🌺🌹🌻🌼💐🌷';
+  const flowers  = '💐';
 
   document.getElementById('sponsorModalContent').innerHTML = `
     <div class="sponsor-modal-confetti">${flowers}</div>
@@ -1249,7 +1249,7 @@ function openSponsorKeycard() {
       none of this would have happened. The entire committee, all the players, and every fan
       is deeply grateful for you. 🙏
     </p>
-    <div style="font-size:28px;margin-top:16px;">🌺🌹🌻🌼💐🌷🌸</div>
+    <div style="font-size:28px;margin-top:16px;">💐</div>
     <p style="font-size:13px;color:var(--green);font-weight:700;margin-top:10px;">The committee salutes you! ⭐</p>
   </div>`;
   showKeycardPopup(content);
@@ -1562,37 +1562,37 @@ function updateStarDisplay(groupId, val) {
 }
 
 /* ── Form Submit ── */
-async function handleSubmit(e) {
-  e.preventDefault();
+// async function handleSubmit(e) {
+//   e.preventDefault();
 
-  if (!currentUser) { openUserLogin(); return; }
+//   if (!currentUser) { openUserLogin(); return; }
 
-  const formspreeId = JB.formspreeId;
-  if (!formspreeId || formspreeId === 'YOUR_FORM_ID') {
-    showToast('⚠️ Set formspreeId in data.js first! See Admin → Form Setup', true);
-    return;
-  }
+//   const formspreeId = JB.formspreeId;
+//   if (!formspreeId) {
+//     showToast('⚠️ Set formspreeId in data.js first! See Admin → Form Setup', true);
+//     return;
+//   }
 
-  const form     = document.getElementById('reviewForm');
-  const formData = new FormData(form);
-  const action   = `https://formspree.io/f/${formspreeId}`;
+//   const form     = document.getElementById('reviewForm');
+//   const formData = new FormData(form);
+//   const action   = `https://formspree.io/f/${formspreeId}`;
 
-  try {
-    const resp = await fetch(action, {
-      method: 'POST',
-      body:   formData,
-      headers: { 'Accept': 'application/json' }
-    });
+//   try {
+//     const resp = await fetch(action, {
+//       method: 'POST',
+//       body:   formData,
+//       headers: { 'Accept': 'application/json' }
+//     });
 
-    if (resp.ok) {
-      showSuccessAnimation();
-    } else {
-      showToast('Submission failed. Please try again.', true);
-    }
-  } catch {
-    showToast('Network error. Please try again.', true);
-  }
-}
+//     if (resp.ok) {
+//       showSuccessAnimation();
+//     } else {
+//       showToast('Submission failed. Please try again.', true);
+//     }
+//   } catch {
+//     showToast('Network error. Please try again.', true);
+//   }
+// }
 
 function showSuccessAnimation() {
   document.getElementById('reviewFormCard').style.display = 'none';
@@ -1747,7 +1747,7 @@ function renderAnalytics() {
 function initFormspreeStatus() {
   const el = document.getElementById('formspreeStatus');
   if (!el) return;
-  if (JB.formspreeId && JB.formspreeId !== 'YOUR_FORM_ID') {
+  if (JB.formspreeId && JB.formspreeId !== 'mvzdlbqd') {
     el.innerHTML = `<div style="background:#dcfce7;border:1px solid #86efac;border-radius:8px;padding:10px 14px;font-size:13px;color:#166534;">✅ Formspree ID is set: <strong>${JB.formspreeId}</strong></div>`;
   } else {
     el.innerHTML = `<div style="background:#fee2e2;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;font-size:13px;color:#991b1b;">⚠️ formspreeId is not set. Follow the steps above.</div>`;
