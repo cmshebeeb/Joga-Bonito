@@ -179,7 +179,7 @@ function startStoryTimer(news) {
       clearInterval(storyTimer);
       closeModal('storyModal');
     }
-  }, 4000);
+  }, 60000);
 }
 
 /* ────────────────────────────────────────────────────────────

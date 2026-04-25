@@ -66,14 +66,14 @@ const JB = {
 
   // ── NEWS / STORIES ───────────────────────────────────────
   news: [
-    {
-      id: 1,
-      title: "Tournament Kicks Off!",
-      body:  "Joga Bonito Season 1 is officially underway at NIT Jalandhar!",
-      emoji: "🏆",
-      img:   "",
-      date:  ""
-    },
+      {
+        id: 1,
+        title: "Milestone 1: Auction Announced",
+        body:  "Joga Bonito Season 1 begins its journey with the official auction announcement. Planned with clear vision by Mallus of NITJ, this marks the first step towards building strong teams and uniting the Malayali community. Four teams will compete in the inaugural season, with overwhelming response and registrations from across the community. The stage is set for something unique.",
+        emoji: "⚡",
+        img:   "images/news/auction_poster.png",
+        date:  "2025-12-13"
+      }
     // {
     //   id: 2,
     //   title: "Quarter Finals Confirmed",
