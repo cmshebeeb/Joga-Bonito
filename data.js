@@ -128,10 +128,10 @@ const JB = {
   },
   {
     id: 2,
-    name: "Malabar Cafe",
+    name: "Malabar Masala",
     photo: "images/sponsors/cafe.png",
     role: "Food Partner",
-    message: "Fueling players with energy ⚽"
+    message: "Fueling players with energy with masala⚽"
   }
   ],
 
