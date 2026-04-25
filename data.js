@@ -31,7 +31,7 @@ const JB = {
   // 4. Paste it below
   // 5. In Formspree dashboard → your form → Integrations → Google Sheets → Connect
   // 6. git push → test by submitting one review
-  formspreeId: "YOUR_FORM_ID",
+  formspreeId: "mvzdlbqd",
 
   // ── WINNER ───────────────────────────────────────────────
   winner: {

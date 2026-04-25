@@ -488,10 +488,11 @@ function initEvents() {
 
   slides.innerHTML = events.map(ev => `
     <div class="event-slide">
-      <img src="${ev.img}" alt="${ev.caption || ''}"
+      <img src="${ev.img}" alt="${ev.title || ''}"
         onerror="this.style.display='none';this.parentNode.style.background='var(--bg)'">
       <div class="event-caption">
-        <h3>${ev.caption || ''}</h3>
+        <h3>${ev.title || ''}</h3>
+        ${ev.subtitle ? `<p>${ev.subtitle}</p>` : ''}
         ${ev.date ? `<p>📅 ${ev.date}</p>` : ''}
       </div>
     </div>`).join('');
