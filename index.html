@@ -5,9 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Joga Bonito Season 1</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
 <link rel="stylesheet" href="styles.css">
-<script src="data.js"></script>
 </head>
 <body>
 
@@ -15,7 +14,7 @@
 <nav>
   <div class="nav-left">
     <!-- Replace logo.png with your actual logo file path -->
-    <img class="nav-logo-img" src="images/logo.png" alt="Joga Bonito" onclick="showPage('home')"
+    <img class="nav-logo-img" src="images/logo.png" alt="Joga Bonito" loading="lazy" onclick="showPage('home')"
          onerror="this.outerHTML='<span style=font-family:Bebas Neue;font-size:22px;color:var(--green);cursor:pointer;font-weight:700;letter-spacing:2px onclick=showPage(&quot;home&quot;)>JB</span>'">
     <div class="nav-links">
       <button class="nav-btn active" onclick="showPage('home')">Home</button>
@@ -184,6 +183,8 @@
 
   <!-- Season 1 content wrapper -->
   <div id="season1Content">
+    <!-- MOD 9: Champions section on home page -->
+  <div id="homeChampionBlock" style="display:none;padding:24px;max-width:1160px;margin:0 auto;"></div>
 
     <!-- News -->
     <div class="news-section">
@@ -243,12 +244,7 @@
     </div>
 
     <!-- Comments slider -->
-    <div class="comments-section" id="commentSection" style="display:none;">
-      <div class="comments-inner">
-        <div class="section-label" style="margin-bottom:8px;">💬 Fan Comments</div>
-        <div style="overflow:hidden;"><div class="slider-track" id="sliderTrack"></div></div>
-      </div>
-    </div>
+    <div id="commentSection" class="comments-section" style="display:none;"></div>
 
     <!-- Quick links -->
     <div class="inner">
@@ -297,6 +293,8 @@
   <div class="inner">
     <div class="sec-header"><div class="sec-title">Match Results</div></div>
     <div class="sec-divider"></div>
+    <!-- Winner block in matches -->
+    <div id="matchesWinnerBlock" style="display:none;margin-bottom:28px;"></div>
     <div id="matchesList"></div>
   </div>
 </div>
@@ -691,6 +689,7 @@ git push</div>
   <p>Joga Bonito Season 1 · NIT Jalandhar &nbsp;|&nbsp; <a href="https://github.com/cmshebeeb" target="_blank">cmshebeeb</a></p>
 </footer>
 
+<script src="data.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

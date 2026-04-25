@@ -31,10 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initSponsors();
   initEvents();
   initComments();
-  initTeamsPage();
-  initMatchesPage();
-  initTablePage();
-  initStatsPage();
   initReviewForm();
   initAdminPanel();
   initWinner();
@@ -67,6 +63,10 @@ function showPage(id) {
   if (id === 'review') renderReviewPage();
   if (id === 'players') renderPlayersPage();
   if (id === 'admin')   renderAdminReviews();
+  if (id === 'teams')    initTeamsPage();
+  if (id === 'matches')  initMatchesPage();
+  if (id === 'table')    initTablePage();
+  if (id === 'stats')    initStatsPage();
 }
 
 /* ────────────────────────────────────────────────────────────
@@ -79,7 +79,7 @@ function initHero() {
   if (t.logo) {
     const area = document.getElementById('logoArea');
     if (area) {
-      area.innerHTML = `<img src="${t.logo}" alt="${t.name}"
+      area.innerHTML = `<img src="${t.logo}" loading="lazy" alt="${t.name}"
         style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
         onerror="this.outerHTML='<span style=font-size:28px;>⚽</span>'">`;
     }
@@ -140,7 +140,7 @@ function initStoriesCarousel() {
   container.innerHTML = news.map((n, i) => `
     <div class="story-card" onclick="openStory(${i})">
       <div class="story-bg">
-        ${n.img ? `<img src="${n.img}" alt="${n.title}" onerror="this.style.display='none'">` : `<span>${n.emoji || '📰'}</span>`}
+        ${n.img ? `<img src="${n.img}" loading="lazy" alt="${n.title}" onerror="this.style.display='none'">` : `<span>${n.emoji || '📰'}</span>`}
       </div>
       <div class="story-overlay"><h3>${n.title}</h3></div>
     </div>`).join('');
@@ -162,7 +162,7 @@ function renderStoryModal(news) {
   const img = document.getElementById('storyFullImg');
   if (img) {
     img.innerHTML = n.img
-      ? `<img src="${n.img}" alt="${n.title}" style="width:100%;height:100%;object-fit:cover;" onerror="this.textContent='${n.emoji || '📰'}'">` 
+      ? `<img src="${n.img}" loading="lazy" alt="${n.title}" style="width:100%;height:100%;object-fit:cover;" onerror="this.textContent='${n.emoji || '📰'}'">` 
       : `<span>${n.emoji || '📰'}</span>`;
   }
   document.getElementById('storyFullTitle').textContent = n.title;
@@ -203,10 +203,10 @@ function initPlayerCards() {
 
     if (hasCard) {
       return `<div class="pc-item" onclick="openPlayerCard(${p.id})">
-        <img class="pc-card-img" src="${p.card}" alt="${p.name}"
+        <img class="pc-card-img" src="${p.card}" loading="lazy" alt="${p.name}"
           onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
         <div class="pc-placeholder" style="display:none;">
-          ${hasPhoto ? `<img src="${p.photo}" onerror="this.style.display='none'">` : `<div class="pc-icon">⚽</div>`}
+          ${hasPhoto ? `<img src="${p.photo}" loading="lazy" onerror="this.style.display='none'">` : `<div class="pc-icon">⚽</div>`}
           <p>${p.name}</p>
         </div>
         <div class="pc-name">${p.name}${cap}</div>
@@ -215,7 +215,7 @@ function initPlayerCards() {
     } else {
       return `<div class="pc-item" onclick="openPlayerCard(${p.id})">
         <div class="pc-placeholder">
-          ${hasPhoto ? `<img src="${p.photo}" onerror="this.outerHTML='<div class=pc-icon>⚽</div>'">` : `<div class="pc-icon">⚽</div>`}
+          ${hasPhoto ? `<img src="${p.photo}" loading="lazy" onerror="this.outerHTML='<div class=pc-icon>⚽</div>'">` : `<div class="pc-icon">⚽</div>`}
           <p>${p.name}${p.captain ? ' (C)' : ''}</p>
         </div>
         <div class="pc-name">${p.name}${cap}</div>
@@ -258,11 +258,11 @@ function openPlayerCard(playerId) {
     html += `<img class="pcm-img" src="${p.card}" alt="${p.name}"
       onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
       <div class="pcm-placeholder" style="display:none;">
-        ${hasPhoto ? `<img src="${p.photo}" onerror="this.style.display='none'">` : `<div class="pcm-icon">⚽</div>`}
+        ${hasPhoto ? `<img src="${p.photo}" loading="lazy" onerror="this.style.display='none'">` : `<div class="pcm-icon">⚽</div>`}
       </div>`;
   } else {
     html += `<div class="pcm-placeholder">
-      ${hasPhoto ? `<img src="${p.photo}" onerror="this.outerHTML='<div class=pcm-icon>⚽</div>'">` : `<div class="pcm-icon">⚽</div>`}
+      ${hasPhoto ? `<img src="${p.photo}" loading="lazy" onerror="this.outerHTML='<div class=pcm-icon>⚽</div>'">` : `<div class="pcm-icon">⚽</div>`}
     </div>`;
   }
 
@@ -292,7 +292,7 @@ function goToPlayerProfile(playerId) {
   // Wait until players page is ready
   requestAnimationFrame(() => {
     setTimeout(() => {
-      openPlayerStats(playerId);
+      openPlayerStatsModal(playerId);
     }, 300);
   });
 }
@@ -477,7 +477,7 @@ function initSponsors() {
   grid.innerHTML = sponsors.map(s => {
     const initials = s.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
     const avatar   = s.photo
-      ? `<div class="sponsor-avatar"><img src="${s.photo}" alt="${s.name}" onerror="this.parentNode.textContent='${initials}'"></div>`
+      ? `<div class="sponsor-avatar"><img src="${s.photo}" loading="lazy" alt="${s.name}" onerror="this.parentNode.textContent='${initials}'"></div>`
       : `<div class="sponsor-avatar">${initials}</div>`;
     return `<div class="sponsor-card" onclick="openSponsorModal(${s.id})">
       ${avatar}
@@ -497,18 +497,30 @@ function openSponsorModal(sponsorId) {
   const flowers  = '💸';
 
   document.getElementById('sponsorModalContent').innerHTML = `
-    <div class="sponsor-modal-confetti">${flowers}</div>
-    ${s.photo ? `<img src="${s.photo}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);margin-bottom:10px;" onerror="this.style.display='none'">` : ''}
-    <div class="sponsor-modal-name">${s.name}</div>
-    <div class="sponsor-modal-role">${s.role || 'Sponsor'}</div>
-    <div class="sponsor-modal-msg">"${s.message || 'Thank you for your generous support!'}"</div>
-    <p style="font-size:14px;color:var(--text2);margin-top:14px;line-height:1.7;">
-      Thanks for sponsoring the tournament — without your support, we couldn't make all of this possible. 
-      The entire committee salutes your generosity! 🙏
-    </p>
-    <div class="sponsor-flowers">${flowers}</div>`;
+  <div class="sponsor-modal-confetti">${flowers}</div>
 
-  document.getElementById('sponsorModal').classList.add('show');
+  ${s.photo ? `
+    <img src="${s.photo}" loading="lazy"
+         style="width:130px;height:130px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);margin-bottom:10px;" 
+         onerror="this.style.display='none'">
+  ` : ''}
+
+  <div class="sponsor-modal-name">${s.name}</div>
+  <div class="sponsor-modal-role">${s.role || 'Sponsor'}</div>
+
+  <div class="sponsor-modal-msg">
+    "${s.message || 'Thank you for your generous support!'}"
+  </div>
+
+  <p style="font-size:14px;color:var(--text2);margin-top:14px;line-height:1.7;">
+    Thanks for sponsoring the tournament — without your support, we couldn't make all of this possible. 
+    The entire committee salutes your generosity! 🙏
+  </p>
+
+  <div class="sponsor-flowers">${flowers}</div>
+`;
+
+document.getElementById('sponsorModal').classList.add('show');
 }
 
 /* ────────────────────────────────────────────────────────────
@@ -527,7 +539,7 @@ function initEvents() {
 
   slides.innerHTML = events.map(ev => `
     <div class="event-slide">
-      <img src="${ev.img}" alt="${ev.title || ''}"
+      <img src="${ev.img}" loading="lazy" alt="${ev.title || ''}"
         onerror="this.style.display='none';this.parentNode.style.background='var(--bg)'">
       <div class="event-caption">
         <h3>${ev.title || ''}</h3>
@@ -579,25 +591,59 @@ function startCarouselTimer() {
 /* ────────────────────────────────────────────────────────────
    COMMENTS SLIDER
 ──────────────────────────────────────────────────────────── */
-function initComments() {
-  const section = document.getElementById('commentSection');
-  const track   = document.getElementById('sliderTrack');
-  if (!section || !track) return;
+/* MOD 6: Manual comment navigation */
+let commentIndex = 0;
 
+function initComments() {
+  const section  = document.getElementById('commentSection');
   const comments = JB.comments || [];
-  if (!comments.length) return;
+  if (!section || !comments.length) return;
   section.style.display = '';
 
-  const renderChip = c => `
-    <div class="comment-chip">
-      <div class="cc-av">${c.name.charAt(0).toUpperCase()}</div>
-      <span class="cc-name">${c.name}</span>
-      <span class="cc-text">${c.text}</span>
+  section.innerHTML = `
+    <div class="comments-inner">
+      <div class="section-label">💬 Fan Comments</div>
+      <div class="comment-viewer">
+        <div class="comment-card-display" id="commentDisplay"></div>
+        <div class="comment-nav">
+          <button class="comment-nav-btn" onclick="moveComment(-1)">‹</button>
+          <div class="comment-counter" id="commentCounter"></div>
+          <button class="comment-nav-btn" onclick="moveComment(1)">›</button>
+        </div>
+        <div class="comment-dots" id="commentDots"></div>
+      </div>
     </div>`;
 
-  const doubled = [...comments, ...comments];
-  track.innerHTML = doubled.map(renderChip).join('');
+  // Build dots
+  document.getElementById('commentDots').innerHTML = comments.map((_, i) =>
+    `<button class="comment-dot ${i === 0 ? 'active' : ''}" onclick="goToComment(${i})"></button>`
+  ).join('');
+
+  showComment(0);
 }
+
+function showComment(idx) {
+  const comments = JB.comments || [];
+  commentIndex = (idx + comments.length) % comments.length;
+  const c = comments[commentIndex];
+
+  const display = document.getElementById('commentDisplay');
+  if (display) {
+    display.innerHTML = `
+      <div class="cc-av-lg">${c.name.charAt(0).toUpperCase()}</div>
+      <div class="cc-name-lg">${c.name}</div>
+      <div class="cc-text-lg">${c.text}</div>`;
+  }
+
+  const counter = document.getElementById('commentCounter');
+  if (counter) counter.textContent = `${commentIndex + 1} / ${comments.length}`;
+
+  document.querySelectorAll('.comment-dot').forEach((d, i) =>
+    d.classList.toggle('active', i === commentIndex));
+}
+
+function moveComment(dir) { showComment(commentIndex + dir); }
+function goToComment(idx) { showComment(idx); }
 
 /* ────────────────────────────────────────────────────────────
    TEAMS PAGE
@@ -624,8 +670,9 @@ function openTeamModal(teamId) {
 
   let html = `
     <div style="text-align:center;margin-bottom:18px;">
-      <img src="${team.logo}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--border);margin-bottom:8px;"
-        onerror="this.style.display='none'">
+      <img src="${team.logo}" loading="lazy"
+          style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:2px solid var(--border);margin-bottom:8px;"
+          onerror="this.style.display='none'">
       <div style="font-family:'Bebas Neue';font-size:26px;letter-spacing:1px;">${team.name}</div>
     </div>
     <div class="pstats-grid" style="margin-bottom:16px;">
@@ -642,7 +689,7 @@ function openTeamModal(teamId) {
     const goals   = countPlayerGoals(p.id);
     const assists = countPlayerAssists(p.id);
     return `<div class="player-row" onclick="closeModal('teamModal');openPlayerStatsModal(${p.id})">
-      ${p.photo ? `<img src="${p.photo}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:1px solid var(--border);" onerror="this.style.display='none'">` : `<div style="width:36px;height:36px;border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;">⚽</div>`}
+      ${p.photo ? `<img src="${p.photo}" loading="lazy" style="width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid var(--green);" onerror="this.style.display='none'">` : `<div style="width:54px;height:54px;border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;">⚽</div>`}
       <div style="flex:1;">
         <div style="font-weight:700;font-size:13px;">${p.name}${p.captain ? ' <span class="cap-c">C</span>' : ''}</div>
         <div style="font-size:11px;color:var(--muted);">${p.position}</div>
@@ -664,8 +711,39 @@ function openTeamModal(teamId) {
 function initMatchesPage() {
   const list = document.getElementById('matchesList');
   if (!list) return;
+  renderMatchesWinnerBlock(); // Added winner team
   renderMatchesList();
 }
+
+/* MOD 9: Winner block for matches page */
+function renderMatchesWinnerBlock() {
+  const block = document.getElementById('matchesWinnerBlock');
+  if (!block) return;
+  const w = JB.winner;
+  if (!w || !w.teamId) return;
+
+  const team = JB.teams.find(t => t.id === w.teamId);
+  if (!team) return;
+
+  const captain = JB.players.find(p => p.teamId === team.id && p.captain);
+
+  block.style.display = '';
+  block.innerHTML = `
+    <div style="background:linear-gradient(135deg,#78350f,#1c1008);border:2px solid var(--gold);border-radius:18px;padding:28px 20px;text-align:center;box-shadow:0 0 40px rgba(217,119,6,0.4);animation:finalGlow 2s ease-in-out infinite alternate;">
+      <div style="font-size:44px;margin-bottom:6px;">🏆</div>
+      <div style="font-family:'Bebas Neue';font-size:16px;letter-spacing:3px;color:var(--gold);margin-bottom:8px;">JOGA BONITO SEASON 1 CHAMPIONS</div>
+      ${team.logo ? `<img src="${team.logo}" loading="lazy" style="width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid var(--gold);margin-bottom:12px;box-shadow:0 0 24px rgba(217,119,6,0.5);">` : ''}
+      <div style="font-family:'Bebas Neue';font-size:36px;color:#fff;letter-spacing:2px;">${team.name}</div>
+      ${captain ? `<div style="margin-top:14px;display:flex;align-items:center;justify-content:center;gap:10px;">
+        ${captain.photo ? `<img src="${captain.photo}" loading="lazy" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.4);">` : ''}
+        <div style="text-align:left;">
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);letter-spacing:1px;text-transform:uppercase;">Captain</div>
+          <div style="font-weight:700;color:#fff;font-size:15px;">${captain.name}</div>
+        </div>
+      </div>` : ''}
+    </div>`;
+}
+
 
 function renderMatchesList() {
   const list    = document.getElementById('matchesList');
@@ -689,14 +767,14 @@ function renderMatchesList() {
       </div>
       <div class="match-teams">
         <div class="match-team">
-          <img class="team-logo-sm" style="width:44px;height:44px;" src="${home?.logo || ''}" alt="${home?.name || ''}" onerror="this.style.display='none'">
+          <img style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--border);" src="${home?.logo || ''}" alt="${home?.name || ''}" onerror="this.style.display='none'">
           <div class="match-team-name">${home?.name || 'TBD'}</div>
         </div>
         <div class="match-score">
           ${m.homeScore ?? '—'}&nbsp;–&nbsp;${m.awayScore ?? '—'}
         </div>
         <div class="match-team">
-          <img class="team-logo-sm" style="width:44px;height:44px;" src="${away?.logo || ''}" alt="${away?.name || ''}" onerror="this.style.display='none'">
+          <img style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--border);" src="${away?.logo || ''}" alt="${away?.name || ''}" onerror="this.style.display='none'">
           <div class="match-team-name">${away?.name || 'TBD'}</div>
         </div>
       </div>
@@ -738,21 +816,21 @@ function openMatchDetail(matchId) {
       <div class="match-goal-info">
         <div class="match-goal-name">${isOG ? '🔴' : '⚽'} ${scorer?.name || '?'}${isOG ? ' <span style="font-size:11px;color:var(--red);">(Own Goal)</span>' : ''}</div>
         ${assister ? `<div class="match-goal-sub">🎯 Assist: ${assister.name}
-          ${assister.photo ? `<img src="${assister.photo}" style="width:18px;height:18px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-left:4px;" onerror="this.style.display='none'">` : ''}
+          ${assister.photo ? `<img src="${assister.photo}" loading="lazy" style="width:54px;height:54px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-left:6px;border:2px solid var(--muted);" onerror="this.style.display='none'">` : ''}
         </div>` : ''}
       </div>
     </div>`;
   }).join('');
 
   const cardRows = (cards) => cards.map(c => {
-    const player = JB.players.find(p => p.id === c.playerId);
-    const isRed  = c.type === 'red' || c.type === 'second-yellow';
-    return `<div class="match-card-row">
-      ${player?.photo
-        ? `<img style="width:30px;height:30px;border-radius:50%;object-fit:cover;" src="${player.photo}" alt="${player?.name}" onerror="this.style.display='none'">`
-        : `<div style="width:30px;height:30px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;">${isRed ? '🟥' : '🟨'}</div>`}
-      <span style="font-size:13px;">${isRed ? '🟥' : '🟨'} ${player?.name || '?'}${c.type === 'second-yellow' ? ' (2nd Yellow)' : ''}</span>
-    </div>`;
+      const player = JB.players.find(p => p.id === c.playerId);
+      const isRed  = c.type === 'red' || c.type === 'second-yellow';
+      return `<div class="match-card-row">
+        ${player?.photo
+          ? `<img style="width:50px;height:50px;border-radius:50%;object-fit:cover;" src="${player.photo}" alt="${player?.name || ''}" loading="lazy" onerror="this.style.display='none'">`
+          : `<div style="width:30px;height:30px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;">${isRed ? '🟥' : '🟨'}</div>`}
+        <span style="font-size:13px;">${isRed ? '🟥' : '🟨'} ${player?.name || '?'}${c.type === 'second-yellow' ? ' (2nd Yellow)' : ''}</span>
+      </div>`;
   }).join('');
 
   const teamSection = (team, goals, cards, score) => `
@@ -797,7 +875,7 @@ function renderPointsTable() {
       <td class="${cls}">${i + 1}</td>
       <td>
         <div style="display:flex;align-items:center;gap:8px;">
-          <img class="team-logo-sm" src="${team?.logo || ''}" alt="" onerror="this.style.display='none'">
+          <img src="${team?.logo || ''}" loading="lazy" alt="" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" onerror="this.style.display='none'">
           <span style="font-weight:600;">${team?.name || ''}</span>
         </div>
       </td>
@@ -826,6 +904,23 @@ function buildStandings(matches, teams) {
   });
 
   return Object.values(map).sort((a, b) => b.pts - a.pts || (b.gf - b.ga) - (a.gf - a.ga) || b.gf - a.gf);
+}
+
+// buildStandings but includes final match goals
+function buildStandingsAllMatches(matches, teams) {
+  const map = {};
+  teams.forEach(t => map[t.id] = { teamId: t.id, played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, pts: 0 });
+
+  matches.forEach(m => {
+    if (m.homeScore === null || m.awayScore === null) return;
+    // Include ALL matches (even isFinal) for goal counting
+    const h = map[m.homeId], a = map[m.awayId];
+    if (!h || !a) return;
+    h.gf += m.homeScore; h.ga += m.awayScore;
+    a.gf += m.awayScore; a.ga += m.homeScore;
+  });
+
+  return Object.values(map).sort((a, b) => b.gf - a.gf);
 }
 
 function buildTeamStats(teamId) {
@@ -953,7 +1048,7 @@ function renderAttackDefence() {
   const atkBody = document.getElementById('bestAttack');
   const defBody = document.getElementById('bestDefence');
 
-  const standing = buildStandings(JB.matches || [], JB.teams || []);
+  const standing = buildStandingsAllMatches(JB.matches || [], JB.teams || []);
 
   if (atkBody) {
     const sorted = [...standing].sort((a, b) => b.gf - a.gf);
@@ -998,6 +1093,11 @@ function openPlayerStatsModal(playerId) {
   const yc      = countPlayerCards(p.id, 'yellow');
   const rc      = countPlayerCards(p.id, 'red');
   const perf    = p.performance || {};
+  // Auto-calculate appearances from matches
+  const appearances = (JB.matches || []).filter(m =>
+    m.homeScore !== null && m.awayScore !== null &&
+    (m.homeId === p.teamId || m.awayId === p.teamId)
+  ).length;
 
   document.getElementById('statsModalContent').innerHTML = `
     <div class="player-stats-wrap">
@@ -1005,7 +1105,7 @@ function openPlayerStatsModal(playerId) {
       <!-- LEFT IMAGE -->
       <div class="ps-left">
         ${p.photo
-          ? `<img src="${p.photo}" alt="${p.name}">`
+          ? `<img src="${p.photo}" loading="lazy" alt="${p.name}">`
           : `<div style="width:200px;height:200px;border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:40px;">⚽</div>`
         }
       </div>
@@ -1027,7 +1127,7 @@ function openPlayerStatsModal(playerId) {
         </div>
 
         <div class="pstats-grid">
-          <div class="pstat-box"><div class="pstat-val">${perf.appearances || 0}</div><div class="pstat-lbl">Apps</div></div>
+          <div class="pstat-box"><div class="pstat-val">${appearances}</div><div class="pstat-lbl">Apps</div></div>
           <div class="pstat-box"><div class="pstat-val">${goals}</div><div class="pstat-lbl">Goals ⚽</div></div>
           <div class="pstat-box"><div class="pstat-val">${assists}</div><div class="pstat-lbl">Assists 🎯</div></div>
           <div class="pstat-box"><div class="pstat-val">${yc}</div><div class="pstat-lbl">Yellow 🟨</div></div>
@@ -1086,7 +1186,7 @@ function renderPlayersPage() {
 
     html += `<div class="players-team-section">
       <div class="players-team-header">
-        ${team.logo ? `<img src="${team.logo}" alt="${team.name}" onerror="this.style.display='none'">` : ''}
+        ${team.logo ? `<img src="${team.logo}" loading="lazy" alt="${team.name}" onerror="this.style.display='none'">` : ''}
         <h3>${team.name}</h3>
       </div>`;
 
@@ -1096,6 +1196,10 @@ function renderPlayersPage() {
       const yc      = countPlayerCards(p.id, 'yellow');
       const rc      = countPlayerCards(p.id, 'red');
       const perf    = p.performance || {};
+      const appearances = (JB.matches || []).filter(m =>
+        m.homeScore !== null && m.awayScore !== null &&
+        (m.homeId === p.teamId || m.awayId === p.teamId)
+      ).length;
 
       html += `<div class="player-list-card" onclick="openPlayerStatsModal(${p.id})">
         ${p.photo
@@ -1105,7 +1209,7 @@ function renderPlayersPage() {
           <div class="plc-name">${p.name}${p.captain ? ' <span class="cap-c">C</span>' : ''}</div>
           <div class="plc-pos">${p.position}</div>
           <div class="plc-stats">
-            <div class="plc-stat"><span>Apps</span><span>${perf.appearances || 0}</span></div>
+            <div class="plc-stat"><span>Apps</span><span>${appearances}</span></div>
             ${goals   > 0 ? `<div class="plc-stat"><span>⚽</span><span>${goals}</span></div>` : ''}
             ${assists > 0 ? `<div class="plc-stat"><span>🎯</span><span>${assists}</span></div>` : ''}
             ${yc      > 0 ? `<div class="plc-stat"><span>🟨</span><span>${yc}</span></div>` : ''}
@@ -1233,7 +1337,7 @@ function openProfileModal() {
   const team   = player ? JB.teams.find(t => t.id === player.teamId) : null;
 
   let html = `<div style="text-align:center;margin-bottom:16px;">
-    ${player?.photo ? `<img src="${player.photo}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--green);margin-bottom:8px;" onerror="this.style.display='none'">` : `<div style="width:80px;height:80px;border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 8px;">👤</div>`}
+    ${player?.photo ? `<img src="${player.photo}" loading="lazy" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--green);margin-bottom:8px;" onerror="this.style.display='none'">` : `<div style="width:80px;height:80px;border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 8px;">👤</div>`}
     <div style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;">${currentUser.displayName}</div>
     <div style="font-size:12px;color:var(--muted);">${currentUser.usertype === 'p' ? 'Player' : currentUser.usertype === 's' ? 'Sponsor' : 'Fan'}</div>
     ${team ? `<div style="display:flex;align-items:center;gap:6px;justify-content:center;margin-top:5px;">
@@ -1243,17 +1347,20 @@ function openProfileModal() {
   </div>`;
 
   if (player) {
-    const goals   = countPlayerGoals(player.id);
-    const assists = countPlayerAssists(player.id);
-    const yc      = countPlayerCards(player.id, 'yellow');
-    const rc      = countPlayerCards(player.id, 'red');
-    const perf    = player.performance || {};
-    html += `<div class="pstats-grid" style="margin-bottom:14px;">
-      <div class="pstat-box"><div class="pstat-val">${perf.appearances || 0}</div><div class="pstat-lbl">Apps</div></div>
-      <div class="pstat-box"><div class="pstat-val">${goals}</div><div class="pstat-lbl">Goals ⚽</div></div>
-      <div class="pstat-box"><div class="pstat-val">${assists}</div><div class="pstat-lbl">Assists 🎯</div></div>
-      <div class="pstat-box"><div class="pstat-val">${yc}</div><div class="pstat-lbl">Yellow 🟨</div></div>
-    </div>`;
+      const goals   = countPlayerGoals(player.id);
+      const assists = countPlayerAssists(player.id);
+      const yc      = countPlayerCards(player.id, 'yellow');
+      const rc      = countPlayerCards(player.id, 'red');
+      const appearances = (JB.matches || []).filter(m =>
+        m.homeScore !== null && m.awayScore !== null &&
+        (m.homeId === player.teamId || m.awayId === player.teamId)
+      ).length;
+      html += `<div class="pstats-grid" style="margin-bottom:14px;">
+        <div class="pstat-box"><div class="pstat-val">${appearances}</div><div class="pstat-lbl">Apps</div></div>
+        <div class="pstat-box"><div class="pstat-val">${goals}</div><div class="pstat-lbl">Goals ⚽</div></div>
+        <div class="pstat-box"><div class="pstat-val">${assists}</div><div class="pstat-lbl">Assists 🎯</div></div>
+        <div class="pstat-box"><div class="pstat-val">${yc}</div><div class="pstat-lbl">Yellow 🟨</div></div>
+      </div>`;
   }
 
   html += `<button class="btn btn-outline btn-full" onclick="userLogout()" style="margin-top:6px;">Logout</button>`;
@@ -1813,6 +1920,44 @@ function initFormspreeStatus() {
   }
 }
 
+function renderHomeChampionBlock() {
+  const block = document.getElementById('homeChampionBlock');
+  if (!block) return;
+  const w = JB.winner;
+  if (!w || !w.teamId) return;
+
+  const champion = JB.teams.find(t => t.id === w.teamId);
+  if (!champion) return;
+
+  // Find runner-up: top of standings who is not the champion
+  const standings = buildStandings(JB.matches || [], JB.teams || []);
+  const runnerUp  = standings.find(s => s.teamId !== w.teamId);
+  const ruTeam    = runnerUp ? JB.teams.find(t => t.id === runnerUp.teamId) : null;
+
+  block.style.display = '';
+  block.innerHTML = `
+    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;justify-content:center;">
+      
+      <!-- CHAMPION -->
+      <div style="background:linear-gradient(135deg,#78350f,#1c1008);border:2px solid var(--gold);border-radius:16px;padding:24px 20px;text-align:center;flex:1;min-width:200px;max-width:300px;box-shadow:0 0 30px rgba(217,119,6,0.3);animation:finalGlow 2s ease-in-out infinite alternate;">
+        <div style="font-size:32px;">🏆</div>
+        <div style="font-size:10px;letter-spacing:3px;color:var(--gold);margin:6px 0;text-transform:uppercase;font-weight:700;">Champions</div>
+        ${champion.logo ? `<img src="${champion.logo}" loading="lazy" style="width:90px;height:90px;border-radius:50%;border:3px solid var(--gold);object-fit:cover;margin-bottom:8px;">` : ''}
+        <div style="font-family:'Bebas Neue';font-size:26px;color:#fff;">${champion.name}</div>
+      </div>
+
+      <!-- RUNNER UP -->
+      ${ruTeam ? `
+      <div style="background:var(--card);border:1.5px solid var(--border2);border-radius:14px;padding:18px 16px;text-align:center;flex:1;min-width:160px;max-width:240px;box-shadow:var(--shadow);">
+        <div style="font-size:22px;">🥈</div>
+        <div style="font-size:10px;letter-spacing:2px;color:var(--muted);margin:5px 0;text-transform:uppercase;font-weight:700;">Runner Up</div>
+        ${ruTeam.logo ? `<img src="${ruTeam.logo}" loading="lazy" style="width:64px;height:64px;border-radius:50%;border:2px solid var(--border2);object-fit:cover;margin-bottom:7px;">` : ''}
+        <div style="font-family:'Bebas Neue';font-size:20px;color:var(--text);">${ruTeam.name}</div>
+      </div>` : ''}
+    </div>`;
+}
+
+
 /* ────────────────────────────────────────────────────────────
    WINNER
 ──────────────────────────────────────────────────────────── */
@@ -1835,6 +1980,7 @@ function initWinner() {
     document.getElementById('winnerOverlay').classList.add('show');
     startConfetti();
   }
+  renderHomeChampionBlock();
 }
 
 function closeWinner() {
