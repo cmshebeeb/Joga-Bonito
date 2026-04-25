@@ -494,7 +494,7 @@ function openSponsorModal(sponsorId) {
   if (!s) return;
 
   const initials = s.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-  const flowers  = '💐';
+  const flowers  = '💸';
 
   document.getElementById('sponsorModalContent').innerHTML = `
     <div class="sponsor-modal-confetti">${flowers}</div>

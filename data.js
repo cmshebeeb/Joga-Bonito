@@ -95,7 +95,7 @@ const JB = {
       id: 1,
       title: "Opening Ceremony",
       subtitle: "Season 1 Kickoff",
-      img: "images/events/event1.jpg"
+      img: "images/events/event1.png"
     },
     {
       id: 2,
@@ -121,10 +121,10 @@ const JB = {
   sponsors: [
     {
     id: 1,
-    name: "Kerala Spices Co.",
-    photo: "images/sponsors/spice.png",
-    role: "Title Sponsor",
-    message: "Proud to support Joga Bonito 🔥"
+    name: "Reman Sir (Thampanoor)",
+    photo: "images/sponsors/reman.png",
+    role: "Main Sponsor",
+    message: "remansir illayirunnenkil🥹 🔥"
   },
   {
     id: 2,
