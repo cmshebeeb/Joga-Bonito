@@ -225,6 +225,23 @@ function initPlayerCards() {
   }).join('');
 
   track.innerHTML = render(players) + render(players); // duplicate for seamless loop
+  track.scrollLeft = track.scrollWidth / 2;
+// Fix loop jump (attach only once)
+if (!track.dataset.loopInit) {
+  track.addEventListener('scroll', () => {
+    const maxScroll = track.scrollWidth / 2;
+
+    if (track.scrollLeft >= maxScroll) {
+      track.scrollLeft -= maxScroll;
+    }
+
+    if (track.scrollLeft <= 0) {
+      track.scrollLeft = maxScroll;
+    }
+  });
+
+  track.dataset.loopInit = "true";
+}
 }
 
 function openPlayerCard(playerId) {
@@ -254,9 +271,32 @@ function openPlayerCard(playerId) {
     <div class="pcm-sub">${p.position} · ${team ? team.name : ''}${p.performance?.jerseyNumber ? ' · #' + p.performance.jerseyNumber : ''}</div>
   </div>`;
 
-  content.innerHTML = html;
-  document.getElementById('pcModal').classList.add('show');
+  html += `
+  <div style="padding:14px;text-align:center;">
+    <button class="btn btn-green" onclick="goToPlayerProfile(${p.id})">
+      👤 See Profile
+    </button>
+  </div>
+`;
+
+content.innerHTML = html;
+document.getElementById('pcModal').classList.add('show');
 }
+
+
+function goToPlayerProfile(playerId) {
+  closeModal('pcModal');
+
+  showPage('players');
+
+  // Wait until players page is ready
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      openPlayerStats(playerId);
+    }, 300);
+  });
+}
+
 
 /* ────────────────────────────────────────────────────────────
    CARD DRAG (manual drag on carousel)
@@ -282,7 +322,6 @@ function initCardDrag() {
     isDragging  = true;
     startX      = getX(e);
     scrollStart = wrap.scrollLeft || 0;
-    track.classList.remove('animating');
     wrap.classList.add('dragging');
   }
 
@@ -961,28 +1000,47 @@ function openPlayerStatsModal(playerId) {
   const perf    = p.performance || {};
 
   document.getElementById('statsModalContent').innerHTML = `
-    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
-      ${p.photo ? `<img src="${p.photo}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--green);" onerror="this.style.display='none'">` : `<div style="width:64px;height:64px;border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:28px;">⚽</div>`}
-      <div>
-        <div style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;">${p.name}${p.captain ? ' <span class="cap-c">C</span>' : ''}</div>
-        <div style="font-size:12px;color:var(--muted);">${p.position}
-          ${perf.jerseyNumber ? ' · #' + perf.jerseyNumber : ''}
+    <div class="player-stats-wrap">
+
+      <!-- LEFT IMAGE -->
+      <div class="ps-left">
+        ${p.photo
+          ? `<img src="${p.photo}" alt="${p.name}">`
+          : `<div style="width:200px;height:200px;border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:40px;">⚽</div>`
+        }
+      </div>
+
+      <!-- RIGHT STATS -->
+      <div class="ps-right">
+
+        <div style="font-family:'Bebas Neue';font-size:24px;letter-spacing:1px;margin-bottom:6px;">
+          ${p.name}${p.captain ? ' <span class="cap-c">C</span>' : ''}
         </div>
-        <div style="display:flex;align-items:center;gap:5px;margin-top:3px;">
-          ${team?.logo ? `<img style="width:18px;height:18px;border-radius:50%;object-fit:cover;" src="${team.logo}" onerror="this.style.display='none'">` : ''}
-          <span style="font-size:12px;font-weight:600;">${team?.name || ''}</span>
+
+        <div style="font-size:13px;color:var(--muted);margin-bottom:10px;">
+          ${p.position} ${perf.jerseyNumber ? ' · #' + perf.jerseyNumber : ''}
         </div>
+
+        <div style="margin-bottom:12px;">
+          ${team?.logo ? `<img style="width:20px;height:20px;border-radius:50%;vertical-align:middle;margin-right:6px;" src="${team.logo}">` : ''}
+          <span style="font-size:13px;font-weight:600;">${team?.name || ''}</span>
+        </div>
+
+        <div class="pstats-grid">
+          <div class="pstat-box"><div class="pstat-val">${perf.appearances || 0}</div><div class="pstat-lbl">Apps</div></div>
+          <div class="pstat-box"><div class="pstat-val">${goals}</div><div class="pstat-lbl">Goals ⚽</div></div>
+          <div class="pstat-box"><div class="pstat-val">${assists}</div><div class="pstat-lbl">Assists 🎯</div></div>
+          <div class="pstat-box"><div class="pstat-val">${yc}</div><div class="pstat-lbl">Yellow 🟨</div></div>
+          <div class="pstat-box"><div class="pstat-val">${rc}</div><div class="pstat-lbl">Red 🟥</div></div>
+          ${p.position === 'Goalkeeper'
+            ? `<div class="pstat-box"><div class="pstat-val">${perf.cleanSheets || 0}</div><div class="pstat-lbl">Clean Sheets</div></div>`
+            : ''
+          }
+        </div>
+
       </div>
     </div>
-    <div class="pstats-grid">
-      <div class="pstat-box"><div class="pstat-val">${perf.appearances || 0}</div><div class="pstat-lbl">Appearances</div></div>
-      <div class="pstat-box"><div class="pstat-val">${goals}</div><div class="pstat-lbl">Goals ⚽</div></div>
-      <div class="pstat-box"><div class="pstat-val">${assists}</div><div class="pstat-lbl">Assists 🎯</div></div>
-      <div class="pstat-box"><div class="pstat-val">${yc}</div><div class="pstat-lbl">Yellow 🟨</div></div>
-      <div class="pstat-box"><div class="pstat-val">${rc}</div><div class="pstat-lbl">Red 🟥</div></div>
-      ${p.position === 'Goalkeeper' ? `<div class="pstat-box"><div class="pstat-val">${perf.cleanSheets || 0}</div><div class="pstat-lbl">Clean Sheets</div></div>` : ''}
-    </div>
-    ${perf.note ? `<div style="margin-top:12px;padding:10px;background:var(--bg);border-radius:8px;font-size:13px;color:var(--text2);">📝 ${perf.note}</div>` : ''}`;
+  `;
 
   document.getElementById('statsModal').classList.add('show');
 }

@@ -143,7 +143,6 @@ nav{background:#fff;border-bottom:1px solid var(--border);display:flex;align-ite
 .cards-track-wrap{overflow:hidden;cursor:grab;user-select:none;}
 .cards-track-wrap.dragging{cursor:grabbing;}
 .cards-track{display:flex;gap:14px;padding:6px 24px 14px;width:max-content;transition:transform .1s linear;}
-.cards-track.animating{animation:slideCards 70s linear infinite;}
 @keyframes slideCards{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .pc-item{flex-shrink:0;width:130px;cursor:pointer;transition:transform .3s;z-index:1;position:relative;}
 .pc-item:hover{transform:translateY(-14px) scale(1.1);z-index:10;}
@@ -456,4 +455,53 @@ footer a{color:var(--green);text-decoration:none;font-weight:700;}
   .match-team-name{font-size:12px;}
   .form-section{padding:14px;}
   .stars .star{font-size:26px;}
+}
+
+
+.player-stats-wrap {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: 20px;
+  align-items: center;
+}
+
+.ps-left {
+  display: flex;
+  justify-content: center;
+}
+
+.ps-left img {
+  width: 100%;
+  max-width: 240px;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  border-radius: 12px;   /* rectangle */
+  border: 3px solid var(--green);
+}
+
+.ps-right {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .player-stats-wrap {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 14px;
+  }
+
+  .ps-left {
+    justify-content: center;
+  }
+
+  .ps-left img {
+    width: 100%;
+    max-width: 180px;
+    aspect-ratio: 2/3;   /* keep rectangular */
+    border-radius: 12px;
+  }
+
+  .ps-right {
+    text-align: center;
+  }
 }
