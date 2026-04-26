@@ -169,6 +169,7 @@ nav{background:#fff;border-bottom:1px solid var(--border);display:flex;align-ite
 .graphs-section{background:#fff;padding:24px 0;border-bottom:1px solid var(--border);}
 .graphs-inner{max-width:1160px;margin:0 auto;padding:0 24px;}
 .graphs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:14px;}
+.graph-card--wide{grid-column:1/-1;}
 .graph-card{background:var(--bg);border:1px solid var(--border);border-radius:13px;padding:16px;}
 .graph-card h4{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:12px;}
 .graph-canvas-wrap{position:relative;height:170px;}

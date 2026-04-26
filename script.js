@@ -346,6 +346,9 @@ function initCardDrag() {
 /* ────────────────────────────────────────────────────────────
    GRAPHS / LIVE STATS
 ──────────────────────────────────────────────────────────── */
+
+
+
 let charts = {};
 
 function initGraphs() {
@@ -445,11 +448,184 @@ function drawGraphs() {
     },
     options: barOpts()
   });
+  drawProgressionChart();
 }
 
 function destroyChart(id) {
   if (charts[id]) { charts[id].destroy(); delete charts[id]; }
 }
+
+
+/* ────────────────────────────────────────────────────────────
+   POINTS PROGRESSION LINE CHART
+──────────────────────────────────────────────────────────── */
+function drawProgressionChart() {
+  const teams   = JB.teams   || [];
+  const matches = JB.matches || [];
+  const tooltip = document.getElementById('progressionTooltip');
+
+  // Only league matches (no final), only played ones (score not null)
+  const leagueMatches = matches.filter(m =>
+    !m.isFinal && m.homeScore !== null && m.awayScore !== null
+  );
+
+  // Sort by match id so they appear in order played
+  leagueMatches.sort((a, b) => a.id - b.id);
+
+  // X axis labels: Match 1, Match 2, ...
+  // We need one label per unique match slot (up to 6 for 4-team round robin)
+  const matchLabels = leagueMatches.map((_, i) => `Match ${i + 1}`);
+
+  // 4 distinct colours for 4 teams
+  const teamColors = ['#16a34a', '#d97706', '#7c3aed', '#dc2626'];
+
+  // Build cumulative points per team, match by match
+  const datasets = teams.map((team, i) => {
+    let cumPoints = 0;
+    const pointsAfterEachMatch = [];
+    const matchInfoPerPoint   = []; // store match info for tooltip
+
+    leagueMatches.forEach(m => {
+      // Did this team play in this match?
+      const played = m.homeId === team.id || m.awayId === team.id;
+
+      if (played) {
+        const isHome = m.homeId === team.id;
+        const gs = isHome ? m.homeScore : m.awayScore; // goals scored
+        const gc = isHome ? m.awayScore : m.homeScore; // goals conceded
+
+        let pts = 0;
+        let result = '';
+        if (gs > gc)      { pts = 3; result = 'Win 🟢'; }
+        else if (gs === gc){ pts = 1; result = 'Draw 🟡'; }
+        else               { pts = 0; result = 'Loss 🔴'; }
+
+        cumPoints += pts;
+
+        const opponent = teams.find(t => t.id === (isHome ? m.awayId : m.homeId));
+        matchInfoPerPoint.push({
+          played: true,
+          opponent: opponent?.name || '?',
+          score: isHome ? `${gs} - ${gc}` : `${gc} - ${gs}`,
+          result,
+          pts,
+          cumPoints,
+          date: m.date || ''
+        });
+      } else {
+        // Team didn't play this match round — carry forward same points
+        matchInfoPerPoint.push({ played: false, cumPoints });
+      }
+
+      pointsAfterEachMatch.push(cumPoints);
+    });
+
+    return {
+      label: team.name,
+      data: pointsAfterEachMatch,
+      metaInfo: matchInfoPerPoint, // custom — used in tooltip
+      borderColor: teamColors[i],
+      backgroundColor: teamColors[i] + '22', // transparent fill
+      borderWidth: 2.5,
+      pointRadius: 6,
+      pointHoverRadius: 9,
+      pointBackgroundColor: teamColors[i],
+      pointBorderColor: '#fff',
+      pointBorderWidth: 2,
+      tension: 0.35,
+      fill: false
+    };
+  });
+
+  destroyChart('chartProgression');
+  const ctx = document.getElementById('chartProgression');
+  if (!ctx) return;
+
+  charts['chartProgression'] = new Chart(ctx, {
+    type: 'line',
+    data: { labels: matchLabels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'nearest', axis: 'xy', intersect: true },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: { font: { size: 11, family: 'Outfit' }, usePointStyle: true, pointStyleWidth: 10 }
+        },
+        tooltip: { enabled: false } // we use our own custom tooltip below
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: 'Points', font: { size: 11 } },
+          ticks: { precision: 0, stepSize: 1, font: { size: 10 } },
+          grid: { color: '#f1f5f9' }
+        },
+        x: {
+          title: { display: true, text: 'Match', font: { size: 11 } },
+          ticks: { font: { size: 10 } },
+          grid: { display: false }
+        }
+      },
+      // Custom tooltip on hover/tap
+      onHover: (event, elements) => {
+        if (!tooltip) return;
+        if (!elements || elements.length === 0) {
+          tooltip.style.display = 'none';
+          return;
+        }
+
+        const el         = elements[0];
+        const dsIndex    = el.datasetIndex;
+        const pointIndex = el.index;
+        const ds         = datasets[dsIndex];
+        const info       = ds.metaInfo[pointIndex];
+        const team       = teams[dsIndex];
+        const color      = teamColors[dsIndex];
+
+        let html = `<div style="font-weight:700;color:${color};margin-bottom:6px;">
+          ${team.name}
+        </div>`;
+
+        if (info.played) {
+          html += `
+            <div>vs <b>${info.opponent}</b></div>
+            <div>Score: <b>${info.score}</b></div>
+            <div>${info.result} (+${info.pts} pts)</div>
+            <div style="margin-top:4px;border-top:1px solid rgba(255,255,255,.15);padding-top:4px;">
+              Total: <b>${info.cumPoints} pts</b>
+            </div>
+            ${info.date ? `<div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;">${info.date}</div>` : ''}
+          `;
+        } else {
+          html += `<div style="color:rgba(255,255,255,.6);">No match this round</div>
+            <div>Total: <b>${info.cumPoints} pts</b></div>`;
+        }
+
+        tooltip.innerHTML = html;
+        tooltip.style.display = 'block';
+
+        // Position tooltip near cursor, keep inside window
+        const x = event.native.clientX;
+        const y = event.native.clientY;
+        const tw = tooltip.offsetWidth  || 200;
+        const th = tooltip.offsetHeight || 100;
+        tooltip.style.left = Math.min(x + 14, window.innerWidth  - tw - 12) + 'px';
+        tooltip.style.top  = Math.max(y - th - 14, 8)                        + 'px';
+      }
+    }
+  });
+
+  // Hide tooltip when clicking/tapping anywhere else
+  document.addEventListener('click', (e) => {
+    if (tooltip && !ctx.contains(e.target)) {
+      tooltip.style.display = 'none';
+    }
+  }, { once: false });
+}
+
 
 function barOpts() {
   return {
