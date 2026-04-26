@@ -102,11 +102,11 @@ nav{background:#fff;border-bottom:1px solid var(--border);display:flex;align-ite
 .story-overlay h3{font-size:10px;font-weight:700;line-height:1.3;color:#fff;}
 
 /* ── STORY MODAL ── */
-#storyModal .modal-box{background:#000;padding:0;max-width:340px;height:520px;}
-.story-full{width:100%;height:100%;display:flex;flex-direction:column;}
-.story-full-img{flex:1;background:linear-gradient(160deg,var(--green),#052e16);display:flex;align-items:center;justify-content:center;font-size:64px;overflow:hidden;}
-.story-full-img img{width:100%;height:100%;object-fit:cover;}
-.story-full-content{padding:14px;background:linear-gradient(transparent,rgba(0,0,0,.95));}
+#storyModal .modal-box{background:#000;padding:0;max-width:360px;width:100%;max-height:92vh;overflow:hidden;border-radius:16px;}
+.story-full{width:100%;display:flex;flex-direction:column;}
+.story-full-img{width:100%;aspect-ratio:9/16;background:linear-gradient(160deg,var(--green),#052e16);display:flex;align-items:center;justify-content:center;font-size:64px;overflow:hidden;flex-shrink:0;}
+.story-full-img img{width:100%;height:100%;object-fit:cover;object-position:top;}
+.story-full-content{padding:14px 16px 18px;background:#111;overflow-y:auto;}
 .story-full-content h2{font-size:16px;font-weight:700;color:#fff;}
 .story-full-content p{font-size:12px;color:rgba(255,255,255,.65);margin-top:4px;}
 .story-progress{display:flex;gap:4px;padding:10px 12px 0;}
@@ -173,6 +173,10 @@ nav{background:#fff;border-bottom:1px solid var(--border);display:flex;align-ite
 .graph-card{background:var(--bg);border:1px solid var(--border);border-radius:13px;padding:16px;}
 .graph-card h4{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:12px;}
 .graph-canvas-wrap{position:relative;height:170px;}
+.graph-canvas-wrap--tall{height:240px;}
+@media(max-width:768px){
+  .graph-canvas-wrap--tall{height:200px;}
+}
 
 /* ── COMMENTS SLIDER (Manual navigation) ── */
 .comments-section{background:#f1f5f9;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:24px 0;}
