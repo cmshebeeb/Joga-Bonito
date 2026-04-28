@@ -59,9 +59,9 @@ const JB = {
 // { id: 2, name: "Sreerag",  text: "FC Kerala all the way! 💚" },
   comments: [
       { id: 1, name: "Mammootty", text:"Real Fighters 🔥" },
-      { id: 2, name: "Narenra Modi", text: "Desh vasiyoooom Al Nassar hamara priend he" },
+      { id: 2, name: "Modi", text: "Desh vasiyoooom Al Nassar hamara bahuth Achaa team he" },
       { id: 3, name: "Anushka Sharma", text: "Final was intense ⚽" },
-      { id: 4, name: "Drump", text: "hai Mwolooo jada aano??!!"}
+      { id: 4, name: "Trump", text: "hai Mwolooo jada aano??!!"}
   ],
 
   // ── NEWS / STORIES ───────────────────────────────────────
@@ -73,7 +73,127 @@ const JB = {
         emoji: "⚡",
         img:   "images/news/auction_poster.png",
         date:  "2025-12-13"
-      }
+      },
+      {
+        id: 2,
+        title: "Milestone 1: Auction Announced",
+        body:  "Joga Bonito Season 1 begins its journey with the official auction announcement. Planned with clear vision by Mallus of NITJ, this marks the first step towards building strong teams and uniting the Malayali community. Four teams will compete in the inaugural season, with overwhelming response and registrations from across the community. The stage is set for something unique.",
+        emoji: "⚡",
+        img:   "images/news/auction_event.png",
+        date:  "2025-12-13"
+      },
+      {
+        id: 16,
+        title: "Top Buys",
+        body:  "Joga Bonito Season 1 begins its journey with the official auction announcement. Planned with clear vision by Mallus of NITJ, this marks the first step towards building strong teams and uniting the Malayali community. Four teams will compete in the inaugural season, with overwhelming response and registrations from across the community. The stage is set for something unique.",
+        emoji: "⚡",
+        img:   "images/news/auc_players.png",
+        date:  "2025-12-13"
+      },
+      {
+        id: 12,
+        title: "Team Captain",
+        body:  "Joga Bonito Season 1 begins its journey with the official auction announcement. Planned with clear vision by Mallus of NITJ, this marks the first step towards building strong teams and uniting the Malayali community. Four teams will compete in the inaugural season, with overwhelming response and registrations from across the community. The stage is set for something unique.",
+        emoji: "⚡",
+        img:   "images/news/auc_13.png",
+        date:  "2025-12-13"
+      },
+      {
+        id: 13,
+        title: "Team Captain",
+        body:  "Joga Bonito Season 1 begins its journey with the official auction announcement. Planned with clear vision by Mallus of NITJ, this marks the first step towards building strong teams and uniting the Malayali community. Four teams will compete in the inaugural season, with overwhelming response and registrations from across the community. The stage is set for something unique.",
+        emoji: "⚡",
+        img:   "images/news/auc_12.png",
+        date:  "2025-12-13"
+      },
+      {
+        id: 14,
+        title: "Team Captain",
+        body:  "Joga Bonito Season 1 begins its journey with the official auction announcement. Planned with clear vision by Mallus of NITJ, this marks the first step towards building strong teams and uniting the Malayali community. Four teams will compete in the inaugural season, with overwhelming response and registrations from across the community. The stage is set for something unique.",
+        emoji: "⚡",
+        img:   "images/news/auc_11.png",
+        date:  "2025-12-13"
+      },
+      {
+        id: 15,
+        title: "Team Captain",
+        body:  "Joga Bonito Season 1 begins its journey with the official auction announcement. Planned with clear vision by Mallus of NITJ, this marks the first step towards building strong teams and uniting the Malayali community. Four teams will compete in the inaugural season, with overwhelming response and registrations from across the community. The stage is set for something unique.",
+        emoji: "⚡",
+        img:   "images/news/auc_10.png",
+        date:  "2025-12-13"
+      },
+      {
+        id: 3,
+        title: "Auction Bids",
+        body:  "Joga Bonito Season 1 begins its journey with the official auction announcement. Planned with clear vision by Mallus of NITJ, this marks the first step towards building strong teams and uniting the Malayali community. Four teams will compete in the inaugural season, with overwhelming response and registrations from across the community. The stage is set for something unique.",
+        emoji: "⚡",
+        img:   "images/news/auc_3.png",
+        date:  "2025-12-13"
+      },
+      {
+        id: 4,
+        title: "Auction Bids",
+        body:  "Joga Bonito Season 1 begins its journey with the official auction announcement. Planned with clear vision by Mallus of NITJ, this marks the first step towards building strong teams and uniting the Malayali community. Four teams will compete in the inaugural season, with overwhelming response and registrations from across the community. The stage is set for something unique.",
+        emoji: "⚡",
+        img:   "images/news/auc_2.png",
+        date:  "2025-12-13"
+      },
+      {
+        id: 5,
+        title: "Auction Bids",
+        body:  "Joga Bonito Season 1 begins its journey with the official auction announcement. Planned with clear vision by Mallus of NITJ, this marks the first step towards building strong teams and uniting the Malayali community. Four teams will compete in the inaugural season, with overwhelming response and registrations from across the community. The stage is set for something unique.",
+        emoji: "⚡",
+        img:   "images/news/auc_1.png",
+        date:  "2025-12-13"
+      },
+            {
+        id: 6,
+        title: "Auction Bids",
+        body:  "Joga Bonito Season 1 begins its journey with the official auction announcement. Planned with clear vision by Mallus of NITJ, this marks the first step towards building strong teams and uniting the Malayali community. Four teams will compete in the inaugural season, with overwhelming response and registrations from across the community. The stage is set for something unique.",
+        emoji: "⚡",
+        img:   "images/news/auc_4.png",
+        date:  "2025-12-13"
+      },
+      {
+        id: 7,
+        title: "Auction Bids",
+        body:  "Joga Bonito Season 1 begins its journey with the official auction announcement. Planned with clear vision by Mallus of NITJ, this marks the first step towards building strong teams and uniting the Malayali community. Four teams will compete in the inaugural season, with overwhelming response and registrations from across the community. The stage is set for something unique.",
+        emoji: "⚡",
+        img:   "images/news/auc_5.png",
+        date:  "2025-12-13"
+      },
+            {
+        id: 8,
+        title: "Auction Bids",
+        body:  "Joga Bonito Season 1 begins its journey with the official auction announcement. Planned with clear vision by Mallus of NITJ, this marks the first step towards building strong teams and uniting the Malayali community. Four teams will compete in the inaugural season, with overwhelming response and registrations from across the community. The stage is set for something unique.",
+        emoji: "⚡",
+        img:   "images/news/auc_6.png",
+        date:  "2025-12-13"
+      },
+      {
+        id: 9,
+        title: "Auction Bids",
+        body:  "Joga Bonito Season 1 begins its journey with the official auction announcement. Planned with clear vision by Mallus of NITJ, this marks the first step towards building strong teams and uniting the Malayali community. Four teams will compete in the inaugural season, with overwhelming response and registrations from across the community. The stage is set for something unique.",
+        emoji: "⚡",
+        img:   "images/news/auc_7.png",
+        date:  "2025-12-13"
+      },
+      {
+        id: 10,
+        title: "Auction Bids",
+        body:  "Joga Bonito Season 1 begins its journey with the official auction announcement. Planned with clear vision by Mallus of NITJ, this marks the first step towards building strong teams and uniting the Malayali community. Four teams will compete in the inaugural season, with overwhelming response and registrations from across the community. The stage is set for something unique.",
+        emoji: "⚡",
+        img:   "images/news/auc_8.png",
+        date:  "2025-12-13"
+      },
+      {
+        id: 11,
+        title: "Auction Bids",
+        body:  "Joga Bonito Season 1 begins its journey with the official auction announcement. Planned with clear vision by Mallus of NITJ, this marks the first step towards building strong teams and uniting the Malayali community. Four teams will compete in the inaugural season, with overwhelming response and registrations from across the community. The stage is set for something unique.",
+        emoji: "⚡",
+        img:   "images/news/auc_9.png",
+        date:  "2025-12-13"
+      },
     // {
     //   id: 2,
     //   title: "Quarter Finals Confirmed",
@@ -93,21 +213,33 @@ const JB = {
   events: [
     {
       id: 1,
-      title: "Opening Ceremony",
-      subtitle: "Season 1 Kickoff",
+      title: "Official Partner",
+      subtitle: "Supports",
       img: "images/events/event1.png"
     },
     {
       id: 2,
-      title: "Semi Finals",
-      subtitle: "Top teams clash",
+      title: "Auction Announcement",
+      subtitle: "poster",
       img: "images/events/event2.png"
     },
     {
       id: 3,
-      title: "Grand Final",
-      subtitle: "Championship Night",
+      title: "Auction Day",
+      subtitle: "Auction Night",
       img: "images/events/event3.png"
+    },
+    {
+      id: 4,
+      title: "Team Captains",
+      subtitle: "Fahad - Hari - Haris - Aswin",
+      img: "images/events/event4.png"
+    },
+    {
+      id: 5,
+      title: "Top Buyers",
+      subtitle: "Top 5 Buyers",
+      img: "images/events/event5.png"
     }
   ],
 
@@ -132,6 +264,20 @@ const JB = {
     photo: "images/sponsors/cafe.png",
     role: "Food Partner",
     message: "Fueling players with energy with masala⚽"
+  },
+  {
+    id: 3,
+    name: "Tutic ELeran",
+    photo: "images/sponsors/tutic.png",
+    role: "Support Partner",
+    message: "Educational Partner"
+  },
+  {
+    id:4,
+    name: "Lakshyechi",
+    photo: "images/sponsors/lakshya.png",
+    role: "Primary sponsor",
+    message: "Lakshyechi njngalde aishwaryam"
   }
   ],
 

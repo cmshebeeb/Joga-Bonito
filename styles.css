@@ -102,10 +102,41 @@ nav{background:#fff;border-bottom:1px solid var(--border);display:flex;align-ite
 .story-overlay h3{font-size:10px;font-weight:700;line-height:1.3;color:#fff;}
 
 /* ── STORY MODAL ── */
-#storyModal .modal-box{background:#000;padding:0;max-width:360px;width:100%;max-height:92vh;overflow:hidden;border-radius:16px;}
-.story-full{width:100%;display:flex;flex-direction:column;}
-.story-full-img{width:100%;aspect-ratio:9/16;background:linear-gradient(160deg,var(--green),#052e16);display:flex;align-items:center;justify-content:center;font-size:64px;overflow:hidden;flex-shrink:0;}
-.story-full-img img{width:100%;height:100%;object-fit:cover;object-position:top;}
+#storyModal .modal-box{
+  background:#000;
+  padding:0;
+  max-width:360px;
+  width:100%;
+  max-height:92vh;
+  overflow-y:auto;   /* ✅ allow scroll */
+  overflow-x:hidden;
+  border-radius:16px;
+}
+.story-full{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+}
+
+.story-full-img{
+  width:100%;
+  height:auto;
+  max-height:80vh;        /* prevents overflow cut */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#000;
+  overflow:visible;       /* important: don't crop */
+  flex-shrink:0;
+}
+
+.story-full-img img{
+  width:100%;
+  height:auto;            /* maintain full image */
+  object-fit:contain;
+  object-position:center;
+  display:block;
+}
 .story-full-content{padding:14px 16px 18px;background:#111;overflow-y:auto;}
 .story-full-content h2{font-size:16px;font-weight:700;color:#fff;}
 .story-full-content p{font-size:12px;color:rgba(255,255,255,.65);margin-top:4px;}
